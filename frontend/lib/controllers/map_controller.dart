@@ -32,6 +32,7 @@ class MapScreenController extends GetxController
     await hasLocationPermission();
     isLocationPrecise.value = getStorage.read('isPrecise') ?? false;
     currentMapStyle.value = getStorage.read('currentMapStyle') ?? 'default';
+   
   }
 
   void animatedMapMove(LatLng destLocation, double destZoom) {

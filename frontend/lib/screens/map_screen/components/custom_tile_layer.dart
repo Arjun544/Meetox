@@ -9,6 +9,7 @@ class CustomTileLayer extends GetView<MapScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Obx(
       () => controller.currentMapStyle.value == 'default'
           ? context.isDarkMode
