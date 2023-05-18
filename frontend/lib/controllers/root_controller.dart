@@ -7,6 +7,7 @@ import 'package:frontend/core/instances.dart';
 import 'package:frontend/helpers/has_location_permission.dart';
 import 'package:frontend/screens/conversation_screen/conversation_screen.dart';
 import 'package:frontend/screens/feed_screen/feed_screen.dart';
+import 'package:frontend/screens/map_screen/map_screen.dart';
 import 'package:frontend/screens/notification_screen/notification_screen.dart';
 import 'package:frontend/services/user_services.dart';
 
@@ -18,7 +19,7 @@ class RootController extends GetxController {
   final selectedTab = 1.obs;
 
   final List<Widget> items = [
-    const SizedBox(),
+    const MapScreen(),
     const FeedScreen(),
     const SizedBox.shrink(),
     const ConversationScreen(),
@@ -87,11 +88,6 @@ class RootController extends GetxController {
             currentPosition.value.longitude
           ],
         );
-        // await UserServices.addLocation(
-        //   address: address,
-        //   latitude: currentPosition.value.latitude,
-        //   longitude: currentPosition.value.longitude,
-        // );
 
         mapBounds.value = !currentUser.value.isPremium!
             // Approx 300 kms

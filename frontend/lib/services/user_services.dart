@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:frontend/config/graphql.dart';
 import 'package:frontend/graphql/user/mutations.dart';
 import 'package:frontend/utils/logging.dart';
@@ -20,7 +18,6 @@ class UserServices {
               'coordinates': coordinates,
             },
           },
-          onCompleted: (data) => log('addddress $data'),
         ),
       );
     } catch (e) {

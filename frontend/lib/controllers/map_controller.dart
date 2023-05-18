@@ -1,4 +1,4 @@
-
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:frontend/controllers/root_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
@@ -21,7 +21,7 @@ class MapScreenController extends GetxController
 
   // Filters
   final RxInt markersFilter = 0.obs;
-  final RxDouble radius = (currentUser.value.isPremium!? 600.0 : 300.0).obs;
+  final RxDouble radius = (currentUser.value.isPremium! ? 600.0 : 300.0).obs;
   // final RxList<circle_model.Circle> oldCircles = <circle_model.Circle>[].obs;
   // final RxList<QuestionModel> oldQuestions = <QuestionModel>[].obs;
   // final RxList<UserModel> oldUsers = <UserModel>[].obs;
@@ -30,27 +30,33 @@ class MapScreenController extends GetxController
   Future<void> onInit() async {
     super.onInit();
     await hasLocationPermission();
-    mapController = MapController();
     isLocationPrecise.value = getStorage.read('isPrecise') ?? false;
     currentMapStyle.value = getStorage.read('currentMapStyle') ?? 'default';
   }
 
   void animatedMapMove(LatLng destLocation, double destZoom) {
     final latTween = Tween<double>(
-        begin: mapController!.center.latitude, end: destLocation.latitude,);
+      begin: mapController!.center.latitude,
+      end: destLocation.latitude,
+    );
     final lngTween = Tween<double>(
-        begin: mapController!.center.longitude, end: destLocation.longitude,);
+      begin: mapController!.center.longitude,
+      end: destLocation.longitude,
+    );
     final zoomTween = Tween<double>(begin: mapController!.zoom, end: destZoom);
 
     final controller = AnimationController(
-        duration: const Duration(milliseconds: 500), vsync: this,);
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
     final Animation<double> animation =
         CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
 
     controller.addListener(() {
       mapController!.move(
-          LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
-          zoomTween.evaluate(animation),);
+        LatLng(latTween.evaluate(animation), lngTween.evaluate(animation)),
+        zoomTween.evaluate(animation),
+      );
     });
 
     animation.addStatusListener((status) {

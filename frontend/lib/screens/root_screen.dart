@@ -67,24 +67,28 @@ class RootScreen extends HookWidget {
         NavItem(
           tab: controller.items[0],
           icon: FlutterRemix.road_map_fill,
+          unselectedIcon: FlutterRemix.road_map_line,
           title: 'Map',
           navigatorkey: controller.mapNavigatorKey,
         ),
         NavItem(
           tab: controller.items[1],
           icon: FlutterRemix.fire_fill,
+          unselectedIcon: FlutterRemix.fire_line,
           title: 'Feeds',
           navigatorkey: controller.feedsNavigatorKey,
         ),
         NavItem(
           tab: controller.items[2],
           icon: FlutterRemix.message_3_fill,
+          unselectedIcon: FlutterRemix.message_3_line,
           title: 'Conversations',
           navigatorkey: controller.conversationsNavigatorKey,
         ),
         NavItem(
           tab: controller.items[3],
           icon: FlutterRemix.notification_4_fill,
+          unselectedIcon: FlutterRemix.notification_4_line,
           title: 'Notifications',
           navigatorkey: controller.notificationsNavigatorKey,
         ),

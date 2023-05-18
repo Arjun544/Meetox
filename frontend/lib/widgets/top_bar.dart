@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:frontend/controllers/map_controller.dart';
+import 'package:frontend/controllers/root_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/core/instances.dart';
@@ -54,6 +55,8 @@ class TopBar extends GetView<MapScreenController> {
       );
     }
 
+    final rootController = Get.find<RootController>();
+
     return Container(
       height: 55.sp,
       width: Get.width,
@@ -67,7 +70,7 @@ class TopBar extends GetView<MapScreenController> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           InkWell(
-            onTap: () => controller.rootController.zoomDrawerController.open!(),
+            onTap: () => rootController.zoomDrawerController.open!(),
             child: Hero(
               tag: 'Profile',
               child: currentUser.value.displayPic == null

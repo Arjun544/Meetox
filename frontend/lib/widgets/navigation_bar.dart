@@ -65,14 +65,13 @@ class CustomBottomNavigationBar extends GetView<RootController> {
             items: items
                 .map(
                   (item) => CustomNavigationBarItem(
+                    selectedIcon: Icon(item.icon,
+                        size: 24, color: AppColors.primaryYellow),
                     icon: Icon(
-                      item.icon,
+                      item.unselectedIcon,
                       size: 24,
-                      color: controller.selectedTab.value == items.indexOf(item)
-                          ? context
-                              .theme.bottomNavigationBarTheme.selectedItemColor
-                          : context.theme.bottomNavigationBarTheme
-                              .unselectedItemColor,
+                      color: context
+                          .theme.bottomNavigationBarTheme.unselectedItemColor,
                     ),
                     // title: const Text(''),
                   ),
@@ -100,10 +99,12 @@ class NavItem {
     required this.tab,
     required this.title,
     required this.icon,
+    required this.unselectedIcon,
     this.navigatorkey,
   });
   final Widget tab;
   final GlobalKey<NavigatorState>? navigatorkey;
   final String title;
   final IconData icon;
+  final IconData unselectedIcon;
 }

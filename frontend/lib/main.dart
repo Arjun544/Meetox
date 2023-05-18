@@ -1,4 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:frontend/core/app_strings.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
@@ -16,6 +17,12 @@ void main() async {
   //   await SecureStorageServices.clearAll();
   //   await getStorage.write('first_run', false);
   // }
+
+  // Map tiles caching
+  await FlutterMapTileCaching.initialise(
+    debugMode: true,
+  );
+
   runApp(const MyApp());
 }
 

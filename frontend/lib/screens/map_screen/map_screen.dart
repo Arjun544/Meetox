@@ -12,6 +12,9 @@ class MapScreen extends GetView<MapScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(MapScreenController());
+  controller.  mapController = MapController();
+
     return Scaffold(
       body: Stack(
         children: [
@@ -156,82 +159,84 @@ class MapScreen extends GetView<MapScreenController> {
       ),
       floatingActionButton: Padding(
         padding: EdgeInsets.only(bottom: Platform.isIOS ? 100.sp : 80.sp),
-        child: Obx(() => !controller.isDraggingMap.value
-            ? SlideInRight(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    FloatingActionButton(
-                      backgroundColor: context
-                          .theme.floatingActionButtonTheme.backgroundColor,
-                      child: Icon(
-                        FlutterRemix.menu_5_fill,
-                        color: context.theme.appBarTheme.iconTheme!.color,
+        child: Obx(
+          () => !controller.isDraggingMap.value
+              ? SlideInRight(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      FloatingActionButton(
+                        backgroundColor: context
+                            .theme.floatingActionButtonTheme.backgroundColor,
+                        child: Icon(
+                          FlutterRemix.menu_5_fill,
+                          color: context.theme.appBarTheme.iconTheme!.color,
+                        ),
+                        onPressed: () {},
+                        // TODO:
+                        // onPressed: () => showCustomSheet(
+                        //   context: context,
+                        //   child: MarkersListSheet(),
+                        // ),
                       ),
-                      onPressed: (){},
-                      // TODO:
-                      // onPressed: () => showCustomSheet(
-                      //   context: context,
-                      //   child: MarkersListSheet(),
-                      // ),
-                    ),
-                    const SizedBox(height: 14),
-                    FloatingActionButton(
-                      backgroundColor: context
-                          .theme.floatingActionButtonTheme.backgroundColor,
-                      child: Icon(
-                        FlutterRemix.focus_fill,
-                        color: context.theme.appBarTheme.iconTheme!.color,
-                      ),
-                      onPressed: () async {
-                        // final double distance = Geolocator.distanceBetween(
-                        //   controller.rootController.currentPosition.value.latitude - 1,
-                        //   controller.rootController.currentPosition.value.longitude - 1,
-                        //   controller.rootController.currentPosition.value.latitude + 1,
-                        //   controller.rootController.currentPosition.value.longitude + 1,
-                        // );
-                        // log('distance: ${(distance * 0.001).toStringAsFixed(0)}');
-                        controller.animatedMapMove(
-                          LatLng(
-                            controller
-                                .rootController.currentPosition.value.latitude,
-                            controller
-                                .rootController.currentPosition.value.longitude,
-                          ),
-                          15,
-                        );
-                        // int tiles = FMTC.instance('Map store').stats.storeLength;
+                      const SizedBox(height: 14),
+                      FloatingActionButton(
+                        backgroundColor: context
+                            .theme.floatingActionButtonTheme.backgroundColor,
+                        child: Icon(
+                          FlutterRemix.focus_fill,
+                          color: context.theme.appBarTheme.iconTheme!.color,
+                        ),
+                        onPressed: () async {
+                          // final double distance = Geolocator.distanceBetween(
+                          //   controller.rootController.currentPosition.value.latitude - 1,
+                          //   controller.rootController.currentPosition.value.longitude - 1,
+                          //   controller.rootController.currentPosition.value.latitude + 1,
+                          //   controller.rootController.currentPosition.value.longitude + 1,
+                          // );
+                          // log('distance: ${(distance * 0.001).toStringAsFixed(0)}');
+                          controller.animatedMapMove(
+                            LatLng(
+                              controller.rootController.currentPosition.value
+                                  .latitude,
+                              controller.rootController.currentPosition.value
+                                  .longitude,
+                            ),
+                            15,
+                          );
+                          // int tiles = FMTC.instance('Map store').stats.storeLength;
 
-                        // final int checkTiles = FMTC.instance('Map light').stats.storeLength;
-                        // final bool isCachaed = FMTC
-                        //     .instance('Map light')
-                        //     .getTileProvider(
-                        //       FMTCTileProviderSettings(behavior: CacheBehavior.cacheFirst),
-                        //     )
-                        //     .checkTileCached(
-                        //       coords: Coords(
-                        //           controller.rootController.currentPosition.value.latitude,
-                        //           controller
-                        //               .rootController.currentPosition.value.longitude),
-                        //       options: TileLayer(
-                        //         tileProvider: FMTC.instance('Map light').getTileProvider(
-                        //               FMTCTileProviderSettings(
-                        //                   behavior: CacheBehavior.cacheFirst),
-                        //             ),
-                        //         minZoom: 1,
-                        //         maxZoom: 14,
-                        //         tileBounds: controller.rootController.mapBounds.value,
-                        //         urlTemplate: lightMapUrl,
-                        //       ),
-                        //       customURL: lightMapUrl,
-                        //     );
-                        // log('tiles: ');
-                      },
-                    ),
-                  ],
-                ),
-              )
-            : const SizedBox.shrink(),),
+                          // final int checkTiles = FMTC.instance('Map light').stats.storeLength;
+                          // final bool isCachaed = FMTC
+                          //     .instance('Map light')
+                          //     .getTileProvider(
+                          //       FMTCTileProviderSettings(behavior: CacheBehavior.cacheFirst),
+                          //     )
+                          //     .checkTileCached(
+                          //       coords: Coords(
+                          //           controller.rootController.currentPosition.value.latitude,
+                          //           controller
+                          //               .rootController.currentPosition.value.longitude),
+                          //       options: TileLayer(
+                          //         tileProvider: FMTC.instance('Map light').getTileProvider(
+                          //               FMTCTileProviderSettings(
+                          //                   behavior: CacheBehavior.cacheFirst),
+                          //             ),
+                          //         minZoom: 1,
+                          //         maxZoom: 14,
+                          //         tileBounds: controller.rootController.mapBounds.value,
+                          //         urlTemplate: lightMapUrl,
+                          //       ),
+                          //       customURL: lightMapUrl,
+                          //     );
+                          // log('tiles: ');
+                        },
+                      ),
+                    ],
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ),
       ),
     );
   }

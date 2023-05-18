@@ -102,7 +102,7 @@ class CustomDrawer extends StatelessWidget {
               const SizedBox(width: 20),
               Text(
                 'version 1.0.0',
-                style: context.theme.textTheme.titleMedium!.copyWith(
+                style: context.theme.textTheme.titleSmall!.copyWith(
                   color: Colors.white,
                   letterSpacing: 0.5,
                 ),
