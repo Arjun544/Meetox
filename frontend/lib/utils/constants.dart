@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 
@@ -15,10 +16,8 @@ const String profilePlaceHolder =
     'https://static.vecteezy.com/system/resources/previews/003/337/584/original/default-avatar-photo-placeholder-profile-icon-vector.jpg';
 
 // MapBox
-// final String mapBoxAccessToken = dotenv.env['MAPBOX_ACCESS_TOKEN']!;
-// final String lightMapUrl = dotenv.env['LIGHT_MAP_URL']!;
-// final String darkMapUrl = dotenv.env['DARK_MAP_URL']!;
-// final String skyMapUrl = dotenv.env['SKY_MAP_URL']!;
-// final String meetoxMapUrl = dotenv.env['MEETOX_MAP_URL']!
-
-
+final String mapBoxAccessToken = dotenv.env['MAPBOX_ACCESS_TOKEN']!;
+final String lightMapUrl = dotenv.env['LIGHT_MAP_URL']!;
+final String darkMapUrl = dotenv.env['DARK_MAP_URL']!;
+final String skyMapUrl = dotenv.env['SKY_MAP_URL']!;
+final String meetoxMapUrl = dotenv.env['MEETOX_MAP_URL']!;

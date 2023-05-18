@@ -133,7 +133,7 @@ class TopBar extends GetView<MapScreenController> {
                     SizedBox(width: 5.sp),
                     Obx(
                       () => Text(
-                        currentUser.value.location!.address!.isEmpty
+                        currentUser.value.location == null
                             ? 'Unknown'
                             : currentUser.value.location!.address!,
                         style: context.theme.textTheme.labelMedium,

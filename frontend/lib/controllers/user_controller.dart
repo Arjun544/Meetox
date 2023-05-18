@@ -18,9 +18,11 @@ class UserController extends GetxController {
           logError(result.exception.toString());
           return;
         } else {
-          logSuccess('location subscription: ${result.data}');
-          // currentUser.value.location = result.data!;
-          // currentUser.refresh();
+          
+          currentUser.value.location = Location.fromJson(
+            result.data!['locationUpdated'] as Map<String, dynamic>,
+          );
+          currentUser.refresh();
         }
       });
 

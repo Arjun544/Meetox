@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:frontend/config/graphql.dart';
 import 'package:frontend/graphql/user/mutations.dart';
 import 'package:frontend/utils/logging.dart';
@@ -12,6 +14,13 @@ class UserServices {
       await graphqlClient!.value.mutate(
         MutationOptions(
           document: gql(updateLocation),
+          variables: {
+            'location': {
+              'address': address,
+              'coordinates': coordinates,
+            },
+          },
+          onCompleted: (data) => log('addddress $data'),
         ),
       );
     } catch (e) {

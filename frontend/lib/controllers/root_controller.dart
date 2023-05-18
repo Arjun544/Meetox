@@ -10,6 +10,8 @@ import 'package:frontend/screens/feed_screen/feed_screen.dart';
 import 'package:frontend/screens/notification_screen/notification_screen.dart';
 import 'package:frontend/services/user_services.dart';
 
+import 'map_controller.dart';
+
 class RootController extends GetxController {
   final ZoomDrawerController zoomDrawerController = ZoomDrawerController();
 
@@ -151,7 +153,7 @@ class RootController extends GetxController {
               ),
             );
 
-      final mapScreenController = Get.find();
+      final mapScreenController = Get.put(MapScreenController());
       // ignore: cascade_invocations
       mapScreenController.animatedMapMove(
         LatLng(

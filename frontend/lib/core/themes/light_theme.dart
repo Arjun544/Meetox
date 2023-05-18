@@ -125,4 +125,23 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
       ),
     ),
   ),
+  tabBarTheme: TabBarTheme(
+    labelStyle: globalTextStyle(
+      fontSize: 12.sp,
+      color: AppColors.primaryYellow,
+      fontWeight: FontWeight.w600,
+    ),
+    unselectedLabelStyle: globalTextStyle(
+      fontSize: 12.sp,
+      color: const Color(0xFF868590),
+      fontWeight: FontWeight.w600,
+    ),
+    labelColor: AppColors.primaryYellow,
+    unselectedLabelColor: const Color(0xFF8E8E91),
+    labelPadding: const EdgeInsets.symmetric(vertical: 6),
+    indicator: BoxDecoration(
+      color: Colors.white,
+      borderRadius: BorderRadius.circular(10),
+    ),
+  ),
 );

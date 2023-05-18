@@ -31,42 +31,37 @@ class DrawerScreen extends GetView<RootController> {
   }
 }
 
-class RootScreen extends StatefulWidget {
+class RootScreen extends HookWidget {
   const RootScreen({super.key});
 
   @override
-  State<RootScreen> createState() => _RootScreenState();
-}
-
-class _RootScreenState extends State<RootScreen> with WidgetsBindingObserver {
-  final RootController controller = Get.find();
-
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    super.didChangeDependencies();
-    if (state == AppLifecycleState.resumed) {
-      log('app resumed');
-      appResumedOperations();
-    }
-  }
-
-  Future<void> appResumedOperations() async {
-    if (await Permission.location.serviceStatus.isEnabled &&
-        await Permission.location.status == PermissionStatus.granted) {
-      await controller.getLocation();
-    }
-  }
-
-  void appInactiveOperations() {}
-
-  @override
   Widget build(BuildContext context) {
+    // ignore: omit_local_variable_types
+    final RootController controller = Get.find();
+
+    final appLifecycleState = useAppLifecycleState();
+
+    Future<void> appResumedOperations() async {
+      if (await Permission.location.serviceStatus.isEnabled &&
+          await Permission.location.status == PermissionStatus.granted) {
+        await controller.getLocation();
+      }
+    }
+
+    void appInactiveOperations() {}
+
+    useEffect(
+      () {
+        if (appLifecycleState == AppLifecycleState.resumed) {
+          log('app resumed');
+          appResumedOperations();
+        } else if (appLifecycleState == AppLifecycleState.inactive) {
+          appInactiveOperations();
+        }
+        return () {};
+      },
+      [appLifecycleState],
+    );
     return CustomBottomNavigationBar(
       items: [
         NavItem(

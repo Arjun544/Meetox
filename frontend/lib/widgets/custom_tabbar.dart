@@ -1,0 +1,31 @@
+import 'package:frontend/core/imports/core_imports.dart';
+import 'package:frontend/core/imports/packages_imports.dart';
+
+class CustomTabbar extends StatelessWidget {
+  const CustomTabbar({
+    required this.controller,
+    required this.tabs,
+    required this.onTap,
+    super.key,
+  });
+  final TabController controller;
+  final List<Widget> tabs;
+  final void Function(int)? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(2),
+      height: 35.h,
+      decoration: BoxDecoration(
+        color: const Color(0xFFECEDF2),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: TabBar(
+        onTap: onTap,
+        controller: controller,
+        tabs: tabs,
+      ),
+    );
+  }
+}
