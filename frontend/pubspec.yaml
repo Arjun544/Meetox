@@ -11,6 +11,7 @@ dependencies:
   animate_do: ^3.0.2
   cached_network_image: ^3.2.3
   cupertino_icons: ^1.0.2
+  custom_navigation_bar: ^0.8.2
   dio: ^5.1.2
   file_picker: ^5.3.0
   flutter:
@@ -28,11 +29,19 @@ dependencies:
   image_picker: ^0.8.7+5
   jwt_decoder: ^2.0.1
   loading_animation_widget: ^1.2.0+4
+  permission_handler: ^10.2.0
   pinput: ^2.2.31
   slide_countdown: ^0.6.0-dev.2
   smooth_page_indicator: ^1.1.0
-
   very_good_analysis: ^4.0.0+1
+
+   # Map Packages
+  flutter_map: ^4.0.0
+  latlong2: ^0.8.1
+  geolocator: ^9.0.2
+  geocoding: ^2.1.0
+  # flutter_map_marker_cluster: ^1.1.0
+  flutter_map_tile_caching: ^8.0.0
 
 dev_dependencies:
   flutter_lints: ^2.0.0

@@ -7,7 +7,7 @@ import 'package:frontend/models/user_model.dart';
 import 'package:frontend/screens/add_profile_screen/components/step_one.dart';
 import 'package:frontend/screens/add_profile_screen/components/step_three.dart';
 import 'package:frontend/screens/add_profile_screen/components/step_two.dart';
-import 'package:frontend/screens/drawer_screen.dart';
+import 'package:frontend/screens/root_screen.dart';
 import 'package:frontend/widgets/custom_button.dart';
 import 'package:frontend/widgets/loaders/botton_loader.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';

@@ -6,7 +6,7 @@ import 'package:frontend/helpers/decode_token.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/screens/add_profile_screen/add_profile_screen.dart';
 import 'package:frontend/screens/auth_screens/screens_imports.dart';
-import 'package:frontend/screens/drawer_screen.dart';
+import 'package:frontend/screens/root_screen.dart';
 import 'package:frontend/services/secure_storage_service.dart';
 
 class SplashController extends GetxController {

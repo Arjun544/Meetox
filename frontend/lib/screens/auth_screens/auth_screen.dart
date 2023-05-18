@@ -7,7 +7,7 @@ import 'package:frontend/graphql/auth/mutation.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/screens/add_profile_screen/add_profile_screen.dart';
 import 'package:frontend/screens/auth_screens/screens_imports.dart';
-import 'package:frontend/screens/drawer_screen.dart';
+import 'package:frontend/screens/root_screen.dart';
 import 'package:frontend/services/secure_storage_service.dart';
 import 'package:frontend/widgets/custom_button.dart';
 import 'package:frontend/widgets/loaders/botton_loader.dart';
