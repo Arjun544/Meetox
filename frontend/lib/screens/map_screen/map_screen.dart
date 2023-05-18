@@ -13,7 +13,7 @@ class MapScreen extends GetView<MapScreenController> {
   @override
   Widget build(BuildContext context) {
     Get.put(MapScreenController());
-  controller.  mapController = MapController();
+    controller.mapController = MapController();
 
     return Scaffold(
       body: Stack(
@@ -158,7 +158,7 @@ class MapScreen extends GetView<MapScreenController> {
         ],
       ),
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: Platform.isIOS ? 100.sp : 80.sp),
+        padding: EdgeInsets.only(bottom: Platform.isIOS ? 70.sp : 80.sp),
         child: Obx(
           () => !controller.isDraggingMap.value
               ? SlideInRight(
@@ -166,10 +166,11 @@ class MapScreen extends GetView<MapScreenController> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       FloatingActionButton(
+                        elevation: 0,
                         backgroundColor: context
                             .theme.floatingActionButtonTheme.backgroundColor,
                         child: Icon(
-                          FlutterRemix.menu_5_fill,
+                          IconsaxBold.textalign_center,
                           color: context.theme.appBarTheme.iconTheme!.color,
                         ),
                         onPressed: () {},
@@ -181,6 +182,7 @@ class MapScreen extends GetView<MapScreenController> {
                       ),
                       const SizedBox(height: 14),
                       FloatingActionButton(
+                        elevation: 0,
                         backgroundColor: context
                             .theme.floatingActionButtonTheme.backgroundColor,
                         child: Icon(

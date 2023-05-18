@@ -130,7 +130,7 @@ class TopBar extends GetView<MapScreenController> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
-                      FlutterRemix.map_pin_2_fill,
+                      IconsaxBold.location,
                       size: 15.sp,
                     ),
                     SizedBox(width: 5.sp),
@@ -173,7 +173,7 @@ class TopBar extends GetView<MapScreenController> {
                         ),
                       ],
                     ),
-                    child: const Icon(FlutterRemix.settings_fill),
+                    child: const Icon(IconsaxBold.setting),
                   ),
                 ),
               Container(
@@ -190,7 +190,7 @@ class TopBar extends GetView<MapScreenController> {
                     ),
                   ],
                 ),
-                child: const Icon(FlutterRemix.search_2_fill),
+                child: const Icon(IconsaxBold.search_normal),
               ),
             ],
           ),

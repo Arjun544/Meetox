@@ -1,5 +1,8 @@
 export 'package:animate_do/animate_do.dart';
 export 'package:cached_network_image/cached_network_image.dart';
+// export 'package:pretty_dio_logger/pretty_dio_logger.dart';
+// export 'package:shimmer/shimmer.dart';
+export 'package:ficonsax/ficonsax.dart';
 export 'package:file_picker/file_picker.dart';
 export 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 // export 'package:splash_view/source/presentation/pages/splash_view.dart';
@@ -23,7 +26,5 @@ export 'package:image_picker/image_picker.dart';
 export 'package:latlong2/latlong.dart';
 export 'package:loading_animation_widget/loading_animation_widget.dart';
 export 'package:pinput/pinput.dart';
-// export 'package:pretty_dio_logger/pretty_dio_logger.dart';
-// export 'package:shimmer/shimmer.dart';
 export 'package:slide_countdown/slide_countdown.dart';
 export 'package:smooth_page_indicator/smooth_page_indicator.dart';

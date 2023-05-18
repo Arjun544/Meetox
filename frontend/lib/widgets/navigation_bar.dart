@@ -54,67 +54,66 @@ class CustomBottomNavigationBar extends GetView<RootController> {
         //   onPressed: () {},
         // ),
         bottomNavigationBar: Obx(
-          () => CustomNavigationBar(
-            // iconSize: 15.h,
-            scaleFactor: 0.4,
-            isFloating: true,
-            elevation: 2,
-            borderRadius: const Radius.circular(16),
-            selectedColor: AppColors.primaryYellow,
-            unSelectedColor: AppColors.customGrey,
-            backgroundColor: Colors.black,
-            currentIndex: controller.selectedTab.value,
-            strokeColor: AppColors.primaryYellow,
-            items: items
-                .map(
-                  (item) => CustomNavigationBarItem(
-                    selectedIcon: item.title == 'Add'
-                        ? null
-                        : Icon(
-                            item.icon,
-                            size: 24,
-                            color: AppColors.primaryYellow,
-                          ),
-                    icon: item.title == 'Add'
-                        ? OverflowBox(
-                            maxHeight: 100,
-                            maxWidth: 100,
-                            child: Container(
-                              height: 30.h,
-                              width: 40.w,
-                              decoration: BoxDecoration(
-                                color: AppColors.primaryYellow,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Icon(
-                                item.icon,
-                                size: 24,
-                                color: Colors.white,
+          () => SizedBox(
+            height: 80.h,
+            child: CustomNavigationBar(
+              scaleFactor: 0.4,
+              isFloating: true,
+              elevation: 2,
+              borderRadius: const Radius.circular(16),
+              selectedColor: AppColors.primaryYellow,
+              unSelectedColor: AppColors.customGrey,
+              backgroundColor: Colors.black,
+              currentIndex: controller.selectedTab.value,
+              strokeColor: AppColors.primaryYellow,
+              items: items
+                  .map(
+                    (item) => CustomNavigationBarItem(
+                      icon: item.title != 'Add'
+                          ? Icon(
+                              item.icon,
+                              size: 22.h,
+                              color: controller.selectedTab.value ==
+                                      items.indexOf(item)
+                                  ? context.theme.bottomNavigationBarTheme
+                                      .selectedItemColor
+                                  : context.theme.bottomNavigationBarTheme
+                                      .unselectedItemColor,
+                            )
+                          : OverflowBox(
+                              maxHeight: 100,
+                              maxWidth: 100,
+                              child: Container(
+                                height: 30.h,
+                                width: 40.w,
+                                decoration: BoxDecoration(
+                                  color: AppColors.primaryYellow,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Icon(
+                                  item.icon,
+                                  size: 22.h,
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
-                          )
-                        : Icon(
-                            item.unselectedIcon,
-                            size: 24,
-                            color: context.theme.bottomNavigationBarTheme
-                                .unselectedItemColor,
-                          ),
-                  ),
-                )
-                .toList(),
-            onTap: (index) {
-              if (index == 2) {
-                showCustomSheet(
-                    context: context, child: const AddOptionsSheet());
-              } else if (index == controller.selectedTab.value) {
-                items[index]
-                    .navigatorkey
-                    ?.currentState
-                    ?.popUntil((route) => route.isFirst);
-              } else {
-                controller.selectedTab.value = index;
-              }
-            },
+                    ),
+                  )
+                  .toList(),
+              onTap: (index) {
+                if (index == 2) {
+                  showCustomSheet(
+                      context: context, child: const AddOptionsSheet());
+                } else if (index == controller.selectedTab.value) {
+                  items[index]
+                      .navigatorkey
+                      ?.currentState
+                      ?.popUntil((route) => route.isFirst);
+                } else {
+                  controller.selectedTab.value = index;
+                }
+              },
+            ),
           ),
         ),
       ),
@@ -127,12 +126,10 @@ class NavItem {
     required this.tab,
     required this.title,
     required this.icon,
-    required this.unselectedIcon,
     this.navigatorkey,
   });
   final Widget tab;
   final GlobalKey<NavigatorState>? navigatorkey;
   final String title;
   final IconData icon;
-  final IconData unselectedIcon;
 }

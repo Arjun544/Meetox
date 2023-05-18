@@ -31,7 +31,7 @@ class MainFilters extends GetView<MapScreenController> {
               child: Stack(
                 clipBehavior: Clip.none,
                 children: [
-                  const Icon(FlutterRemix.equalizer_fill),
+                  const Icon(IconsaxBold.setting_4),
                   Obx(
                     () => controller.hasAppliedFilters.value
                         ? Positioned(
@@ -71,10 +71,10 @@ class MainFilters extends GetView<MapScreenController> {
                       children: [
                         InkWell(
                           onTap: () {
-                            if (controller.currentMainFilter.value !=
-                                'All') {
+                            if (controller.currentMainFilter.value != 'All') {
                               controller.isCurrentFilterMarkVisible(true);
-                              Timer.periodic(const Duration(seconds: 2), (timer) {
+                              Timer.periodic(const Duration(seconds: 2),
+                                  (timer) {
                                 controller.isCurrentFilterMarkVisible(false);
                                 timer.cancel();
                               });
@@ -85,7 +85,7 @@ class MainFilters extends GetView<MapScreenController> {
                             width: Get.width,
                             child: Obx(
                               () => Icon(
-                                FlutterRemix.apps_fill,
+                                IconsaxBold.element_4,
                                 size: 22.sp,
                                 color:
                                     controller.currentMainFilter.value == 'All'
@@ -100,7 +100,8 @@ class MainFilters extends GetView<MapScreenController> {
                             if (controller.currentMainFilter.value !=
                                 'Circles') {
                               controller.isCurrentFilterMarkVisible(true);
-                              Timer.periodic(const Duration(seconds: 2), (timer) {
+                              Timer.periodic(const Duration(seconds: 2),
+                                  (timer) {
                                 controller.isCurrentFilterMarkVisible(false);
                                 timer.cancel();
                               });
@@ -122,11 +123,12 @@ class MainFilters extends GetView<MapScreenController> {
                           ),
                         ),
                         InkWell(
-                           onTap: () {
+                          onTap: () {
                             if (controller.currentMainFilter.value !=
                                 'Questions') {
                               controller.isCurrentFilterMarkVisible(true);
-                              Timer.periodic(const Duration(seconds: 2), (timer) {
+                              Timer.periodic(const Duration(seconds: 2),
+                                  (timer) {
                                 controller.isCurrentFilterMarkVisible(false);
                                 timer.cancel();
                               });
@@ -149,10 +151,11 @@ class MainFilters extends GetView<MapScreenController> {
                         ),
                         InkWell(
                           onTap: () {
-                           if (controller.currentMainFilter.value !=
+                            if (controller.currentMainFilter.value !=
                                 'Followers') {
                               controller.isCurrentFilterMarkVisible(true);
-                              Timer.periodic(const Duration(seconds: 2), (timer) {
+                              Timer.periodic(const Duration(seconds: 2),
+                                  (timer) {
                                 controller.isCurrentFilterMarkVisible(false);
                                 timer.cancel();
                               });
@@ -163,7 +166,7 @@ class MainFilters extends GetView<MapScreenController> {
                             width: Get.width,
                             child: Obx(
                               () => Icon(
-                                FlutterRemix.team_fill,
+                                IconsaxBold.profile_2user,
                                 size: 22.sp,
                                 color: controller.currentMainFilter.value ==
                                         'Followers'
@@ -177,7 +180,8 @@ class MainFilters extends GetView<MapScreenController> {
                           onTap: () {
                             if (controller.currentMainFilter.value != 'Users') {
                               controller.isCurrentFilterMarkVisible(true);
-                              Timer.periodic(const Duration(seconds: 2), (timer) {
+                              Timer.periodic(const Duration(seconds: 2),
+                                  (timer) {
                                 controller.isCurrentFilterMarkVisible(false);
                                 timer.cancel();
                               });
@@ -188,7 +192,7 @@ class MainFilters extends GetView<MapScreenController> {
                             width: Get.width,
                             child: Obx(
                               () => Icon(
-                                FlutterRemix.user_add_fill,
+                                IconsaxBold.people,
                                 size: 20.sp,
                                 color: controller.currentMainFilter.value ==
                                         'Users'
@@ -204,7 +208,7 @@ class MainFilters extends GetView<MapScreenController> {
                       onTap: () => controller.currentMainFilter.value = 'All',
                       child: Obx(
                         () => Icon(
-                          FlutterRemix.apps_fill,
+                          IconsaxBold.element_4,
                           size: 25.sp,
                           color: controller.currentMainFilter.value == 'All'
                               ? AppColors.primaryYellow
@@ -220,8 +224,8 @@ class MainFilters extends GetView<MapScreenController> {
                   !controller.isFiltersVisible.value,
               child: Icon(
                 controller.isFiltersVisible.value
-                    ? FlutterRemix.arrow_up_s_fill
-                    : FlutterRemix.arrow_down_s_fill,
+                    ? IconsaxBold.arrow_up_1
+                    : IconsaxBold.arrow_down,
                 color: context.theme.dividerColor,
                 size: 30.sp,
               ),

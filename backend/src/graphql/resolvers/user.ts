@@ -40,9 +40,6 @@ const resolvers = {
       const { req, pubsub } = context;
       const { location } = args;
       const { id, token } = decodeToken(req as IncomingMessage);
-      const { address, coordinates } = location;
-
-      console.log(location);
 
       const user: IUser | null = await User.findByIdAndUpdate(
         id,
