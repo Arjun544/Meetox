@@ -1,8 +1,11 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend/controllers/root_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
-import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/widgets/lazyload_stack.dart';
+import 'package:frontend/widgets/show_custom_sheet.dart';
+
+import 'sheets/add_options_sheet.dart';
 
 class CustomBottomNavigationBar extends GetView<RootController> {
   const CustomBottomNavigationBar({required this.items, super.key});
@@ -41,15 +44,15 @@ class CustomBottomNavigationBar extends GetView<RootController> {
                 .toList(),
           ),
         ),
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: AppColors.primaryYellow,
-          child: Icon(
-            FlutterRemix.add_fill,
-            size: 25.sp,
-            color: Colors.white,
-          ),
-          onPressed: () {},
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   backgroundColor: AppColors.primaryYellow,
+        //   child: Icon(
+        //     FlutterRemix.add_fill,
+        //     size: 25.sp,
+        //     color: Colors.white,
+        //   ),
+        //   onPressed: () {},
+        // ),
         bottomNavigationBar: Obx(
           () => CustomNavigationBar(
             // iconSize: 15.h,
@@ -65,20 +68,45 @@ class CustomBottomNavigationBar extends GetView<RootController> {
             items: items
                 .map(
                   (item) => CustomNavigationBarItem(
-                    selectedIcon: Icon(item.icon,
-                        size: 24, color: AppColors.primaryYellow),
-                    icon: Icon(
-                      item.unselectedIcon,
-                      size: 24,
-                      color: context
-                          .theme.bottomNavigationBarTheme.unselectedItemColor,
-                    ),
-                    // title: const Text(''),
+                    selectedIcon: item.title == 'Add'
+                        ? null
+                        : Icon(
+                            item.icon,
+                            size: 24,
+                            color: AppColors.primaryYellow,
+                          ),
+                    icon: item.title == 'Add'
+                        ? OverflowBox(
+                            maxHeight: 100,
+                            maxWidth: 100,
+                            child: Container(
+                              height: 30.h,
+                              width: 40.w,
+                              decoration: BoxDecoration(
+                                color: AppColors.primaryYellow,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Icon(
+                                item.icon,
+                                size: 24,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                        : Icon(
+                            item.unselectedIcon,
+                            size: 24,
+                            color: context.theme.bottomNavigationBarTheme
+                                .unselectedItemColor,
+                          ),
                   ),
                 )
                 .toList(),
             onTap: (index) {
-              if (index == controller.selectedTab.value) {
+              if (index == 2) {
+                showCustomSheet(
+                    context: context, child: const AddOptionsSheet());
+              } else if (index == controller.selectedTab.value) {
                 items[index]
                     .navigatorkey
                     ?.currentState

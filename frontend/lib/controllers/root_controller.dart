@@ -27,6 +27,7 @@ class RootController extends GetxController {
   ];
   final mapNavigatorKey = GlobalKey<NavigatorState>();
   final feedsNavigatorKey = GlobalKey<NavigatorState>();
+  final addNavigatorKey = GlobalKey<NavigatorState>();
   final conversationsNavigatorKey = GlobalKey<NavigatorState>();
   final notificationsNavigatorKey = GlobalKey<NavigatorState>();
 
