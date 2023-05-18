@@ -1,4 +1,6 @@
-import cloudinary from "cloudinary";
+import cloudinary, { UploadApiErrorResponse } from "cloudinary";
+import { GraphQLError } from "graphql/error/GraphQLError";
+
 export async function uploadImage(folder: string, photo: string) {
   cloudinary.v2.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -12,6 +14,7 @@ export async function uploadImage(folder: string, photo: string) {
     });
     return result;
   } catch (e: any) {
-    return `Image could not be uploaded:${e.message}`;
+    throw new GraphQLError(e?.message);
+    return `Image could not be uploaded: ${e.message}`;
   }
 }

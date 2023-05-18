@@ -7,6 +7,7 @@ void showToast(String message) => Get.rawSnackbar(
       snackPosition: SnackPosition.top,
       backgroundColor: AppColors.customBlack,
       borderRadius: 14,
+      duration: const Duration(seconds: 2),
       barBlur: 10,
       overlayBlur: 2,
       shouldIconPulse: false,

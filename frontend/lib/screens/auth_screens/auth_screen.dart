@@ -216,10 +216,7 @@ class AuthScreen extends GetView<AuthController> {
                                     result,
                                   ),
 
-                                  // LoadingAnimationWidget.staggeredDotsWave(
-                                  //   color: AppColors.primaryYellow,
-                                  //   size: 35.sp,
-                                  // );
+                                  
                                 ),
                         );
                       },

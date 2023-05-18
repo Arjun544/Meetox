@@ -66,7 +66,7 @@
 
 
 
-import '../core/imports/core_imports.dart';
+import 'package:frontend/core/imports/core_imports.dart';
 
 class DrawerScreen extends StatelessWidget {
   const DrawerScreen({super.key});

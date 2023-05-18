@@ -1,15 +1,13 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:frontend/controllers/global_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/core/instances.dart';
+import 'package:frontend/helpers/convert_base64_image.dart';
 import 'package:frontend/helpers/get_asset_image.dart';
 import 'package:frontend/helpers/move_cursor.dart';
 import 'package:frontend/services/secure_storage_service.dart';
-
-import '../helpers/convert_base64_image.dart';
 
 class AddProfileController extends GetxController
     with GetTickerProviderStateMixin {
@@ -18,7 +16,6 @@ class AddProfileController extends GetxController
 
   final PageController pageController = PageController();
   late TabController tabController;
-  final RxBool isLoading = false.obs;
   final RxInt selectedTab = 0.obs;
 
   final RxString currentLoginProvider = ''.obs;
@@ -75,7 +72,7 @@ class AddProfileController extends GetxController
     }
   }
 
-  Future<void> handleSubmit() async {
+  Future<void> handleSubmit(dynamic runMutation) async {
     String? base64Profile;
     if (socialProfile.value.isEmpty &&
         capturedImage.value.path.isEmpty &&
@@ -99,19 +96,19 @@ class AddProfileController extends GetxController
       log('Avatar Imageg called');
 
       final imageFromAsset = await getImageFileFromAssets(
-          globalController.userAvatars[selectedAvatar.value],);
+        globalController.userAvatars[selectedAvatar.value],
+      );
       log(imageFromAsset.path);
 
       base64Profile = convertIntoBase64Image(imageFromAsset.path);
     }
 
-    final userProfile = <String, dynamic>{
+
+    runMutation({
       'name': nameController.text.trim(),
       'birthDate': birthDate.value.toUtc().toString(),
       'profile':
           socialProfile.value.isNotEmpty ? socialProfile.value : base64Profile,
-    };
-
-    // await UserServices.addProfile(isLoading: isLoading,profile: userProfile);
+    });
   }
 }

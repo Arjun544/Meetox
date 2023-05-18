@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:frontend/controllers/add_profile_controller.dart';
-
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/utils/constants.dart';
@@ -22,7 +21,7 @@ class StepThree extends GetView<AddProfileController> {
               SlideInLeft(
                 child: Text(
                   'Your Birth day',
-                  style: context.theme.textTheme.headlineLarge,
+                  style: context.theme.textTheme.titleLarge,
                 ),
               ),
               SmoothPageIndicator(
@@ -38,7 +37,7 @@ class StepThree extends GetView<AddProfileController> {
               ),
             ],
           ),
-          SizedBox(height: 25.sp),
+          SizedBox(height: 15.sp),
           SlideInLeft(
             delay: const Duration(milliseconds: 500),
             from: 300,
@@ -58,11 +57,12 @@ class StepThree extends GetView<AddProfileController> {
               ),
               child: CupertinoDatePicker(
                 mode: CupertinoDatePickerMode.date,
-                initialDateTime:
-                    DateTime.now().subtract(const Duration(days: 2922)), // 8 years
-                maximumDate: DateTime.now().subtract(const Duration(days: 2922)),
-                minimumDate:
-                    DateTime.now().subtract(const Duration(days: 36525)), // 100 years
+                initialDateTime: DateTime.now()
+                    .subtract(const Duration(days: 2922)), // 8 years
+                maximumDate:
+                    DateTime.now().subtract(const Duration(days: 2922)),
+                minimumDate: DateTime.now()
+                    .subtract(const Duration(days: 36525)), // 100 years
                 dateOrder: DatePickerDateOrder.dmy,
                 onDateTimeChanged: (date) => controller.birthDate.value = date,
               ),

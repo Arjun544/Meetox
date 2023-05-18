@@ -1,11 +1,10 @@
+import { UploadApiResponse } from "cloudinary";
 import { IncomingMessage } from "http";
 import User from "../../models/user_model";
+import { uploadImage } from "../../services/storage_services";
 import { decodeToken } from "../../services/token_services";
 import { IUser } from "../../utils/interfaces/user";
 import { GraphQLContext } from "../../utils/types";
-import { uploadImage } from "../../services/storage_services";
-import { UploadApiResponse } from "cloudinary";
-import { GraphQLError } from "graphql";
 
 const resolvers = {
   Mutation: {
@@ -20,13 +19,9 @@ const resolvers = {
       );
 
       const response: UploadApiResponse = results as UploadApiResponse;
-      const error: string = results as string;
 
-      if (error) {
-        throw new GraphQLError(error);
-      }
       const user: IUser | null = await User.findByIdAndUpdate(
-        { id: id },
+        id,
         {
           name,
           birthDate,
