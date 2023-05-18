@@ -3,6 +3,7 @@ import gql from "graphql-tag";
 const typeDefs = gql`
   scalar Date
   scalar IUser
+  scalar ILocation
 
   type Query {
     getUser: IUser
@@ -10,6 +11,23 @@ const typeDefs = gql`
 
   type Mutation {
     addProfile(name: String!, birthDate: String!, profile: String!): IUser
+  }
+
+  type Mutation {
+    updateLocation(location: LocationInput!): Boolean
+  }
+
+  type Subscription {
+    locationUpdated: ILocation!
+  }
+
+  input LocationInput {
+    address: String
+    coordinates: [Float]
+  }
+  type LocationResponse {
+    address: String
+    coordinates: [Float]
   }
 `;
 

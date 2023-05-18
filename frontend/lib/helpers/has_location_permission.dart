@@ -77,7 +77,6 @@ Future<bool> hasLocationPermission() async {
         ),
       ),
     );
-
     log('Location permission: No service available');
     return false;
   }

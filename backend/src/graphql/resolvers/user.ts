@@ -1,4 +1,5 @@
 import { UploadApiResponse } from "cloudinary";
+import { withFilter } from "graphql-subscriptions/dist/with-filter";
 import { IncomingMessage } from "http";
 import User from "../../models/user_model";
 import { uploadImage } from "../../services/storage_services";
@@ -35,6 +36,26 @@ const resolvers = {
 
       return user;
     },
+    updateLocation: async (_: any, args: any, context: GraphQLContext) => {
+      const { req, pubsub } = context;
+      const { location } = args;
+      const { id, token } = decodeToken(req as IncomingMessage);
+      const { address, coordinates } = location;
+
+      const user: IUser | null = await User.findByIdAndUpdate(
+        id,
+        {
+          location: location,
+        },
+        { new: true }
+      );
+
+      pubsub.publish("LOCATION_UPDATED", {
+        locationUpdated: user?.location,
+      });
+
+      return true;
+    },
   },
   Query: {
     getUser: async (_: any, args: any, context: GraphQLContext) => {
@@ -46,6 +67,20 @@ const resolvers = {
       );
 
       return user;
+    },
+  },
+  Subscription: {
+    locationUpdated: {
+      subscribe: withFilter(
+        (_: any, __: any, context: GraphQLContext) => {
+          const { pubsub } = context;
+
+          return pubsub.asyncIterator(["LOCATION_UPDATED"]);
+        },
+        (payload: any, _, context: GraphQLContext) => {
+          return true;
+        }
+      ),
     },
   },
 };

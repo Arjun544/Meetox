@@ -6,21 +6,21 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 class UserController extends GetxController {
   @override
   void onInit() {
-    final userSubscription = graphqlClient!.value.subscribe(
+    final locationSubscription = graphqlClient!.value.subscribe(
       SubscriptionOptions(
-        document: gql(userUpdated),
-        parserFn: (data) {
-          return User.fromJson(data);
-        },
+        document: gql(locationUpdated),
+        // parserFn: (data) {
+        //   return User.fromJson(data);
+        // },
       ),
     )..listen((result) {
         if (result.hasException) {
           logError(result.exception.toString());
           return;
         } else {
-          logSuccess('user subscription: ${result.data}');
-          currentUser.value = result.parsedData!;
-          currentUser.refresh();
+          logSuccess('location subscription: ${result.data}');
+          // currentUser.value.location = result.data!;
+          // currentUser.refresh();
         }
       });
 

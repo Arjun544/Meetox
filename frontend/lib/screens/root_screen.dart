@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:frontend/controllers/root_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/widgets/custom_drawer.dart';
 import 'package:frontend/widgets/navigation_bar.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class DrawerScreen extends GetView<RootController> {
   const DrawerScreen({super.key});
@@ -28,8 +31,39 @@ class DrawerScreen extends GetView<RootController> {
   }
 }
 
-class RootScreen extends GetView<RootController> {
+class RootScreen extends StatefulWidget {
   const RootScreen({super.key});
+
+  @override
+  State<RootScreen> createState() => _RootScreenState();
+}
+
+class _RootScreenState extends State<RootScreen> with WidgetsBindingObserver {
+  final RootController controller = Get.find();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeDependencies();
+    if (state == AppLifecycleState.resumed) {
+      log('app resumed');
+      appResumedOperations();
+    }
+  }
+
+  Future<void> appResumedOperations() async {
+    if (await Permission.location.serviceStatus.isEnabled &&
+        await Permission.location.status == PermissionStatus.granted) {
+      await controller.getLocation();
+    }
+  }
+
+  void appInactiveOperations() {}
 
   @override
   Widget build(BuildContext context) {

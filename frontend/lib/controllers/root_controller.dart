@@ -8,6 +8,7 @@ import 'package:frontend/helpers/has_location_permission.dart';
 import 'package:frontend/screens/conversation_screen/conversation_screen.dart';
 import 'package:frontend/screens/feed_screen/feed_screen.dart';
 import 'package:frontend/screens/notification_screen/notification_screen.dart';
+import 'package:frontend/services/user_services.dart';
 
 class RootController extends GetxController {
   final ZoomDrawerController zoomDrawerController = ZoomDrawerController();
@@ -42,17 +43,12 @@ class RootController extends GetxController {
   ).obs;
 
   @override
-  void onInit() {
-    getLocation();
+  Future<void> onInit() async {
+    await getLocation();
     super.onInit();
   }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
-
-  Future<bool> getLocationPermissions() async => await hasLocationPermission();
+  Future<bool> getLocationPermissions() async => hasLocationPermission();
 
   Future<void> getLocation() async {
     final hasPermission = await getLocationPermissions();
@@ -82,6 +78,13 @@ class RootController extends GetxController {
             '${placemarks[0].administrativeArea}, ${placemarks[0].isoCountryCode}';
 
         log('Updated Address');
+        await UserServices.updateUserLocation(
+          address: address,
+          coordinates: [
+            currentPosition.value.latitude,
+            currentPosition.value.longitude
+          ],
+        );
         // await UserServices.addLocation(
         //   address: address,
         //   latitude: currentPosition.value.latitude,
