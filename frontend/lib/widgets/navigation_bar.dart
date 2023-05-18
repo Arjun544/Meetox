@@ -1,6 +1,7 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:frontend/controllers/root_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
+import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/widgets/lazyload_stack.dart';
 
 class CustomBottomNavigationBar extends GetView<RootController> {
@@ -39,6 +40,15 @@ class CustomBottomNavigationBar extends GetView<RootController> {
                 )
                 .toList(),
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: AppColors.primaryYellow,
+          child: Icon(
+            FlutterRemix.add_fill,
+            size: 25.sp,
+            color: Colors.white,
+          ),
+          onPressed: () {},
         ),
         bottomNavigationBar: Obx(
           () => CustomNavigationBar(
