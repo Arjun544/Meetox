@@ -2,7 +2,7 @@ import { ApolloServer } from "@apollo/server";
 import { expressMiddleware } from "@apollo/server/express4";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { makeExecutableSchema } from "@graphql-tools/schema";
-import { json } from "body-parser";
+import bodyParser, { json } from "body-parser";
 import cors from "cors";
 import * as dotenv from "dotenv";
 import express from "express";
@@ -106,7 +106,9 @@ const main = async () => {
   app.use(
     "/graphql",
     cors<cors.CorsRequest>(corsOptions),
-    json(),
+    json({
+      limit: '10mb',
+    }),
     expressMiddleware(server, {
       context: async ({ req }): Promise<GraphQLContext> => {
         return { req, pubsub };

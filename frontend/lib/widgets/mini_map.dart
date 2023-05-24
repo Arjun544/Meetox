@@ -12,6 +12,7 @@ class MiniMap extends GetView<MapScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(MapScreenController());
     return Obx(
       () => FlutterMap(
         options: MapOptions(
