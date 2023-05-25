@@ -27,6 +27,7 @@ class CustomBottomNavigationBar extends GetView<RootController> {
         }
       },
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         body: Obx(
           () => LazyLoadIndexedStack(
             index: controller.selectedTab.value,

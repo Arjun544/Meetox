@@ -6,6 +6,7 @@ import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/core/instances.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/screens/splash_screen.dart';
+import 'package:frontend/services/secure_storage_service.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 void main() async {

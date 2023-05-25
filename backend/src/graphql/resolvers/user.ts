@@ -6,6 +6,7 @@ import { uploadImage } from "../../services/storage_services";
 import { decodeToken } from "../../services/token_services";
 import { IUser } from "../../utils/interfaces/user";
 import { GraphQLContext } from "../../utils/types";
+import { nearbyUsers } from "../../services/user_services";
 
 const resolvers = {
   Mutation: {
@@ -62,10 +63,18 @@ const resolvers = {
       const { id, token } = decodeToken(req as IncomingMessage);
 
       const user: IUser | null = await User.findById(id).select(
-        "email name display_pic isPremium location createdAt"
+        "email name birthDay display_pic isPremium location createdAt"
       );
 
       return user;
+    },
+    getNearByUsers: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { latitude, longitude, distanceInKM, followers } = args;
+      const { id, token } = decodeToken(req as IncomingMessage);
+
+      const users = await nearbyUsers(id as String, latitude, longitude, distanceInKM, followers);
+      return users;
     },
   },
   Subscription: {

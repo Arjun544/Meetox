@@ -7,6 +7,9 @@ import 'package:frontend/screens/map_screen/components/custom_tile_layer.dart';
 import 'package:frontend/screens/map_screen/components/main_filters.dart';
 import 'package:frontend/widgets/top_bar.dart';
 
+import 'components/current_user_layer.dart';
+import 'components/users_cluster_layer.dart';
+
 class MapScreen extends GetView<MapScreenController> {
   const MapScreen({super.key});
 
@@ -56,9 +59,9 @@ class MapScreen extends GetView<MapScreenController> {
               children: controller.currentMainFilter.value == 'All'
                   ? [
                       const CustomTileLayer(),
-                      // const CurrentUserLayer(),
+                      const CurrentUserLayer(),
                       // const CirclesClusterlayer(),
-                      // const UsersClusterlayer(),
+                      const UsersClusterlayer(),
                       // const FollowersClusterlayer(),
                       // const QuestionsClusterlayer(),
                     ]

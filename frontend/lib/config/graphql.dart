@@ -9,7 +9,7 @@ Future<void> graphqlInit() async {
 
   final httpLink = HttpLink(
     // 'http://192.168.1.181:4000/graphql',
-    'http://192.168.0.32:4000/graphql',
+    'http://192.168.43.29:4000/graphql',
   );
   final token = await SecureStorageServices.readValue(key: 'accessToken');
 
@@ -23,7 +23,7 @@ Future<void> graphqlInit() async {
 
     final websocketLink = WebSocketLink(
       // 'ws://192.168.1.181:4000/graphql/subscriptions',
-      'ws://192.168.0.32:4000/graphql/subscriptions',
+      'ws://192.168.43.29:4000/graphql/subscriptions',
       config: SocketClientConfig(
         initialPayload: {
           'token': token,

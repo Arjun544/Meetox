@@ -8,6 +8,14 @@ const typeDefs = gql`
   type Query {
     getUser: IUser
   }
+  type Query {
+    getNearByUsers(
+      latitude: Float!
+      longitude: Float!
+      distanceInKM: Float!
+      followers: [String!]!
+    ): [IUser]
+  }
 
   type Mutation {
     addProfile(name: String!, birthDate: String!, profile: String!): IUser
