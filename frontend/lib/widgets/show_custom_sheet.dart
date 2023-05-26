@@ -2,8 +2,14 @@ import 'dart:ui';
 
 import 'package:frontend/core/imports/core_imports.dart';
 
-Future<void> Function({required BuildContext context, required Widget child})
-    showCustomSheet = ({required BuildContext context, required Widget child}) {
+Future<void> Function({
+  required BuildContext context,
+  required Widget child,
+  bool hasBlur,
+}) showCustomSheet = (
+    {required BuildContext context,
+    required Widget child,
+    bool hasBlur = true}) {
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -19,8 +25,8 @@ Future<void> Function({required BuildContext context, required Widget child})
       onTap: Get.back,
       child: BackdropFilter(
         filter: ImageFilter.blur(
-          sigmaX: 4,
-          sigmaY: 4,
+          sigmaX: hasBlur ? 4 : 0,
+          sigmaY: hasBlur ? 4 : 0,
         ),
         child: SizedBox(
           child: child,

@@ -1,28 +1,27 @@
-import 'dart:developer';
-
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/models/user_model.dart';
 import 'package:frontend/utils/constants.dart';
 
 class CustomMarker extends HookWidget {
   const CustomMarker({
-    required this.image,
     required this.color,
+    required this.user,
     required this.onPressed,
     super.key,
     this.isQuestionMarker = false,
   });
-  final String image;
+  final User user;
   final Color color;
   final bool isQuestionMarker;
-  final void Function(ValueNotifier<bool>)? onPressed;
+  final void Function(ValueNotifier<User>)? onPressed;
 
   @override
   Widget build(BuildContext context) {
-    final isTapped = useState(false);
+    final tappedUser = useState(User());
 
     return AnimatedScale(
-      scale: isTapped.value ? 1.7 : 1,
+      scale: tappedUser.value.id != null ? 1.7 : 1,
       duration: const Duration(milliseconds: 400),
       child: Stack(
         clipBehavior: Clip.none,
@@ -30,10 +29,8 @@ class CustomMarker extends HookWidget {
         children: [
           InkWell(
             onTap: () {
-              log('sss : ${isTapped.value}');
-              isTapped.value = !isTapped.value;
-
-              onPressed!(isTapped);
+              tappedUser.value = user;
+              onPressed!(tappedUser);
             },
             child: !isQuestionMarker
                 ? Container(
@@ -49,7 +46,9 @@ class CustomMarker extends HookWidget {
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         image: CachedNetworkImageProvider(
-                          image == '' ? profilePlaceHolder : image,
+                          user.displayPic!.profile!.isEmpty
+                              ? profilePlaceHolder
+                              : user.displayPic!.profile!,
                         ),
                       ),
                     ),

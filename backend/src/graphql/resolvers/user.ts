@@ -63,7 +63,7 @@ const resolvers = {
       const { id, token } = decodeToken(req as IncomingMessage);
 
       const user: IUser | null = await User.findById(id).select(
-        "email name birthDay display_pic isPremium location createdAt"
+        "email name birthDay display_pic isPremium location createdAt followers followings"
       );
 
       return user;

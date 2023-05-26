@@ -1,5 +1,7 @@
 import { Schema, model } from "mongoose";
 import { ICircle } from "../utils/interfaces/circle";
+import paginate from "mongoose-paginate-v2";
+
 
 const circleSchema = new Schema(
   {
@@ -68,6 +70,6 @@ circleSchema.set("toJSON", {
   virtuals: true,
 });
 
-// userSchema.plugin(paginate);
+circleSchema.plugin(paginate);
 
 export default model<ICircle>("Circles", circleSchema);

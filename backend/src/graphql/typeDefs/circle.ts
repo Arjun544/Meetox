@@ -5,9 +5,18 @@ const typeDefs = gql`
   scalar ICircle
   scalar ILocation
 
-  #   type Query {
-  #     getUser: IUser
-  #   }
+  # type Query {
+  #   getNearByCircles(
+  #     latitude: Float!
+  #     longitude: Float!
+  #     distanceInKM: Float!
+  #     followers: [String!]!
+  #   ): [IUser]
+  # }
+
+  type Query {
+    userCircles(page: Int!, limit: Int!): CirclesResponse
+  }
 
   type Mutation {
     addCircle(
@@ -19,6 +28,17 @@ const typeDefs = gql`
       members: [String]!
       location: ILocation
     ): ICircle
+  }
+
+  type CirclesResponse {
+    page: Int
+    nextPage: Int
+    prevPage: Int
+    hasNextPage: Boolean
+    hasPrevPage: Boolean
+    total_pages: Int
+    total_results: Int
+    circles: [ICircle]
   }
 `;
 

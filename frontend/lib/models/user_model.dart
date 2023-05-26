@@ -74,6 +74,8 @@ class User {
     this.isPremium,
     this.createdAt,
     this.userId,
+    this.followers,
+    this.followings,
   });
 
   factory User.fromRawJson(String str) => User.fromJson(
@@ -97,6 +99,8 @@ class User {
             ? null
             : DateTime.parse(json['createdAt'] as String),
         userId: json['id'] as String,
+        followers: json['followers'] as List<dynamic>,
+        followings: json['followings'] as List<dynamic>,
       );
   Location? location;
   String? id;
@@ -106,6 +110,8 @@ class User {
   bool? isPremium;
   DateTime? createdAt;
   String? userId;
+  List<dynamic>? followers;
+  List<dynamic>? followings;
 
   String toRawJson() => json.encode(toJson());
 

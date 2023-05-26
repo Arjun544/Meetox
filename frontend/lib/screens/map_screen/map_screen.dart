@@ -1,22 +1,37 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/graphql/user/queries.dart';
+import 'package:frontend/models/user_model.dart';
+import 'package:frontend/screens/map_screen/components/current_user_layer.dart';
 import 'package:frontend/screens/map_screen/components/custom_tile_layer.dart';
 import 'package:frontend/screens/map_screen/components/main_filters.dart';
+import 'package:frontend/screens/map_screen/components/users_cluster_layer.dart';
 import 'package:frontend/widgets/top_bar.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'components/current_user_layer.dart';
-import 'components/users_cluster_layer.dart';
-
-class MapScreen extends GetView<MapScreenController> {
+class MapScreen extends HookWidget {
   const MapScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Get.put(MapScreenController());
-    controller.mapController = MapController();
+    final controller = Get.put(MapScreenController())
+      ..mapController = MapController();
+
+    final userResult = useQuery(
+      QueryOptions(
+        document: gql(getNearByUsers),
+        variables: {
+          'latitude': currentUser.value.location!.coordinates![0],
+          'longitude': currentUser.value.location!.coordinates![1],
+          'distanceInKM': currentUser.value.isPremium! ? 600 : 300,
+          'followers': const [],
+        },
+      ),
+    );
 
     return Scaffold(
       body: Stack(
@@ -61,7 +76,13 @@ class MapScreen extends GetView<MapScreenController> {
                       const CustomTileLayer(),
                       const CurrentUserLayer(),
                       // const CirclesClusterlayer(),
-                      const UsersClusterlayer(),
+                      UsersClusterlayer(
+                        userResult.result.data!['getNearByUsers']
+                            .map<User>(
+                              (user) => User.fromRawJson(json.encode(user)),
+                            )
+                            .toList() as List<User>,
+                      ),
                       // const FollowersClusterlayer(),
                       // const QuestionsClusterlayer(),
                     ]
@@ -140,28 +161,26 @@ class MapScreen extends GetView<MapScreenController> {
           Positioned(
             left: 15,
             bottom: 115.sp,
-            child: Obx(
-              () => controller.isLoading.value
-                  ? Container(
-                      height: 50.sp,
-                      width: 50.sp,
-                      padding: EdgeInsets.symmetric(horizontal: 15.sp),
-                      decoration: BoxDecoration(
-                        color: AppColors.primaryYellow.withOpacity(0.6),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: LoadingAnimationWidget.staggeredDotsWave(
-                        color: AppColors.customBlack,
-                        size: 20.sp,
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
+            child: userResult.result.isLoading
+                ? Container(
+                    height: 50.sp,
+                    width: 50.sp,
+                    padding: EdgeInsets.symmetric(horizontal: 15.sp),
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryYellow.withOpacity(0.6),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: AppColors.customBlack,
+                      size: 20.sp,
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ),
         ],
       ),
       floatingActionButton: Padding(
-        padding: EdgeInsets.only(bottom: Platform.isIOS ? 70.sp : 80.sp),
+        padding: EdgeInsets.only(bottom: Platform.isIOS ? 100.sp : 80.sp),
         child: Obx(
           () => !controller.isDraggingMap.value
               ? SlideInRight(

@@ -1,17 +1,20 @@
 import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/helpers/get_distance.dart';
 import 'package:frontend/models/user_model.dart';
+import 'package:frontend/utils/constants.dart';
+import 'package:frontend/widgets/online_indicator.dart';
 
 class UserDetailsSheet extends HookWidget {
-  const UserDetailsSheet(this.user, this.isMarkerTapped, {super.key});
+  const UserDetailsSheet(this.user, this.tappedUser, {super.key});
   final User user;
-  final ValueNotifier<bool> isMarkerTapped;
+  final Rx<User> tappedUser;
 
   @override
   Widget build(BuildContext context) {
-    final MapScreenController controller = Get.find();
-    // final ValueNotifier<int> followers = useState(user.followers!.length);
+    final controller = Get.find<MapScreenController>();
+    final followers = useState(user.followers!.length);
 
     // final followMutation = useMutation(job: FollowersQueries.followMutation);
     // final unfollowMutation =
@@ -19,19 +22,19 @@ class UserDetailsSheet extends HookWidget {
 
     // final ValueNotifier<bool> isFetchingConversations = useState(false);
 
-    // final double currentLatitude =
-    //     controller.rootController.currentPosition.value.latitude;
-    // final double currentLongitude =
-    //     controller.rootController.currentPosition.value.longitude;
-    // final double userLatitude = user.location!.coordinates![0];
-    // final double userLongitude = user.location!.coordinates![1];
+    final currentLatitude =
+        controller.rootController.currentPosition.value.latitude;
+    final currentLongitude =
+        controller.rootController.currentPosition.value.longitude;
+    final userLatitude = user.location!.coordinates![0];
+    final userLongitude = user.location!.coordinates![1];
 
-    // final double distanceBtw = getDistance(
-    //   currentLatitude,
-    //   currentLongitude,
-    //   userLatitude,
-    //   userLongitude,
-    // );
+    final distanceBtw = getDistance(
+      currentLatitude,
+      currentLongitude,
+      userLatitude,
+      userLongitude,
+    );
 
     // Future handleFollow() async {
     //   await followMutation.mutateAsync({
@@ -63,29 +66,28 @@ class UserDetailsSheet extends HookWidget {
     // }
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // controller.animatedMapMove(
-      //   LatLng(
-      //     userLatitude,
-      //     userLongitude,
-      //   ),
-      //   14,
-      // );
+      controller.animatedMapMove(
+        LatLng(
+          user.location!.coordinates![0],
+          user.location!.coordinates![1],
+        ),
+        14,
+      );
     });
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
         controller.isFiltersVisible.value = true;
-        isMarkerTapped.value = false;
-        Get.back();
+        tappedUser.value = User();
+        Navigator.pop(context);
       },
       child: Container(
         height: Get.height,
         width: Get.width,
         color: Colors.transparent,
         child: Container(
-          height: Get.height * 0.4,
           width: Get.width,
-          margin: EdgeInsets.only(top: Get.height * 0.6),
+          margin: EdgeInsets.only(top: Get.height * 0.55),
           decoration: BoxDecoration(
             color: context.theme.scaffoldBackgroundColor,
             borderRadius: BorderRadius.circular(30),
@@ -119,81 +121,82 @@ class UserDetailsSheet extends HookWidget {
                           width: 50,
                           height: 60,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            // child: CachedNetworkImage(
-                            //   imageUrl: user.displayPic!.profile == ''
-                            //       ? profilePlaceHolder
-                            //       : user.displayPic!.profile!,
-                            //   fit: BoxFit.cover,
-                            // ),
+                            borderRadius: BorderRadius.circular(30),
+                            child: CachedNetworkImage(
+                              imageUrl: user.displayPic!.profile!.isEmpty
+                                  ? profilePlaceHolder
+                                  : user.displayPic!.profile!,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                        // OnlineIndicator(
-                        //   id: user.id!,
-                        // ),
+                        OnlineIndicator(
+                          id: user.id!,
+                        ),
                       ],
                     ),
                   ),
-                  // title: Text(
-                  //   user.name == '' ? 'Unknown' : user.name!.capitalize!,
-                  //   style: context.theme.textTheme.headline3,
-                  // ),
-                  // subtitle: Text(
-                  //   user.location?.address?.capitalize ?? 'Unknown',
-                  //   style: context.theme.textTheme.headline6!.copyWith(
-                  //     color: Colors.grey,
-                  //   ),
-                  // ),
+                  title: Text(
+                    user.name == '' ? 'Unknown' : user.name!.capitalize!,
+                    style: context.theme.textTheme.labelMedium,
+                  ),
+                  subtitle: Text(
+                    user.location?.address?.capitalize ?? 'Unknown',
+                    style: context.theme.textTheme.labelSmall!.copyWith(
+                      color: Colors.grey,
+                    ),
+                  ),
                   trailing: Padding(
                     padding: const EdgeInsets.only(right: 16),
-                    child:  InkWell(
-                        onTap: () async {},
-                        // currentUser.value.followings!.contains(user.id)
-                        //     ? await handleUnfollow()
-                        //     : await handleFollow(),
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            color: AppColors.primaryYellow,
-                            borderRadius: BorderRadius.circular(10),
+                    child: InkWell(
+                      onTap: () async {},
+                      // currentUser.value.followings!.contains(user.id)
+                      //     ? await handleUnfollow()
+                      //     : await handleFollow(),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryYellow,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.sp,
+                            vertical: 6.sp,
                           ),
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 20.sp, vertical: 6.sp),
-                            child: true == true
-                                ? LoadingAnimationWidget.staggeredDotsWave(
-                                    color: AppColors.customBlack,
-                                    size: 20.sp,
-                                  )
-                                : const Row(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      // Icon(
-                                      //   currentUser.value.followings!
-                                      //           .contains(user.id)
-                                      //       ? FlutterRemix.user_unfollow_fill
-                                      //       : FlutterRemix.user_add_fill,
-                                      //   size: 16.sp,
-                                      //   color: context.theme.iconTheme.color,
-                                      // ),
-                                      SizedBox(width: 8),
-                                      // Text(
-                                      //   currentUser.value.followings!
-                                      //           .contains(user.id)
-                                      //       ? 'Unfollow'
-                                      //       : 'Follow',
-                                      //   style:
-                                      //       context.theme.textTheme.headline6,
-                                      // ),
-                                    ],
-                                  ),
-                          ),
+                          child: true == true
+                              ? LoadingAnimationWidget.staggeredDotsWave(
+                                  color: AppColors.customBlack,
+                                  size: 20.sp,
+                                )
+                              : const Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    // Icon(
+                                    //   currentUser.value.followings!
+                                    //           .contains(user.id)
+                                    //       ? FlutterRemix.user_unfollow_fill
+                                    //       : FlutterRemix.user_add_fill,
+                                    //   size: 16.sp,
+                                    //   color: context.theme.iconTheme.color,
+                                    // ),
+                                    SizedBox(width: 8),
+                                    // Text(
+                                    //   currentUser.value.followings!
+                                    //           .contains(user.id)
+                                    //       ? 'Unfollow'
+                                    //       : 'Follow',
+                                    //   style:
+                                    //       context.theme.textTheme.headline6,
+                                    // ),
+                                  ],
+                                ),
                         ),
                       ),
                     ),
                   ),
                 ),
-              
-              const SizedBox(height: 10),
+              ),
+              SizedBox(height: 10.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -208,10 +211,10 @@ class UserDetailsSheet extends HookWidget {
                     },
                     child: Column(
                       children: [
-                        // Text(
-                        //   followers.value.toString(),
-                        //   style: context.theme.textTheme.labelMedium,
-                        // ),
+                        Text(
+                          followers.value.toString(),
+                          style: context.theme.textTheme.labelMedium,
+                        ),
                         Text(
                           'Followers',
                           style: context.theme.textTheme.labelSmall!
@@ -230,12 +233,12 @@ class UserDetailsSheet extends HookWidget {
                     },
                     child: Column(
                       children: [
-                        // Text(
-                        //   user.followings!.length.toString(),
-                        //   style: context.theme.textTheme.labelMedium,
-                        // ),
                         Text(
-                          'followings',
+                          user.followings!.length.toString(),
+                          style: context.theme.textTheme.labelMedium,
+                        ),
+                        Text(
+                          'Followings',
                           style: context.theme.textTheme.labelSmall!
                               .copyWith(color: Colors.grey),
                         ),
@@ -255,7 +258,7 @@ class UserDetailsSheet extends HookWidget {
                       child: Container(
                         height: 45.sp,
                         decoration: BoxDecoration(
-                          color: context.theme.scaffoldBackgroundColor,
+                          color: context.theme.bottomSheetTheme.backgroundColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -266,10 +269,10 @@ class UserDetailsSheet extends HookWidget {
                               size: 22.sp,
                               color: context.theme.iconTheme.color,
                             ),
-                            // Text(
-                            //   '~ ${distanceBtw.toStringAsFixed(0)} KMs',
-                            //   style: context.theme.textTheme.labelSmall,
-                            // ),
+                            Text(
+                              '~ ${distanceBtw.toStringAsFixed(0)} KMs',
+                              style: context.theme.textTheme.labelSmall,
+                            ),
                           ],
                         ),
                       ),
@@ -317,24 +320,15 @@ class UserDetailsSheet extends HookWidget {
                           height: 45.sp,
                           width: 50.sp,
                           decoration: BoxDecoration(
-                            color: context.theme.scaffoldBackgroundColor,
+                            color:
+                                context.theme.bottomSheetTheme.backgroundColor,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          // child: isFetchingConversations.value
-                          //     ? Row(
-                          //         mainAxisAlignment: MainAxisAlignment.center,
-                          //         children: [
-                          //           LoadingAnimationWidget.staggeredDotsWave(
-                          //             color: AppColors.primaryYellow,
-                          //             size: 20.sp,
-                          //           ),
-                          //         ],
-                          //       )
-                          //     : Icon(
-                          //         FlutterRemix.chat_smile_2_fill,
-                          //         size: 22.sp,
-                          //         color: context.theme.iconTheme.color,
-                          //       ),
+                          child: Icon(
+                            FlutterRemix.chat_smile_2_fill,
+                            size: 22.sp,
+                            color: context.theme.iconTheme.color,
+                          ),
                         ),
                       ),
                     ),
@@ -343,7 +337,7 @@ class UserDetailsSheet extends HookWidget {
                       child: Container(
                         height: 45.sp,
                         decoration: BoxDecoration(
-                          color: context.theme.scaffoldBackgroundColor,
+                          color: context.theme.bottomSheetTheme.backgroundColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(

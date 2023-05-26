@@ -4,6 +4,7 @@ import 'package:frontend/controllers/root_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/widgets/custom_drawer.dart';
+import 'package:frontend/widgets/lazyload_stack.dart';
 import 'package:frontend/widgets/navigation_bar.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -36,8 +37,11 @@ class RootScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ignore: omit_local_variable_types
-    final RootController controller = Get.find();
+    SystemChrome.setSystemUIOverlayStyle(
+      context.theme.appBarTheme.systemOverlayStyle!,
+    );
+
+    final controller = Get.put(RootController());
 
     final appLifecycleState = useAppLifecycleState();
 
@@ -62,39 +66,16 @@ class RootScreen extends HookWidget {
       },
       [appLifecycleState],
     );
-    return CustomBottomNavigationBar(
-      items: [
-        NavItem(
-          tab: controller.items[0],
-          icon: IconsaxBold.map_1,
-          title: 'Map',
-          navigatorkey: controller.mapNavigatorKey,
+
+    return Scaffold(
+      extendBody: true,
+      body: Obx(
+        () => LazyLoadIndexedStack(
+          index: controller.selectedTab.value,
+          children: controller.items,
         ),
-        NavItem(
-          tab: controller.items[1],
-          icon: FlutterRemix.fire_fill,
-          title: 'Feeds',
-          navigatorkey: controller.feedsNavigatorKey,
-        ),
-        NavItem(
-          tab: controller.items[2],
-          icon: FlutterRemix.add_fill,
-          title: 'Add',
-          navigatorkey: controller.addNavigatorKey,
-        ),
-        NavItem(
-          tab: controller.items[3],
-          icon: IconsaxBold.message,
-          title: 'Conversations',
-          navigatorkey: controller.conversationsNavigatorKey,
-        ),
-        NavItem(
-          tab: controller.items[4],
-          icon: IconsaxBold.notification,
-          title: 'Notifications',
-          navigatorkey: controller.notificationsNavigatorKey,
-        ),
-      ],
+      ),
+      bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
 }

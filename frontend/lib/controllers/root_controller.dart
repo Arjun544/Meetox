@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_zoom_drawer/config.dart';
+import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/core/instances.dart';
@@ -10,8 +11,6 @@ import 'package:frontend/screens/feed_screen/feed_screen.dart';
 import 'package:frontend/screens/map_screen/map_screen.dart';
 import 'package:frontend/screens/notification_screen/notification_screen.dart';
 import 'package:frontend/services/user_services.dart';
-
-import 'map_controller.dart';
 
 class RootController extends GetxController {
   final ZoomDrawerController zoomDrawerController = ZoomDrawerController();
@@ -25,11 +24,6 @@ class RootController extends GetxController {
     const ConversationScreen(),
     const NotificationScreen(),
   ];
-  final mapNavigatorKey = GlobalKey<NavigatorState>();
-  final feedsNavigatorKey = GlobalKey<NavigatorState>();
-  final addNavigatorKey = GlobalKey<NavigatorState>();
-  final conversationsNavigatorKey = GlobalKey<NavigatorState>();
-  final notificationsNavigatorKey = GlobalKey<NavigatorState>();
 
   Rx<LatLngBounds> mapBounds = LatLngBounds(LatLng(0, 0), LatLng(0, 0)).obs;
   Rx<LocationPermission> locationPermission = LocationPermission.denied.obs;

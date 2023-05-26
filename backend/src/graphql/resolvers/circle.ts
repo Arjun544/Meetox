@@ -6,6 +6,7 @@ import { uploadImage } from "../../services/storage_services";
 import { decodeToken } from "../../services/token_services";
 import { ICircle } from "../../utils/interfaces/circle";
 import { GraphQLContext } from "../../utils/types";
+import { userCircles } from "../../services/circle_services";
 
 const resolvers = {
   Mutation: {
@@ -39,18 +40,16 @@ const resolvers = {
       return circle;
     },
   },
-  //   Query: {
-  //     getUser: async (_: any, args: any, context: GraphQLContext) => {
-  //       const { req } = context;
-  //       const { id, token } = decodeToken(req as IncomingMessage);
+  Query: {
+    userCircles: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const {page, limit } = args
+      const { id, token } = decodeToken(req as IncomingMessage);
 
-  //       const user: IUser | null = await User.findById(id).select(
-  //         "email name display_pic isPremium location createdAt"
-  //       );
-
-  //       return user;
-  //     },
-  //   },
+      const circles = await userCircles(id as String, page, limit);
+      return circles;
+    },
+  },
   //   Subscription: {
   //     locationUpdated: {
   //       subscribe: withFilter(
