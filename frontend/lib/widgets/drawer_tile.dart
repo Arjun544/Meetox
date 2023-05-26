@@ -17,7 +17,7 @@ class DrawerTile extends GetView<RootController> {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        final rootController = Get.find();
+        final rootController = Get.find<RootController>();
         rootController.zoomDrawerController.close!();
         onPressed();
       },

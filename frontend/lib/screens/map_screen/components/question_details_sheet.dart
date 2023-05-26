@@ -78,11 +78,11 @@
 //                   size: 35.sp,
 //                 ),
 //                 title: Text(
-//                   question.question!.capitalize!,
+//                   question.question!.capitalizeFirst!,
 //                   style: context.theme.textTheme.headline3,
 //                 ),
 //                 subtitle: Text(
-//                   question.location!.address!.capitalize!,
+//                   question.location!.address!.capitalizeFirst!,
 //                   style: context.theme.textTheme.headline6!.copyWith(
 //                     color: Colors.grey,
 //                   ),

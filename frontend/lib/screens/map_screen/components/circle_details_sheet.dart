@@ -81,11 +81,11 @@
 //                   ),
 //                 ),
 //                 title: Text(
-//                   circle.name.capitalize!,
+//                   circle.name.capitalizeFirst!,
 //                   style: context.theme.textTheme.headline3,
 //                 ),
 //                 subtitle: Text(
-//                   circle.location.address!.capitalize!,
+//                   circle.location.address!.capitalizeFirst!,
 //                   style: context.theme.textTheme.headline6!.copyWith(
 //                     color: Colors.grey,
 //                   ),

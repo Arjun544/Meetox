@@ -177,7 +177,7 @@
 //                             title: Text(
 //                               follower.name == ''
 //                                   ? 'Unknown'
-//                                   : follower.name!.capitalize!,
+//                                   : follower.name!.capitalizeFirst!,
 //                               style: context.theme.textTheme.headline5,
 //                             ),
 //                           ),
@@ -226,7 +226,7 @@
 //                             title: Text(
 //                               user.name == ''
 //                                   ? 'Unknown'
-//                                   : user.name!.capitalize!,
+//                                   : user.name!.capitalizeFirst!,
 //                               style: context.theme.textTheme.headline5,
 //                             ),
 //                           ),

@@ -137,11 +137,11 @@ class UserDetailsSheet extends HookWidget {
                     ),
                   ),
                   title: Text(
-                    user.name == '' ? 'Unknown' : user.name!.capitalize!,
+                    user.name == '' ? 'Unknown' : user.name!.capitalizeFirst!,
                     style: context.theme.textTheme.labelMedium,
                   ),
                   subtitle: Text(
-                    user.location?.address?.capitalize ?? 'Unknown',
+                    user.location?.address?.capitalizeFirst ?? 'Unknown',
                     style: context.theme.textTheme.labelSmall!.copyWith(
                       color: Colors.grey,
                     ),

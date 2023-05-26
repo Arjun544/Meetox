@@ -1,7 +1,7 @@
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
-
-import 'drawer_tile.dart';
+import 'package:frontend/screens/circles_screen/circles_screen.dart';
+import 'package:frontend/widgets/drawer_tile.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -14,23 +14,18 @@ class CustomDrawer extends StatelessWidget {
       margin: EdgeInsets.only(top: 50.sp, right: 10.sp, left: 12.sp),
       color: AppColors.primaryYellow,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Column(
-            children: [
-              Text(
-                currentUser.value.name == ''
-                    ? 'Unknown'
-                    : currentUser.value.name!,
-                style: context.theme.textTheme.titleLarge,
-              ),
-              const SizedBox(height: 30),
-              const SizedBox(height: 15),
-              const Divider(
-                color: Colors.white,
-                thickness: 1,
-              ),
-            ],
+          Text(
+            currentUser.value.name == '' ? 'Unknown' : currentUser.value.name!,
+            style: context.theme.textTheme.titleLarge,
+          ),
+          Text(
+            'Menu',
+            style: context.theme.textTheme.labelMedium!.copyWith(
+              color: AppColors.customBlack,
+            ),
           ),
           SizedBox(
             height: Get.height * 0.4,
@@ -50,7 +45,7 @@ class CustomDrawer extends StatelessWidget {
                 DrawerTile(
                   icon: FlutterRemix.bubble_chart_fill,
                   title: 'Circles',
-                  onPressed: () {},
+                  onPressed: () => Get.to(() => const CirclesScreen()),
                 ),
                 DrawerTile(
                   icon: FlutterRemix.question_fill,
@@ -71,10 +66,13 @@ class CustomDrawer extends StatelessWidget {
             ),
           ),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Divider(
-                color: Colors.white,
-                thickness: 1,
+              Text(
+                'Others',
+                style: context.theme.textTheme.labelMedium!.copyWith(
+                  color: AppColors.customBlack,
+                ),
               ),
               const SizedBox(height: 20),
               DrawerTile(

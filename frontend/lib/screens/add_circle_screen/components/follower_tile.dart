@@ -50,7 +50,9 @@ class FollowerTile extends StatelessWidget {
                 ],
               ),
               title: Text(
-                follower.name == '' ? 'Unknown' : follower.name!.capitalize!,
+                follower.name == ''
+                    ? 'Unknown'
+                    : follower.name!.capitalizeFirst!,
                 style: context.theme.textTheme.labelSmall,
               ),
               trailing: Theme(
