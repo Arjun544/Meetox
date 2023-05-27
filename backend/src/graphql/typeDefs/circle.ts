@@ -5,14 +5,13 @@ const typeDefs = gql`
   scalar ICircle
   scalar ILocation
 
-  # type Query {
-  #   getNearByCircles(
-  #     latitude: Float!
-  #     longitude: Float!
-  #     distanceInKM: Float!
-  #     followers: [String!]!
-  #   ): [IUser]
-  # }
+  type Query {
+    getNearByCircles(
+      latitude: Float!
+      longitude: Float!
+      distanceInKM: Float!
+    ): [ICircle]
+  }
 
   type Query {
     userCircles(page: Int!, limit: Int!): CirclesResponse

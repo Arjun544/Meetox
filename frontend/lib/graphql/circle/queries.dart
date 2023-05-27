@@ -12,3 +12,9 @@ query ($page: Int!, $limit: Int!){
   }
 }
 ''';
+
+String getNearbyCircles = r'''
+query ($latitude: Float!, $longitude: Float!, $distanceInKM: Float!){
+   getNearByCircles(latitude: $latitude, longitude: $longitude, distanceInKM: $distanceInKM)
+}
+''';

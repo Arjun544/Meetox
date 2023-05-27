@@ -3,9 +3,7 @@ import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/models/user_model.dart';
-import 'package:frontend/screens/map_screen/components/customer_marker.dart';
-import 'package:frontend/screens/map_screen/components/user_details_sheet.dart';
-import 'package:frontend/widgets/show_custom_sheet.dart';
+import 'package:frontend/screens/map_screen/components/custom_user_marker.dart';
 
 class UsersClusterlayer extends GetView<MapScreenController> {
   const UsersClusterlayer(this.users, {super.key});
@@ -33,10 +31,9 @@ class UsersClusterlayer extends GetView<MapScreenController> {
                       ),
                       width: 60.sp,
                       height: 60.sp,
-                      builder: (context) => CustomMarker(
+                      builder: (context) => CustomUserMarker(
                         user: tappedUser.value,
-                        color: Colors.orange,
-                        onPressed: (isTapped) {},
+                        tappedUser: tappedUser,
                       ),
                     )
                   ]
@@ -49,21 +46,9 @@ class UsersClusterlayer extends GetView<MapScreenController> {
                         ),
                         width: 60.sp,
                         height: 60.sp,
-                        builder: (context) => CustomMarker(
+                        builder: (context) => CustomUserMarker(
                           user: user,
-                          color: Colors.orange,
-                          onPressed: (isTapped) {
-                            controller.isFiltersVisible.value = false;
-                            tappedUser(isTapped.value);
-                            showCustomSheet(
-                              context: context,
-                              hasBlur: false,
-                              child: UserDetailsSheet(
-                                user,
-                                tappedUser,
-                              ),
-                            );
-                          },
+                          tappedUser: tappedUser,
                         ),
                       ),
                     )

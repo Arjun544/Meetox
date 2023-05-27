@@ -1,4 +1,3 @@
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:frontend/controllers/root_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/graphql/circle/queries.dart';
 import 'package:frontend/graphql/user/queries.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/screens/map_screen/components/current_user_layer.dart';
@@ -12,6 +13,9 @@ import 'package:frontend/screens/map_screen/components/main_filters.dart';
 import 'package:frontend/screens/map_screen/components/users_cluster_layer.dart';
 import 'package:frontend/widgets/top_bar.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:frontend/models/circle_model.dart' as circle_model;
+
+import 'components/circles_cluster_layer.dart';
 
 class MapScreen extends HookWidget {
   const MapScreen({super.key});
@@ -21,7 +25,7 @@ class MapScreen extends HookWidget {
     final controller = Get.put(MapScreenController())
       ..mapController = MapController();
 
-    final userResult = useQuery(
+    final usersResult = useQuery(
       QueryOptions(
         document: gql(getNearByUsers),
         variables: {
@@ -29,6 +33,17 @@ class MapScreen extends HookWidget {
           'longitude': currentUser.value.location!.coordinates![1],
           'distanceInKM': currentUser.value.isPremium! ? 600 : 300,
           'followers': const [],
+        },
+      ),
+    );
+
+    final circlesResult = useQuery(
+      QueryOptions(
+        document: gql(getNearbyCircles),
+        variables: {
+          'latitude': currentUser.value.location!.coordinates![0],
+          'longitude': currentUser.value.location!.coordinates![1],
+          'distanceInKM': currentUser.value.isPremium! ? 600 : 300,
         },
       ),
     );
@@ -71,44 +86,71 @@ class MapScreen extends HookWidget {
                   }
                 },
               ),
-              children: controller.currentMainFilter.value == 'All'
-                  ? [
-                      const CustomTileLayer(),
-                      const CurrentUserLayer(),
-                      // const CirclesClusterlayer(),
-                      UsersClusterlayer(
-                        userResult.result.data!['getNearByUsers']
-                            .map<User>(
-                              (user) => User.fromRawJson(json.encode(user)),
-                            )
-                            .toList() as List<User>,
-                      ),
-                      // const FollowersClusterlayer(),
-                      // const QuestionsClusterlayer(),
-                    ]
-                  : controller.currentMainFilter.value == 'Circles'
+              children: circlesResult.result.isNotLoading ||
+                      usersResult.result.isNotLoading
+                  ? controller.currentMainFilter.value == 'All'
                       ? [
                           const CustomTileLayer(),
-                          // const CurrentUserLayer(),
-                          // const CirclesClusterlayer(),
+                          const CurrentUserLayer(),
+                          CirclesClusterlayer(
+                            circlesResult.result.data!['getNearByCircles']
+                                .map<circle_model.Circle>(
+                                  (circle) => circle_model.Circle.fromRawJson(
+                                      json.encode(circle)),
+                                )
+                                .toList() as List<circle_model.Circle>,
+                          ),
+                          UsersClusterlayer(
+                            usersResult.result.data!['getNearByUsers']
+                                .map<User>(
+                                  (user) => User.fromRawJson(json.encode(user)),
+                                )
+                                .toList() as List<User>,
+                          ),
+                          // const FollowersClusterlayer(),
+                          // const QuestionsClusterlayer(),
                         ]
-                      : controller.currentMainFilter.value == 'Questions'
+                      : controller.currentMainFilter.value == 'Circles'
                           ? [
                               const CustomTileLayer(),
-                              // const CurrentUserLayer(),
-                              // const QuestionsClusterlayer(),
+                              const CurrentUserLayer(),
+                              CirclesClusterlayer(
+                                circlesResult.result.data!['getNearByCircles']
+                                    .map<circle_model.Circle>(
+                                      (circle) =>
+                                          circle_model.Circle.fromRawJson(
+                                              json.encode(circle)),
+                                    )
+                                    .toList() as List<circle_model.Circle>,
+                              ),
                             ]
-                          : controller.currentMainFilter.value == 'Followers'
+                          : controller.currentMainFilter.value == 'Questions'
                               ? [
                                   const CustomTileLayer(),
-                                  // const CurrentUserLayer(),
-                                  // const FollowersClusterlayer(),
+                                  const CurrentUserLayer(),
+                                  // const QuestionsClusterlayer(),
                                 ]
-                              : [
-                                  const CustomTileLayer(),
-                                  // const CurrentUserLayer(),
-                                  // const UsersClusterlayer(),
-                                ],
+                              : controller.currentMainFilter.value ==
+                                      'Followers'
+                                  ? [
+                                      const CustomTileLayer(),
+                                      const CurrentUserLayer(),
+                                      // const FollowersClusterlayer(),
+                                    ]
+                                  : [
+                                      const CustomTileLayer(),
+                                      const CurrentUserLayer(),
+                                     UsersClusterlayer(
+                                        usersResult
+                                            .result.data!['getNearByUsers']
+                                            .map<User>(
+                                              (user) => User.fromRawJson(
+                                                  json.encode(user)),
+                                            )
+                                            .toList() as List<User>,
+                                      ),
+                                    ]
+                  : [],
             ),
           ),
           Obx(
@@ -161,21 +203,22 @@ class MapScreen extends HookWidget {
           Positioned(
             left: 15,
             bottom: 115.sp,
-            child: userResult.result.isLoading
-                ? Container(
-                    height: 50.sp,
-                    width: 50.sp,
-                    padding: EdgeInsets.symmetric(horizontal: 15.sp),
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryYellow.withOpacity(0.6),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: LoadingAnimationWidget.staggeredDotsWave(
-                      color: AppColors.customBlack,
-                      size: 20.sp,
-                    ),
-                  )
-                : const SizedBox.shrink(),
+            child:
+                usersResult.result.isLoading || circlesResult.result.isLoading
+                    ? Container(
+                        height: 50.sp,
+                        width: 50.sp,
+                        padding: EdgeInsets.symmetric(horizontal: 15.sp),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryYellow.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: LoadingAnimationWidget.staggeredDotsWave(
+                          color: AppColors.customBlack,
+                          size: 20.sp,
+                        ),
+                      )
+                    : const SizedBox.shrink(),
           ),
         ],
       ),

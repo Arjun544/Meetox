@@ -6,7 +6,7 @@ import { uploadImage } from "../../services/storage_services";
 import { decodeToken } from "../../services/token_services";
 import { ICircle } from "../../utils/interfaces/circle";
 import { GraphQLContext } from "../../utils/types";
-import { userCircles } from "../../services/circle_services";
+import { nearbyCircles, userCircles } from "../../services/circle_services";
 
 const resolvers = {
   Mutation: {
@@ -43,10 +43,23 @@ const resolvers = {
   Query: {
     userCircles: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;
-      const {page, limit } = args
+      const { page, limit } = args;
       const { id, token } = decodeToken(req as IncomingMessage);
 
       const circles = await userCircles(id as String, page, limit);
+      return circles;
+    },
+    getNearByCircles: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { latitude, longitude, distanceInKM, followers } = args;
+      const { id, token } = decodeToken(req as IncomingMessage);
+
+      const circles = await nearbyCircles(
+        id as String,
+        latitude,
+        longitude,
+        distanceInKM
+      );
       return circles;
     },
   },

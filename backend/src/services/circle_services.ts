@@ -2,32 +2,26 @@ import Circle from "../models/circle_model";
 import { PaginateModel, Document, model } from "mongoose";
 import { ICircle } from "../utils//interfaces/circle";
 
-// export async function nearbyCircles(
-//   id: String,
-//   latitude: number,
-//   longitude: number,
-//   distanceInKM: number
-// ) {
-//   const radius = distanceInKM / 6378.1;
-//   const users = await Circle.find({
-//     admin: { $ne: id },
-//     "location.coordinates": {
-//       $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
-//     },
-//   })
-//   .select(
-//     "name birthDay display_pic isPremium location createdAt followers followings"
-//   );
+export async function nearbyCircles(
+  id: String,
+  latitude: number,
+  longitude: number,
+  distanceInKM: number
+) {
+  const radius = distanceInKM / 6378.1;
+  const users = await Circle.find({
+    admin: { $ne: id },
+    "location.coordinates": {
+      $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
+    },
+  }).select(
+    "name description image isPrivate members createdAt location limit"
+  );
 
-//   return users;
-// }
+  return users;
+}
+
 export async function userCircles(id: String, page: number, limit: number) {
-  // const circles = await Circle.find({
-  //   admin: { $eq: id },
-  // }).select("name description isPrivate limit location createdAt members");
-
-  // return circles;
-
   const query = {
     admin: id,
   };
