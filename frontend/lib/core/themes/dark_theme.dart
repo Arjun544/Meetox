@@ -31,7 +31,7 @@ final ThemeData darkTheme = ThemeData.light().copyWith(
   cardColor: Colors.black,
   dividerColor: Colors.black,
   canvasColor: AppColors.customGrey,
-  dialogBackgroundColor: AppColors.customBlack,
+  dialogBackgroundColor: Colors.black,
   bottomSheetTheme: const BottomSheetThemeData(
     backgroundColor: Colors.black,
   ),

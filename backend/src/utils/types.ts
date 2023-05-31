@@ -5,6 +5,7 @@ import { Types } from "mongoose";
 
 export interface GraphQLContext {
   req: IncomingMessage | null;
+  token: string;
   pubsub: PubSub;
 }
 export interface SubscriptionContext extends Context {

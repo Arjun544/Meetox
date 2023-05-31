@@ -14,7 +14,7 @@ class CustomCloseButton extends StatelessWidget {
       onTap: onTap,
       child: DecoratedBox(
         decoration: BoxDecoration(
-          color: context.theme.backgroundColor,
+          color: context.theme.dialogBackgroundColor,
           shape: BoxShape.circle,
         ),
         child: Padding(

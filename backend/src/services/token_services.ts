@@ -32,3 +32,11 @@ export function decodeToken(
     }
   }
 }
+
+export function getIdFromToken(token: string): String {
+  const { id } = jwt.verify(
+    token,
+    process.env.JWT_ACCESS_TOKEN_SECRET!
+  ) as jwt.JwtPayload;
+  return id;
+}

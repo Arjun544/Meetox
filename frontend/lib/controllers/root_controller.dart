@@ -6,6 +6,7 @@ import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/core/instances.dart';
 import 'package:frontend/helpers/has_location_permission.dart';
+import 'package:frontend/models/user_model.dart' as user_model;
 import 'package:frontend/screens/conversation_screen/conversation_screen.dart';
 import 'package:frontend/screens/feed_screen/feed_screen.dart';
 import 'package:frontend/screens/map_screen/map_screen.dart';
@@ -76,6 +77,14 @@ class RootController extends GetxController {
             '${placemarks[0].administrativeArea}, ${placemarks[0].isoCountryCode}';
 
         log('Updated Address');
+        currentUser.value.location = user_model.Location(
+          address: address,
+          coordinates: [
+            currentPosition.value.latitude,
+            currentPosition.value.longitude
+          ],
+        );
+
         await UserServices.updateUserLocation(
           address: address,
           coordinates: [

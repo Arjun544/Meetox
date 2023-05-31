@@ -25,10 +25,6 @@ const typeDefs = gql`
     updateLocation(location: LocationInput!): Boolean
   }
 
-  type Subscription {
-    locationUpdated: ILocation!
-  }
-
   input LocationInput {
     address: String
     coordinates: [Float]

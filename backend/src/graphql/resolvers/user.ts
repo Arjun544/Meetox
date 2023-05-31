@@ -3,10 +3,10 @@ import { withFilter } from "graphql-subscriptions/dist/with-filter";
 import { IncomingMessage } from "http";
 import User from "../../models/user_model";
 import { uploadImage } from "../../services/storage_services";
-import { decodeToken } from "../../services/token_services";
+import { decodeToken, getIdFromToken } from "../../services/token_services";
+import { nearbyUsers } from "../../services/user_services";
 import { IUser } from "../../utils/interfaces/user";
 import { GraphQLContext } from "../../utils/types";
-import { nearbyUsers } from "../../services/user_services";
 
 const resolvers = {
   Mutation: {
@@ -50,10 +50,6 @@ const resolvers = {
         { new: true }
       );
 
-      pubsub.publish("LOCATION_UPDATED", {
-        locationUpdated: user?.location,
-      });
-
       return true;
     },
   },
@@ -73,24 +69,32 @@ const resolvers = {
       const { latitude, longitude, distanceInKM, followers } = args;
       const { id, token } = decodeToken(req as IncomingMessage);
 
-      const users = await nearbyUsers(id as String, latitude, longitude, distanceInKM, followers);
+      const users = await nearbyUsers(
+        id as String,
+        latitude,
+        longitude,
+        distanceInKM,
+        followers
+      );
       return users;
     },
   },
-  Subscription: {
-    locationUpdated: {
-      subscribe: withFilter(
-        (_: any, __: any, context: GraphQLContext) => {
-          const { pubsub } = context;
+  // Subscription: {
+  //   locationUpdated: {
+  //     subscribe: withFilter(
+  //       (payload: any, __: any, context: GraphQLContext) => {
+  //         const { token, pubsub } = context;
 
-          return pubsub.asyncIterator(["LOCATION_UPDATED"]);
-        },
-        (payload: any, _, context: GraphQLContext) => {
-          return true;
-        }
-      ),
-    },
-  },
+  //         const userId = getIdFromToken(token);
+
+  //         return pubsub.asyncIterator([`LOCATION_UPDATED:${userId}`]);
+  //       },
+  //       (payload: any, _, context: GraphQLContext) => {
+  //         return true;
+  //       }
+  //     ),
+  //   },
+  // },
 };
 
 export default resolvers;

@@ -46,20 +46,17 @@ const main = async () => {
     if (ctx.connectionParams) {
       const { token } = ctx.connectionParams;
 
-      return { req: null, pubsub };
+      const tokeData: string = token || "";
+
+      return { req: null, token: tokeData, pubsub };
     }
-    // Otherwise let our resolvers know we don't have a current user
-    return { req: null, pubsub };
+    return { req: null, token: "", pubsub };
   };
 
-  // Save the returned server's info so we can shutdown this server later
   const serverCleanup = useServer(
     {
       schema,
       context: (ctx: SubscriptionContext) => {
-        // This will be run every time the client sends a subscription request
-        // Returning an object will add that information to our
-        // GraphQL context, which all of our resolvers have access to.
         return getSubscriptionContext(ctx);
       },
 
@@ -79,7 +76,6 @@ const main = async () => {
   const server = new ApolloServer({
     schema,
     csrfPrevention: true,
-
     plugins: [
       // Proper shutdown for the HTTP server.
       ApolloServerPluginDrainHttpServer({ httpServer }),
@@ -107,11 +103,13 @@ const main = async () => {
     "/graphql",
     cors<cors.CorsRequest>(corsOptions),
     json({
-      limit: '10mb',
+      limit: "10mb",
     }),
     expressMiddleware(server, {
       context: async ({ req }): Promise<GraphQLContext> => {
-        return { req, pubsub };
+        const header = req.headers.authorization;
+        const token = header?.replace("Bearer ", "") as string;
+        return { req, token, pubsub };
       },
     })
   );

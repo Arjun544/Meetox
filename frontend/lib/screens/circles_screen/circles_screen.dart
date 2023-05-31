@@ -3,6 +3,7 @@ import 'package:frontend/controllers/root_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/models/circle_model.dart' as circle_model;
+import 'package:frontend/screens/add_circle_screen/add_circle_screen.dart';
 import 'package:frontend/screens/circles_screen/components/circle_tile.dart';
 import 'package:frontend/screens/root_screen.dart';
 import 'package:frontend/widgets/custom_error_widget.dart';
@@ -33,6 +34,27 @@ class CirclesScreen extends GetView<CirclesController> {
             child: Icon(FlutterRemix.arrow_left_s_line, size: 25.sp),
           ),
           iconTheme: context.theme.appBarTheme.iconTheme,
+          actions: [
+            InkWell(
+              onTap: () => Get.to(() => const AddCircleScreen()),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: context.theme.dialogBackgroundColor,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
+                    child: Icon(
+                      FlutterRemix.add_fill,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 15.w),
+          ],
         ),
         body: RefreshIndicator(
           backgroundColor: context.theme.scaffoldBackgroundColor,
