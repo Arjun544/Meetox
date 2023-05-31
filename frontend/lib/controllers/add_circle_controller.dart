@@ -6,7 +6,11 @@ import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/helpers/convert_base64_image.dart';
 import 'package:frontend/helpers/get_asset_image.dart';
+import 'package:frontend/models/circle_model.dart' as circle_model;
 import 'package:frontend/models/user_model.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
+
+import 'circles_controller.dart';
 
 class AddCircleController extends GetxController {
   final GlobalController globalController = Get.find();
@@ -48,10 +52,8 @@ class AddCircleController extends GetxController {
     super.onInit();
   }
 
-  Future<void> handleAddCircle(
-    BuildContext context,
-    dynamic runMutation,
-  ) async {
+  Future<void> handleAddCircle(BuildContext context, dynamic runMutation,
+      QueryResult<Object?>? result) async {
     String? base64Profile;
     if (capturedImage.value.path.isEmpty &&
         selectedImage.value.files.isNotEmpty) {
@@ -93,28 +95,34 @@ class AddCircleController extends GetxController {
         ],
       }
     });
+  }
 
-    // final newCircle = await mutation.mutateAsync(circle);
+  void onComplete(Map<String, dynamic>? resultData) {
+    if (resultData != null) {
+      logSuccess(resultData.toString());
+      final bool hasCirclesController = Get.isRegistered<CirclesController>();
+      if (hasCirclesController) {
+        final circle_model.Circle newCircle = circle_model.Circle.fromJson(
+            resultData['addCircle'] as Map<String, dynamic>);
+        final CirclesController circlesController = Get.find();
 
-    // if (mutation.hasError) {
-    //   log('mutation error: ${mutation.error}');
-    //   showToast('Circle creation failed');
-    //   mutation.reset();
-    // } else if (mutation.hasData) {
-    //   showToast('Circle created successfully');
-    //   Get.back();
+        circlesController.circlesPagingController.itemList!
+            .insert(0, newCircle);
+        circlesController.circlesPagingController
+            // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+            .notifyListeners();
+      }
 
-    //   // Update user circles with the new data
-    //   QueryBowl.of(context).setQueryData<CircleModel, void>(
-    //       CachingKeys.userCirclesKey, (oldData) {
-    //     oldData!.circles!.insert(0, newCircle!);
-    //     return oldData;
-    //   });
-
-    //   if (rootController.circlesPagingController.itemList != null) {
-    //     rootController.circlesPagingController.itemList!.insert(0, newCircle!);
-    //   }
-
-    // Set data back to original
+      currentStep.value = 0;
+      nameController.clear();
+      descController.clear();
+      isPrivate.value = false;
+      limit.value = 50.0;
+      selectedAvatar.value = 0;
+      capturedImage.value = XFile('');
+      selectedImage.value = const FilePickerResult([]);
+      selectedMembers.clear();
+      Get.back();
+    }
   }
 }

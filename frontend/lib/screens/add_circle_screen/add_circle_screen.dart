@@ -90,33 +90,9 @@ class AddCircleScreen extends GetView<AddCircleController> {
               options: MutationOptions(
                 document: gql(addCircle),
                 fetchPolicy: FetchPolicy.networkOnly,
-                update: (cache, result) => cache,
-                // parserFn: (data) => CircleM,
-                onCompleted: (Map<String, dynamic>? resultData) async {
-                  logSuccess(resultData.toString());
-                  if (resultData != null) {
-                    controller.currentStep.value = 0;
-                    controller.nameController.clear();
-                    controller.descController.clear();
-                    controller.isPrivate.value = false;
-                    controller.limit.value = 50.0;
-                    controller.selectedAvatar.value = 0;
-                    controller.capturedImage.value = XFile('');
-                    controller.selectedImage.value = const FilePickerResult([]);
-                    controller.selectedMembers.clear();
-                    Get.back();
-                  }
-                  // final user = User.fromJson(
-                  //   resultData!['addProfile'] as Map<String, dynamic>,
-                  // );
-
-                  // currentUser.value = user;
-                  // // ignore: invalid_use_of_protected_member
-                  // currentUser.refresh();
-
-                  // await Get.offAll(() => const DrawerScreen());
-                },
-                onError: (error) => logError('Unable to add circle'),
+                onCompleted: (Map<String, dynamic>? resultData) =>
+                    controller.onComplete(resultData),
+                onError: (error) => showToast('Failed to create circle'),
               ),
               builder: (runMutation, result) {
                 return result!.isLoading
@@ -186,12 +162,7 @@ class AddCircleScreen extends GetView<AddCircleController> {
                                   } else if (controller.currentStep.value ==
                                       3) {
                                     await controller.handleAddCircle(
-                                      context,
-                                      runMutation,
-                                    );
-                                    if (result.hasException) {
-                                      showToast('Failed to create circle');
-                                    }
+                                        context, runMutation, result);
                                   } else {
                                     FocusScope.of(context).unfocus();
                                     await controller.pageController.nextPage(

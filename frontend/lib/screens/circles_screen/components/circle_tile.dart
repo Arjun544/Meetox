@@ -27,7 +27,10 @@ class CircleTile extends HookWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child: ListTile(
+        minLeadingWidth: 0,
+        contentPadding: EdgeInsets.zero,
         leading: CircleAvatar(
+          radius: 24.h,
           foregroundImage: CachedNetworkImageProvider(
             circle.image!.image!.isEmpty
                 ? profilePlaceHolder
@@ -40,7 +43,9 @@ class CircleTile extends HookWidget {
         ),
         subtitle: Text(
           'Memebers: ${circle.members!.length}',
-          style: context.theme.textTheme.labelSmall,
+          style: context.theme.textTheme.labelSmall!.copyWith(
+            fontSize: 10.sp,
+          ),
         ),
         trailing: isShowingOnMap
             ? const SizedBox.shrink()
