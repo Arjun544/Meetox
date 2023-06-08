@@ -31,6 +31,7 @@ class MapScreen extends HookWidget {
     final usersResult = useQuery(
       QueryOptions(
         document: gql(getNearByUsers),
+        pollInterval: const Duration(minutes: 5),
         variables: {
           'latitude': currentUser.value.location!.coordinates![0],
           'longitude': currentUser.value.location!.coordinates![1],
@@ -43,6 +44,7 @@ class MapScreen extends HookWidget {
     final circlesResult = useQuery(
       QueryOptions(
         document: gql(getNearbyCircles),
+        pollInterval: const Duration(minutes: 5),
         variables: {
           'latitude': currentUser.value.location!.coordinates![0],
           'longitude': currentUser.value.location!.coordinates![1],
@@ -54,6 +56,7 @@ class MapScreen extends HookWidget {
     final questionsResult = useQuery(
       QueryOptions(
         document: gql(getNearbyQuestions),
+        pollInterval: const Duration(minutes: 5),
         variables: {
           'latitude': currentUser.value.location!.coordinates![0],
           'longitude': currentUser.value.location!.coordinates![1],
@@ -107,33 +110,34 @@ class MapScreen extends HookWidget {
                       ? [
                           const CustomTileLayer(),
                           const CurrentUserLayer(),
-                          if(circlesResult.result.data!=null)
-                          CirclesClusterlayer(
-                            circlesResult.result.data!['getNearByCircles']
-                                .map<circle_model.Circle>(
-                                  (circle) => circle_model.Circle.fromRawJson(
-                                      json.encode(circle)),
-                                )
-                                .toList() as List<circle_model.Circle>,
-                          ),
+                          if (circlesResult.result.data != null)
+                            CirclesClusterlayer(
+                              circlesResult.result.data!['getNearByCircles']
+                                  .map<circle_model.Circle>(
+                                    (circle) => circle_model.Circle.fromRawJson(
+                                        json.encode(circle)),
+                                  )
+                                  .toList() as List<circle_model.Circle>,
+                            ),
                           if (usersResult.result.data != null)
-                          UsersClusterlayer(
-                            usersResult.result.data!['getNearByUsers']
-                                .map<User>(
-                                  (user) => User.fromRawJson(json.encode(user)),
-                                )
-                                .toList() as List<User>,
-                          ),
+                            UsersClusterlayer(
+                              usersResult.result.data!['getNearByUsers']
+                                  .map<User>(
+                                    (user) =>
+                                        User.fromRawJson(json.encode(user)),
+                                  )
+                                  .toList() as List<User>,
+                            ),
                           // const FollowersClusterlayer(),
                           if (questionsResult.result.data != null)
-                          QuestionsClusterlayer(
-                            questionsResult.result.data!['getNearByQuestions']
-                                .map<Question>(
-                                  (question) => Question.fromRawJson(
-                                      json.encode(question)),
-                                )
-                                .toList() as List<Question>,
-                          ),
+                            QuestionsClusterlayer(
+                              questionsResult.result.data!['getNearByQuestions']
+                                  .map<Question>(
+                                    (question) => Question.fromRawJson(
+                                        json.encode(question)),
+                                  )
+                                  .toList() as List<Question>,
+                            ),
                         ]
                       : controller.currentMainFilter.value == 'Circles'
                           ? [

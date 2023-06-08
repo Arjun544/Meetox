@@ -11,13 +11,11 @@ import 'package:timeago/timeago.dart' as timeago;
 
 import 'core/time_ago_messages.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await graphqlInit();
   await dotenv.load();
   timeago.setLocaleMessages('en', TimeAgoMessages());
-
 
   // if (getStorage.read('first_run') ?? true) {
   //   await SecureStorageServices.clearAll();
