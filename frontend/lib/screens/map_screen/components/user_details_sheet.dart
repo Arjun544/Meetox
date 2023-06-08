@@ -74,18 +74,21 @@ class UserDetailsSheet extends HookWidget {
         14,
       );
     });
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      onTap: () {
-        controller.isFiltersVisible.value = true;
-        tappedUser.value = User();
-        Navigator.pop(context);
-      },
-      child: Container(
-        height: Get.height,
-        width: Get.width,
-        color: Colors.transparent,
-        child: Container(
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () {
+            controller.isFiltersVisible.value = true;
+            tappedUser.value = User();
+            Navigator.pop(context);
+          },
+          child: Container(
+            height: Get.height,
+            width: Get.width,
+            color: Colors.transparent,
+          ),
+        ),
+        Container(
           width: Get.width,
           margin: EdgeInsets.only(top: Get.height * 0.55),
           decoration: BoxDecoration(
@@ -378,7 +381,7 @@ class UserDetailsSheet extends HookWidget {
             ],
           ),
         ),
-      ),
+      ],
     );
   }
 }

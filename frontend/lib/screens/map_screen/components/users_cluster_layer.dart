@@ -3,7 +3,7 @@ import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/models/user_model.dart';
-import 'package:frontend/screens/map_screen/components/custom_user_marker.dart';
+import 'package:frontend/screens/map_screen/components/user_marker.dart';
 
 class UsersClusterlayer extends GetView<MapScreenController> {
   const UsersClusterlayer(this.users, {super.key});
@@ -31,7 +31,7 @@ class UsersClusterlayer extends GetView<MapScreenController> {
                       ),
                       width: 60.sp,
                       height: 60.sp,
-                      builder: (context) => CustomUserMarker(
+                      builder: (context) => UserMarker(
                         user: tappedUser.value,
                         tappedUser: tappedUser,
                       ),
@@ -46,7 +46,7 @@ class UsersClusterlayer extends GetView<MapScreenController> {
                         ),
                         width: 60.sp,
                         height: 60.sp,
-                        builder: (context) => CustomUserMarker(
+                        builder: (context) => UserMarker(
                           user: user,
                           tappedUser: tappedUser,
                         ),

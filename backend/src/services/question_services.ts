@@ -14,7 +14,7 @@ export async function nearbyQuestions(
     "location.coordinates": {
       $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
     },
-  }).select("name answers owner upvotes downvotes expiry createdAt location");
+  }).select("question answers owner upvotes downvotes expiry createdAt location");
 
   return questions;
 }
@@ -58,7 +58,7 @@ export async function userQuestions(
 
 export async function deleteQuestion(id: String) {
   const question = await Question.findByIdAndDelete(id).select(
-    "name answers owner upvotes downvotes expiry createdAt location"
+    "question answers owner upvotes downvotes expiry createdAt location"
   );
   return question;
 }

@@ -7,8 +7,8 @@ import 'package:frontend/widgets/show_custom_sheet.dart';
 
 import 'user_details_sheet.dart';
 
-class CustomUserMarker extends HookWidget {
-  const CustomUserMarker({
+class UserMarker extends HookWidget {
+  const UserMarker({
     required this.user,
     required this.tappedUser,
     super.key,
@@ -34,6 +34,7 @@ class CustomUserMarker extends HookWidget {
               showCustomSheet(
                 context: context,
                 hasBlur: false,
+                enableDrag: false,
                 child: UserDetailsSheet(
                   user,
                   tappedUser,

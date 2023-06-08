@@ -6,10 +6,13 @@ Future<void> Function({
   required BuildContext context,
   required Widget child,
   bool hasBlur,
-}) showCustomSheet = (
-    {required BuildContext context,
-    required Widget child,
-    bool hasBlur = true}) {
+  bool enableDrag,
+}) showCustomSheet = ({
+  required BuildContext context,
+  required Widget child,
+  bool hasBlur = true,
+  bool enableDrag = true,
+}) {
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -17,6 +20,7 @@ Future<void> Function({
     barrierColor: Colors.transparent,
     elevation: 0,
     useSafeArea: true,
+    enableDrag: enableDrag,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(30),
     ),

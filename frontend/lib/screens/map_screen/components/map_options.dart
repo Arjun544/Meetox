@@ -4,8 +4,8 @@ import 'package:frontend/core/instances.dart';
 import 'package:frontend/widgets/custom_tabbar.dart';
 import 'package:frontend/widgets/mini_map.dart';
 
-class CustomMapOptions extends StatelessWidget {
-  const CustomMapOptions({super.key});
+class MapOptions extends StatelessWidget {
+  const MapOptions({super.key});
 
   @override
   Widget build(BuildContext context) {

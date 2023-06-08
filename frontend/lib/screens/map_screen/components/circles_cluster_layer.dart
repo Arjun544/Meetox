@@ -4,7 +4,7 @@ import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/models/circle_model.dart' as circle_model;
 
 import '../../../core/imports/core_imports.dart';
-import 'custom_circle_marker.dart';
+import 'circle_marker.dart';
 
 class CirclesClusterlayer extends GetView<MapScreenController> {
   const CirclesClusterlayer(this.circles, {super.key});

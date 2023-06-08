@@ -29,7 +29,8 @@ dependencies:
   get_storage: ^2.1.1
   google_sign_in: ^6.1.0
   graphql_flutter: ^5.2.0-beta.1
-  get_time_ago: ^1.2.2
+  timeago_flutter: ^3.4.0
+  timeago: ^3.4.0
   image_picker: ^0.8.7+5
   infinite_scroll_pagination: ^4.0.0-dev.1
   jwt_decoder: ^2.0.1

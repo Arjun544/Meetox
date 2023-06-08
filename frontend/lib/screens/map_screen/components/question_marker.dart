@@ -1,26 +1,26 @@
 import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
-import 'package:frontend/models/circle_model.dart' as circle_model;
-import 'package:frontend/screens/map_screen/components/circle_details_sheet.dart';
-import 'package:frontend/utils/constants.dart';
+import 'package:frontend/models/question_model.dart';
 import 'package:frontend/widgets/show_custom_sheet.dart';
 
-class CustomCircleMarker extends HookWidget {
-  const CustomCircleMarker({
-    required this.circle,
-    required this.tappedCircle,
+import 'question_details_sheet.dart';
+
+class QuestionMarker extends HookWidget {
+  const QuestionMarker({
+    required this.question,
+    required this.tappedQuestion,
     super.key,
   });
-  final circle_model.Circle circle;
-  final Rx<circle_model.Circle> tappedCircle;
+  final Question question;
+  final Rx<Question> tappedQuestion;
 
   @override
   Widget build(BuildContext context) {
     final MapScreenController controller = Get.find();
 
     return AnimatedScale(
-      scale: tappedCircle.value.id != null ? 1.7 : 1,
+      scale: tappedQuestion.value.id != null ? 1.7 : 1,
       duration: const Duration(milliseconds: 400),
       child: Stack(
         clipBehavior: Clip.none,
@@ -28,14 +28,15 @@ class CustomCircleMarker extends HookWidget {
         children: [
           InkWell(
             onTap: () {
-              tappedCircle.value = circle;
+              tappedQuestion.value = question;
               controller.isFiltersVisible.value = false;
               showCustomSheet(
                 context: context,
                 hasBlur: false,
-                child: CircleDetailsSheet(
-                  circle,
-                  tappedCircle,
+                enableDrag: false,
+                child: QuestionDetailsSheet(
+                  question,
+                  tappedQuestion,
                 ),
               );
             },
@@ -47,17 +48,10 @@ class CustomCircleMarker extends HookWidget {
                 borderRadius: BorderRadius.circular(15),
                 border: Border.all(
                   width: 3,
-                  color: Colors.lightBlue,
-                ),
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: CachedNetworkImageProvider(
-                    circle.image!.image!.isEmpty
-                        ? profilePlaceHolder
-                        : circle.image!.image!,
-                  ),
+                  color: Colors.green,
                 ),
               ),
+              child: const Icon(FlutterRemix.question_mark),
             ),
           ),
           Positioned(
@@ -65,7 +59,7 @@ class CustomCircleMarker extends HookWidget {
             child: Icon(
               FlutterRemix.arrow_down_s_fill,
               size: 25.sp,
-              color: Colors.lightBlue,
+              color: Colors.green,
             ),
           ),
         ],

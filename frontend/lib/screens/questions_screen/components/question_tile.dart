@@ -5,8 +5,8 @@ import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/graphql/question/mutation.dart';
 import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/question_model.dart';
-import 'package:get_time_ago/get_time_ago.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class QuestionTile extends StatelessWidget {
   const QuestionTile({
@@ -51,7 +51,10 @@ class QuestionTile extends StatelessWidget {
         ),
         subtitle: Text(
           question.expiry!.isAfter(DateTime.now())
-              ? 'Expires In: ${GetTimeAgo.parse(question.expiry!)}'
+              ? 'Expires In: ${timeago.format(
+                  question.expiry!,
+                  allowFromNow: true,
+                )}'
               : 'Expired',
           style: question.expiry!.isAfter(DateTime.now())
               ? context.theme.textTheme.labelSmall

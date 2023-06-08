@@ -7,11 +7,17 @@ import 'package:frontend/core/instances.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/screens/splash_screen.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:timeago/timeago.dart' as timeago;
+
+import 'core/time_ago_messages.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await graphqlInit();
   await dotenv.load();
+  timeago.setLocaleMessages('en', TimeAgoMessages());
+
 
   // if (getStorage.read('first_run') ?? true) {
   //   await SecureStorageServices.clearAll();
