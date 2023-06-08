@@ -5,6 +5,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 class CircleServices {
   static Future<UserCircles> userCircles({
+    String? name,
     required int page,
   }) async {
     try {
@@ -15,12 +16,12 @@ class CircleServices {
           parserFn: (data) =>
               UserCircles.fromJson(data['userCircles'] as Map<String, dynamic>),
           variables: {
+            'name': name,
             'page': page,
             'limit': 20,
           },
         ),
       );
-
       return result.parsedData!;
     } catch (e) {
       logError(e.toString());

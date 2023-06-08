@@ -7,11 +7,21 @@ class CirclesController extends GetxController {
   final circlesPagingController =
       PagingController<int, circle_model.Circle>(firstPageKey: 1);
 
+  final RxString searchQuery = ''.obs;
+  late Worker searchDebounce;
+
   @override
   void onInit() {
     super.onInit();
     circlesPagingController.addPageRequestListener((page) async {
       await fetchCircles(page);
+      searchDebounce = debounce(
+        searchQuery,
+        (value) {
+          circlesPagingController.refresh();
+        },
+        time: const Duration(seconds: 2),
+      );
     });
   }
 
@@ -19,6 +29,7 @@ class CirclesController extends GetxController {
     try {
       final newPage = await CircleServices.userCircles(
         page: pageKey,
+        name: searchQuery.value.isEmpty ? null : searchQuery.value,
       );
 
       final newItems = newPage.circles;
@@ -46,5 +57,12 @@ class CirclesController extends GetxController {
       circlesPagingController.refresh();
       Navigator.pop(context);
     }
+  }
+
+  @override
+  void onClose() {
+    circlesPagingController.dispose();
+    searchDebounce.dispose();
+    super.onClose();
   }
 }

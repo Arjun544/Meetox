@@ -18,6 +18,7 @@ class CustomField extends StatelessWidget {
     this.isNumber = false,
     this.formats,
     this.validator,
+    this.onChanged,
   });
   final String hintText;
   final TextEditingController controller;
@@ -30,6 +31,7 @@ class CustomField extends StatelessWidget {
   final RxBool isPasswordVisible;
   final List<TextInputFormatter>? formats;
   final String? Function(String?)? validator;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +100,9 @@ class CustomField extends StatelessWidget {
         validator: validator,
         onChanged: (value) {
           inputText.value = value;
+          if (onChanged != null) {
+            onChanged!(value);
+          }
         },
       ),
     );

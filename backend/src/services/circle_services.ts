@@ -1,5 +1,5 @@
+import { PaginateModel, model } from "mongoose";
 import Circle from "../models/circle_model";
-import { PaginateModel, Document, model } from "mongoose";
 import { ICircle } from "../utils//interfaces/circle";
 
 export async function nearbyCircles(
@@ -21,10 +21,22 @@ export async function nearbyCircles(
   return circles;
 }
 
-export async function userCircles(id: String, page: number, limit: number) {
-  const query = {
-    admin: id,
-  };
+export async function userCircles(
+  id: String,
+  name: String,
+  page: number,
+  limit: number
+) {
+  console.log("name: " + name);
+  const query =
+    name === null
+      ? {
+          admin: id,
+        }
+      : {
+          admin: id,
+          $text: { $search: name as string },
+        };
   const option = {
     lean: true,
     sort: { createdAt: -1 },

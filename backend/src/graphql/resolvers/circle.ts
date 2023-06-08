@@ -55,10 +55,10 @@ const resolvers = {
   Query: {
     userCircles: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;
-      const { page, limit } = args;
+      const { name, page, limit } = args;
       const { id } = decodeToken(req as IncomingMessage);
 
-      const circles = await userCircles(id as String, page, limit);
+      const circles = await userCircles(id as String, name, page, limit);
       return circles;
     },
     getNearByCircles: async (_: any, args: any, context: GraphQLContext) => {

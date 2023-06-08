@@ -61,9 +61,10 @@ class CirclesScreen extends GetView<CirclesController> {
           color: AppColors.primaryYellow,
           onRefresh: () async => controller.circlesPagingController.refresh(),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Column(
               children: [
+                SizedBox(height: 15.h),
                 SizedBox(
                   height: 50.sp,
                   child: CustomField(
@@ -74,6 +75,9 @@ class CirclesScreen extends GetView<CirclesController> {
                     hasFocus: false.obs,
                     keyboardType: TextInputType.text,
                     prefixIcon: FlutterRemix.search_2_fill,
+                    onChanged: (value) {
+                      controller.searchQuery(value);
+                    },
                   ),
                 ),
                 SizedBox(height: 15.sp),

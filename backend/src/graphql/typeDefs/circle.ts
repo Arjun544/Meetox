@@ -14,7 +14,7 @@ const typeDefs = gql`
   }
 
   type Query {
-    userCircles(page: Int!, limit: Int!): CirclesResponse
+    userCircles(name: String, page: Int!, limit: Int!): CirclesResponse
   }
 
   type Mutation {
