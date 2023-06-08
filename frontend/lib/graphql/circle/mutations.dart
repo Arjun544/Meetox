@@ -3,3 +3,9 @@ String addCircle = r'''
      addCircle(name: $name, description: $description, isPrivate: $isPrivate, members: $members, location: $location, limit: $limit, image: $image)
   }
 ''';
+
+String deleteCircle = r'''
+mutation($id: String!) {
+  deleteCircle(id: $id)
+}
+''';

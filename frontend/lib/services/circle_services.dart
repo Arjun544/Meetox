@@ -21,8 +21,6 @@ class CircleServices {
         ),
       );
 
-      // logError(json.encode(result.data).toString());
-
       return result.parsedData!;
     } catch (e) {
       logError(e.toString());

@@ -1,5 +1,5 @@
-import 'package:frontend/models/circle_model.dart' as circle_model;
 import 'package:frontend/core/imports/core_imports.dart';
+import 'package:frontend/models/circle_model.dart' as circle_model;
 import 'package:frontend/services/circle_services.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
@@ -33,6 +33,18 @@ class CirclesController extends GetxController {
     } catch (e) {
       logError(e.toString());
       circlesPagingController.error = e;
+    }
+  }
+
+  void onDeleteCompleted(
+      Map<String, dynamic>? resultData, BuildContext context) {
+    if (resultData != null) {
+      final circle_model.Circle newCircle = circle_model.Circle.fromJson(
+          resultData['deleteCircle'] as Map<String, dynamic>);
+
+      circlesPagingController.itemList!.remove(newCircle);
+      circlesPagingController.refresh();
+      Navigator.pop(context);
     }
   }
 }

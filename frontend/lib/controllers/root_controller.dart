@@ -85,6 +85,8 @@ class RootController extends GetxController {
           ],
         );
 
+        currentUser.refresh();
+
         await UserServices.updateUserLocation(
           address: address,
           coordinates: [

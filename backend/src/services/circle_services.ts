@@ -9,7 +9,7 @@ export async function nearbyCircles(
   distanceInKM: number
 ) {
   const radius = distanceInKM / 6378.1;
-  const users = await Circle.find({
+  const circles = await Circle.find({
     admin: { $ne: id },
     "location.coordinates": {
       $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
@@ -18,7 +18,7 @@ export async function nearbyCircles(
     "name description image isPrivate members createdAt location limit"
   );
 
-  return users;
+  return circles;
 }
 
 export async function userCircles(id: String, page: number, limit: number) {
@@ -45,4 +45,12 @@ export async function userCircles(id: String, page: number, limit: number) {
     total_results: result.totalDocs,
     circles: result.docs,
   };
+}
+
+export async function deleteCircle(id: String) {
+  const circle = await Circle.findByIdAndDelete(id).select(
+    "name description image isPrivate members createdAt location limit"
+  );
+  console.log("deleted circle", circle);
+  return circle;
 }

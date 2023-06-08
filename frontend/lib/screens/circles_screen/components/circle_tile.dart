@@ -1,18 +1,24 @@
 import 'package:flutter/cupertino.dart';
+import 'package:frontend/controllers/circles_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/graphql/circle/mutations.dart';
+import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/circle_model.dart' as circle_model;
 import 'package:frontend/utils/constants.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class CircleTile extends HookWidget {
   const CircleTile({
     required this.circle,
     required this.onTap,
+    required this.circlesController,
     super.key,
     this.isShowingOnMap = false,
   });
   final circle_model.Circle circle;
   final bool isShowingOnMap;
+  final CirclesController circlesController;
   final VoidCallback onTap;
 
   @override
@@ -73,15 +79,13 @@ class CircleTile extends HookWidget {
                       ],
                     ),
                     cancelButton: CupertinoActionSheetAction(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
+                      onPressed: () => Navigator.pop(context),
                       child: Text(
                         'Cancel',
                         style: context.theme.textTheme.labelMedium,
                       ),
                     ),
-                    actions: <CupertinoActionSheetAction>[
+                    actions: [
                       CupertinoActionSheetAction(
                         onPressed: () {},
                         child: Text(
@@ -89,15 +93,44 @@ class CircleTile extends HookWidget {
                           style: context.theme.textTheme.labelMedium,
                         ),
                       ),
-                      CupertinoActionSheetAction(
-                        isDestructiveAction: true,
-                        onPressed: () {},
-                        child: Text(
-                          'Delete',
-                          style: context.theme.textTheme.labelMedium!.copyWith(
-                            color: Colors.redAccent,
+                      Mutation(
+                        options: MutationOptions(
+                          document: gql(deleteCircle),
+                          fetchPolicy: FetchPolicy.networkOnly,
+                          onCompleted: (Map<String, dynamic>? resultData) =>
+                              circlesController.onDeleteCompleted(
+                            resultData,
+                            context,
                           ),
+                          onError: (error) =>
+                              showToast('Failed to delete circle'),
                         ),
+                        builder: (runMutation, result) {
+                          return result!.isLoading
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: Get.width * 0.42,
+                                      vertical: 8.h),
+                                  child:
+                                      LoadingAnimationWidget.staggeredDotsWave(
+                                    color: AppColors.primaryYellow,
+                                    size: 25.sp,
+                                  ),
+                                )
+                              : CupertinoActionSheetAction(
+                                  isDestructiveAction: true,
+                                  onPressed: () => runMutation({
+                                    "id": circle.id,
+                                  }),
+                                  child: Text(
+                                    'Delete',
+                                    style: context.theme.textTheme.labelMedium!
+                                        .copyWith(
+                                      color: Colors.redAccent,
+                                    ),
+                                  ),
+                                );
+                        },
                       ),
                     ],
                   ),

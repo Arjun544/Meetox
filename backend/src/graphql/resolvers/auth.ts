@@ -25,7 +25,7 @@ const resolvers = {
 
       try {
         const hasUser = await User.findOne({ email }).select(
-          "email name display_pic isPremium location createdAt"
+          "email name display_pic isPremium location createdAt followers followings"
         );
 
         if (!hasUser) {

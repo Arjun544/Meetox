@@ -27,6 +27,8 @@ const typeDefs = gql`
       members: [String]!
       location: ILocation
     ): ICircle
+
+    deleteCircle(id: String!): ICircle
   }
 
   type CirclesResponse {

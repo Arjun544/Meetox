@@ -1,7 +1,4 @@
 import 'package:frontend/core/imports/core_imports.dart';
-import 'package:frontend/graphql/user/subscriptions.dart';
-import 'package:frontend/models/user_model.dart';
-import 'package:graphql_flutter/graphql_flutter.dart';
 
 class UserController extends GetxController {
   @override

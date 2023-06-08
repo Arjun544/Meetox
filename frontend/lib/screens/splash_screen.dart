@@ -3,6 +3,7 @@ import 'package:frontend/controllers/splash_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/graphql/user/queries.dart';
+import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/screens/auth_screens/screens_imports.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -12,9 +13,9 @@ class SplashScreen extends GetView<SplashController> {
 
   @override
   Widget build(BuildContext context) {
-    Get..put(SplashController())
-    ..put(GlobalController(), permanent: true);
-
+    Get
+      ..put(SplashController())
+      ..put(GlobalController(), permanent: true);
 
     return Scaffold(
       body: Container(
@@ -53,6 +54,9 @@ class SplashScreen extends GetView<SplashController> {
                 },
                 onError: (error) {
                   logError(error!.graphqlErrors.toString());
+                  if (error.graphqlErrors[0].message == 'jwt expired') {
+                    showToast('Session expired, please login again');
+                  }
                   Get.offAll(() => const AuthScreen());
                 },
               ),

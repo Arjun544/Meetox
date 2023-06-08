@@ -6,7 +6,11 @@ import { uploadImage } from "../../services/storage_services";
 import { decodeToken } from "../../services/token_services";
 import { ICircle } from "../../utils/interfaces/circle";
 import { GraphQLContext } from "../../utils/types";
-import { nearbyCircles, userCircles } from "../../services/circle_services";
+import {
+  nearbyCircles,
+  userCircles,
+  deleteCircle,
+} from "../../services/circle_services";
 
 const resolvers = {
   Mutation: {
@@ -39,12 +43,20 @@ const resolvers = {
 
       return circle;
     },
+    deleteCircle: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { id: circleId } = args;
+      const { id } = decodeToken(req as IncomingMessage);
+
+      const circle = await deleteCircle(circleId as String);
+      return circle;
+    },
   },
   Query: {
     userCircles: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;
       const { page, limit } = args;
-      const { id, token } = decodeToken(req as IncomingMessage);
+      const { id } = decodeToken(req as IncomingMessage);
 
       const circles = await userCircles(id as String, page, limit);
       return circles;
@@ -52,7 +64,7 @@ const resolvers = {
     getNearByCircles: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;
       const { latitude, longitude, distanceInKM, followers } = args;
-      const { id, token } = decodeToken(req as IncomingMessage);
+      const { id } = decodeToken(req as IncomingMessage);
 
       const circles = await nearbyCircles(
         id as String,
