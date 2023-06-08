@@ -1,6 +1,7 @@
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/screens/add_circle_screen/add_circle_screen.dart';
+import 'package:frontend/screens/add_question_screen/add_question_screen.dart';
 
 class AddOptionsSheet extends StatelessWidget {
   const AddOptionsSheet({super.key});
@@ -78,6 +79,7 @@ class AddOptionsSheet extends StatelessWidget {
               'Ask question',
               style: context.theme.textTheme.labelMedium,
             ),
+            onTap: () => Get.to(() => const AddQuestionScreen()),
           ),
         ],
       ),

@@ -1,40 +1,38 @@
 import { PaginateModel, model } from "mongoose";
-import Circle from "../models/circle_model";
-import { ICircle } from "../utils/interfaces/circle";
+import Question from "../models/question_model";
+import { IQuestion } from "../utils/interfaces/question";
 
-export async function nearbyCircles(
+export async function nearbyQuestions(
   id: String,
   latitude: number,
   longitude: number,
   distanceInKM: number
 ) {
   const radius = distanceInKM / 6378.1;
-  const circles = await Circle.find({
+  const questions = await Question.find({
     admin: { $ne: id },
     "location.coordinates": {
       $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
     },
-  }).select(
-    "name description image isPrivate members createdAt location limit"
-  );
+  }).select("name answers owner upvotes downvotes expiry createdAt location");
 
-  return circles;
+  return questions;
 }
 
-export async function userCircles(
+export async function userQuestions(
   id: String,
-  name: String,
+  question: String,
   page: number,
   limit: number
 ) {
   const query =
-    name === null
+    question === null
       ? {
           admin: id,
         }
       : {
           admin: id,
-          $text: { $search: name as string },
+          $text: { $search: question as string },
         };
   const option = {
     lean: true,
@@ -43,9 +41,9 @@ export async function userCircles(
     limit: limit,
   };
 
-  const circle = model<ICircle, PaginateModel<ICircle>>("Circles");
+  const newQuestion = model<IQuestion, PaginateModel<IQuestion>>("Questions");
 
-  const result = await circle.paginate(query, option);
+  const result = await newQuestion.paginate(query, option);
   return {
     page: result.page,
     nextPage: result.nextPage,
@@ -54,14 +52,13 @@ export async function userCircles(
     hasPrevPage: result.hasPrevPage,
     total_pages: result.totalPages,
     total_results: result.totalDocs,
-    circles: result.docs,
+    questions: result.docs,
   };
 }
 
-export async function deleteCircle(id: String) {
-  const circle = await Circle.findByIdAndDelete(id).select(
-    "name description image isPrivate members createdAt location limit"
+export async function deleteQuestion(id: String) {
+  const question = await Question.findByIdAndDelete(id).select(
+    "name answers owner upvotes downvotes expiry createdAt location"
   );
-  console.log("deleted circle", circle);
-  return circle;
+  return question;
 }

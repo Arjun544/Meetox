@@ -1,6 +1,7 @@
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/screens/circles_screen/circles_screen.dart';
+import 'package:frontend/screens/questions_screen/questions_screen.dart';
 import 'package:frontend/widgets/drawer_tile.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -50,7 +51,7 @@ class CustomDrawer extends StatelessWidget {
                 DrawerTile(
                   icon: FlutterRemix.question_fill,
                   title: 'Questions',
-                  onPressed: () {},
+                  onPressed: () => Get.to(() => const QuestionsScreen()),
                 ),
                 DrawerTile(
                   icon: FlutterRemix.shopping_bag_fill,

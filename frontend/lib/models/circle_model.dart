@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'user_model.dart';
+
 class CircleModel {
   String? typename;
   UserCircles? userCircles;
@@ -190,31 +192,3 @@ class Image {
       };
 }
 
-class Location {
-  String? address;
-  List<double>? coordinates;
-
-  Location({
-    this.address,
-    this.coordinates,
-  });
-
-  factory Location.fromRawJson(String str) =>
-      Location.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory Location.fromJson(Map<String, dynamic> json) => Location(
-        address: json["address"],
-        coordinates: json["coordinates"] == null
-            ? []
-            : List<double>.from(json["coordinates"]!.map((x) => x?.toDouble())),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "address": address,
-        "coordinates": coordinates == null
-            ? []
-            : List<dynamic>.from(coordinates!.map((x) => x)),
-      };
-}
