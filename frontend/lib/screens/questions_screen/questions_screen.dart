@@ -73,6 +73,7 @@ class QuestionsScreen extends GetView<QuestionsController> {
                     controller: TextEditingController(),
                     focusNode: FocusNode(),
                     isPasswordVisible: true.obs,
+                    autoFocus: false,
                     hasFocus: false.obs,
                     keyboardType: TextInputType.text,
                     prefixIcon: FlutterRemix.search_2_fill,
@@ -89,8 +90,7 @@ class QuestionsScreen extends GetView<QuestionsController> {
                       thickness: 1,
                       color: context.theme.canvasColor.withOpacity(0.1),
                     ),
-                    builderDelegate:
-                        PagedChildBuilderDelegate<Question>(
+                    builderDelegate: PagedChildBuilderDelegate<Question>(
                       animateTransitions: true,
                       transitionDuration: const Duration(milliseconds: 500),
                       firstPageProgressIndicatorBuilder: (_) =>
@@ -101,14 +101,16 @@ class QuestionsScreen extends GetView<QuestionsController> {
                         child: CustomErrorWidget(
                           image: AssetsManager.angryState,
                           text: 'Failed to fetch questions',
-                          onPressed: controller.questiosPagingController.refresh,
+                          onPressed:
+                              controller.questiosPagingController.refresh,
                         ),
                       ),
                       newPageErrorIndicatorBuilder: (_) => Center(
                         child: CustomErrorWidget(
                           image: AssetsManager.angryState,
                           text: 'Failed to fetch questions',
-                          onPressed: controller.questiosPagingController.refresh,
+                          onPressed:
+                              controller.questiosPagingController.refresh,
                         ),
                       ),
                       noItemsFoundIndicatorBuilder: (_) => CustomErrorWidget(

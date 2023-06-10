@@ -37,6 +37,7 @@ class CircleDetails extends GetView<AddCircleController> {
                 children: [
                   CustomField(
                     hintText: 'Name',
+                    autoFocus: false,
                     controller: controller.nameController,
                     focusNode: controller.nameFocusNode,
                     isPasswordVisible: true.obs,

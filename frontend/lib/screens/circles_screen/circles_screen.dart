@@ -73,6 +73,7 @@ class CirclesScreen extends GetView<CirclesController> {
                     focusNode: FocusNode(),
                     isPasswordVisible: true.obs,
                     hasFocus: false.obs,
+                    autoFocus: false,
                     keyboardType: TextInputType.text,
                     prefixIcon: FlutterRemix.search_2_fill,
                     onChanged: (value) {

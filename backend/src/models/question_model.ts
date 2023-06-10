@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { IQuestion } from "../utils/interfaces/question";
 import paginate from "mongoose-paginate-v2";
+import { IQuestion } from "../utils/interfaces/question";
 
 const questionSchema = new Schema(
   {
@@ -91,6 +91,8 @@ questionSchema.set("toJSON", {
 });
 
 questionSchema.index({ question: "text" });
+
+questionSchema.index({ expiry: 1 }, { expireAfterSeconds: 0 });
 
 questionSchema.plugin(paginate);
 
