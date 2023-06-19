@@ -2,6 +2,7 @@ import { Types, Document } from "mongoose";
 import { ILocation } from "./user";
 
 export interface ICircle extends Document {
+  id: string;
   name: string;
   description: string;
   image: IImage;

@@ -24,9 +24,7 @@ export async function nearbyUsers(
     "location.coordinates": {
       $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
     },
-  }).select(
-    "email name birthDay display_pic isPremium location createdAt followers followings"
-  );
+  }).select("name display_pic isPremium location createdAt updatedAt");
 
   return users;
 }

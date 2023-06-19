@@ -54,10 +54,10 @@ class SplashScreen extends GetView<SplashController> {
                 },
                 onError: (error) {
                   logError(error!.graphqlErrors.toString());
-                  if (error.graphqlErrors[0].message == 'jwt expired') {
+                  if (error.graphqlErrors.isNotEmpty && error.graphqlErrors[0].message == 'jwt expired') {
                     showToast('Session expired, please login again');
-                  }
                   Get.offAll(() => const AuthScreen());
+                  }
                 },
               ),
               builder: (

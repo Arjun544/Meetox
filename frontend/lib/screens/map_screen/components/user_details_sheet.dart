@@ -1,10 +1,13 @@
 import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/graphql/user/mutations.dart';
+import 'package:frontend/graphql/user/queries.dart';
 import 'package:frontend/helpers/get_distance.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/utils/constants.dart';
 import 'package:frontend/widgets/online_indicator.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
 class UserDetailsSheet extends HookWidget {
   const UserDetailsSheet(this.user, this.tappedUser, {super.key});
@@ -14,13 +17,7 @@ class UserDetailsSheet extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<MapScreenController>();
-    final followers = useState(user.followers!.length);
-
-    // final followMutation = useMutation(job: FollowersQueries.followMutation);
-    // final unfollowMutation =
-    //     useMutation(job: FollowersQueries.unfollowMutataion);
-
-    // final ValueNotifier<bool> isFetchingConversations = useState(false);
+    final followers = useState(user.followers!);
 
     final currentLatitude =
         controller.rootController.currentPosition.value.latitude;
@@ -36,34 +33,37 @@ class UserDetailsSheet extends HookWidget {
       userLongitude,
     );
 
-    // Future handleFollow() async {
-    //   await followMutation.mutateAsync({
-    //     'to': user.id,
-    //   });
-
-    //   if (followMutation.hasError) {
-    //     log('mutation error: ${followMutation.error}');
-    //     showToast('Request failed');
-    //     followMutation.reset();
-    //   } else if (followMutation.hasData) {
-    //     followers.value += 1;
-    //     currentUser.value.followings!.add(user.id!);
-    //   }
-    // }
-
-    // Future handleUnfollow() async {
-    //   await unfollowMutation.mutateAsync({
-    //     'to': user.id,
-    //   });
-    //   if (unfollowMutation.hasError) {
-    //     log('mutation error: ${unfollowMutation.error}');
-    //     showToast('Request failed');
-    //     unfollowMutation.reset();
-    //   } else if (unfollowMutation.hasData) {
-    //     followers.value -= 1;
-    //     currentUser.value.followings!.remove(user.id!);
-    //   }
-    // }
+    final checkIsFollowed = useQuery(
+      QueryOptions(
+        document: gql(isFollowed),
+        fetchPolicy: FetchPolicy.networkOnly,
+        variables: {
+          "id": user.id,
+        },
+      ),
+    );
+    final followUser = useMutation(
+      MutationOptions(
+        document: gql(follow),
+        onCompleted: (data) {
+          if (data != null && data['follow'] != null) {
+            followers.value += 1;
+            checkIsFollowed.refetch();
+          }
+        },
+      ),
+    );
+    final unFollowUser = useMutation(
+      MutationOptions(
+        document: gql(unFollow),
+        onCompleted: (data) {
+          if (data != null && data['unFollow'] != null) {
+            followers.value -= 1;
+            checkIsFollowed.refetch();
+          }
+        },
+      ),
+    );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       controller.animatedMapMove(
@@ -152,13 +152,25 @@ class UserDetailsSheet extends HookWidget {
                   trailing: Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: InkWell(
-                      onTap: () async {},
-                      // currentUser.value.followings!.contains(user.id)
-                      //     ? await handleUnfollow()
-                      //     : await handleFollow(),
+                      onTap: () async {
+                        if (checkIsFollowed.result.data!['isFollowed']) {
+                          unFollowUser.runMutation({
+                            "id": user.id,
+                          });
+                        } else {
+                          followUser.runMutation({
+                            "id": user.id,
+                          });
+                        }
+                      },
                       child: DecoratedBox(
                         decoration: BoxDecoration(
-                          color: AppColors.primaryYellow,
+                          color:
+                              checkIsFollowed.result.data?['isFollowed'] == null
+                                  ? AppColors.primaryYellow
+                                  : checkIsFollowed.result.data?['isFollowed']
+                                      ? Colors.redAccent
+                                      : AppColors.primaryYellow,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Padding(
@@ -166,31 +178,28 @@ class UserDetailsSheet extends HookWidget {
                             horizontal: 20.sp,
                             vertical: 6.sp,
                           ),
-                          child: true == true
+                          child: checkIsFollowed.result.isLoading
                               ? LoadingAnimationWidget.staggeredDotsWave(
                                   color: AppColors.customBlack,
                                   size: 20.sp,
                                 )
-                              : const Row(
+                              : Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    // Icon(
-                                    //   currentUser.value.followings!
-                                    //           .contains(user.id)
-                                    //       ? FlutterRemix.user_unfollow_fill
-                                    //       : FlutterRemix.user_add_fill,
-                                    //   size: 16.sp,
-                                    //   color: context.theme.iconTheme.color,
-                                    // ),
-                                    SizedBox(width: 8),
-                                    // Text(
-                                    //   currentUser.value.followings!
-                                    //           .contains(user.id)
-                                    //       ? 'Unfollow'
-                                    //       : 'Follow',
-                                    //   style:
-                                    //       context.theme.textTheme.headline6,
-                                    // ),
+                                    Icon(
+                                      checkIsFollowed.result.data!['isFollowed']
+                                          ? FlutterRemix.user_unfollow_fill
+                                          : FlutterRemix.user_add_fill,
+                                      size: 16.sp,
+                                      color: context.theme.iconTheme.color,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      checkIsFollowed.result.data!['isFollowed']
+                                          ? 'Unfollow'
+                                          : 'Follow',
+                                      style: context.theme.textTheme.labelSmall,
+                                    ),
                                   ],
                                 ),
                         ),
@@ -237,7 +246,7 @@ class UserDetailsSheet extends HookWidget {
                     child: Column(
                       children: [
                         Text(
-                          user.followings!.length.toString(),
+                          user.followings.toString(),
                           style: context.theme.textTheme.labelMedium,
                         ),
                         Text(

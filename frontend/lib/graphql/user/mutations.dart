@@ -9,3 +9,15 @@ String updateLocation = r'''
      updateLocation(location: $location)
   }
 ''';
+
+String follow = r'''
+    mutation($id: String!) {
+    follow(id: $id)
+  }
+''';
+
+String unFollow = r'''
+    mutation($id: String!) {
+    unFollow(id: $id)
+  }
+''';

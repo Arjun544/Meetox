@@ -13,9 +13,8 @@ Future<void> graphqlInit() async {
   );
   final token = await SecureStorageServices.readValue(key: 'accessToken');
 
-    logSuccess('token $token');
+  logSuccess('token $token');
   if (token != null) {
-
     final authLink = AuthLink(
       getToken: () async => 'Bearer $token',
     );

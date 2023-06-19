@@ -88,9 +88,9 @@ class User {
             : Location.fromJson(
                 json['location'] as Map<String, dynamic>,
               ),
-        id: json['_id'] as String,
+        id: json['id'] as String,
         name: json['name'] as String,
-        email: json['email'] as String,
+        email: json['email'] ?? '',
         displayPic: json['display_pic'] == null
             ? null
             : DisplayPic.fromJson(json['display_pic'] as Map<String, dynamic>),
@@ -99,8 +99,8 @@ class User {
             ? null
             : DateTime.parse(json['createdAt'] as String),
         userId: json['id'] as String,
-        followers: json['followers'] as List<dynamic>,
-        followings: json['followings'] as List<dynamic>,
+        followers: json['followers'] ?? 0,
+        followings: json['followings'] ?? 0,
       );
   Location? location;
   String? id;
@@ -110,8 +110,8 @@ class User {
   bool? isPremium;
   DateTime? createdAt;
   String? userId;
-  List<dynamic>? followers;
-  List<dynamic>? followings;
+  int? followers;
+  int? followings;
 
   String toRawJson() => json.encode(toJson());
 

@@ -1,9 +1,9 @@
 import { UploadApiResponse } from "cloudinary";
-import { withFilter } from "graphql-subscriptions/dist/with-filter";
 import { IncomingMessage } from "http";
+import Follow from "../../models/follow_model";
 import User from "../../models/user_model";
 import { uploadImage } from "../../services/storage_services";
-import { decodeToken, getIdFromToken } from "../../services/token_services";
+import { decodeToken } from "../../services/token_services";
 import { nearbyUsers } from "../../services/user_services";
 import { IUser } from "../../utils/interfaces/user";
 import { GraphQLContext } from "../../utils/types";
@@ -38,11 +38,11 @@ const resolvers = {
       return user;
     },
     updateLocation: async (_: any, args: any, context: GraphQLContext) => {
-      const { req, pubsub } = context;
+      const { req } = context;
       const { location } = args;
       const { id, token } = decodeToken(req as IncomingMessage);
 
-      const user: IUser | null = await User.findByIdAndUpdate(
+      await User.findByIdAndUpdate(
         id,
         {
           location: location,
@@ -53,13 +53,23 @@ const resolvers = {
       return true;
     },
   },
+  NearByUserResponse: {
+    followers: async (parent: { id: any }) => {
+      const count = await Follow.countDocuments({ following: parent.id });
+      return count;
+    },
+    followings: async (parent: { id: any }) => {
+      const count = await Follow.countDocuments({ follower: parent.id });
+      return count;
+    },
+  },
   Query: {
     getUser: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;
       const { id, token } = decodeToken(req as IncomingMessage);
 
       const user: IUser | null = await User.findById(id).select(
-        "email name birthDay display_pic isPremium location createdAt followers followings"
+        "email name display_pic isPremium location createdAt updatedAt"
       );
 
       return user;

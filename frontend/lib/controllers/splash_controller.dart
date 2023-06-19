@@ -1,5 +1,3 @@
-
-
 import 'package:frontend/controllers/user_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/helpers/decode_token.dart';
@@ -22,6 +20,7 @@ class SplashController extends GetxController {
   Future<void> onCompleted(User user) async {
     final savedToken =
         await SecureStorageServices.readValue(key: 'accessToken');
+    logInfo('savedToken $savedToken');
     if (savedToken != null) {
       final token = decodeToken(savedToken);
 

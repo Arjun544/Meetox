@@ -38,6 +38,9 @@ class MapScreen extends HookWidget {
           'distanceInKM': currentUser.value.isPremium! ? 600 : 300,
           'followers': const [],
         },
+        onError: (error) {
+          logError(error!.graphqlErrors.toString());
+        },
       ),
     );
 

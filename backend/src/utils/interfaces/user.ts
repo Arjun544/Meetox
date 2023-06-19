@@ -1,4 +1,4 @@
-import { Types, Document } from "mongoose";
+import { Document } from "mongoose";
 
 export interface ISession extends Document {
   token: string;
@@ -21,8 +21,6 @@ export interface IUser extends Document {
   whatsAppTokenExpires: Date;
   socials: ISocialLink;
   location: ILocation;
-  followers: [Types.ObjectId];
-  followings: [Types.ObjectId];
   createdAt: Date;
   updatedAt: Date;
 }
