@@ -6,7 +6,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 class FollowersController extends GetxController
     with GetSingleTickerProviderStateMixin {
   final String id;
-  FollowersController(this.id);
+  final bool isFollowing;
+  FollowersController(this.id, this.isFollowing);
 
   late TabController tabController;
 
@@ -23,7 +24,7 @@ class FollowersController extends GetxController
   @override
   void onInit() {
     super.onInit();
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(initialIndex: isFollowing ? 1: 0,length: 2, vsync: this);
     followersPagingController.addPageRequestListener((page) async {
       await fetchFollowers(page);
       followersSearchDebounce = debounce(

@@ -15,11 +15,7 @@ class FollowersScreen extends GetView<FollowersController> {
 
   @override
   Widget build(BuildContext context) {
-    Get.put(FollowersController(user.id!));
-
-    if (isFollowing) {
-      controller.tabController.animateTo(1);
-    }
+    Get.put(FollowersController(user.id!, isFollowing));
 
     return Scaffold(
       appBar: AppBar(
