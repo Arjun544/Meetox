@@ -14,7 +14,7 @@ export 'package:flutter_map/plugin_api.dart';
 export 'package:flutter_remix/flutter_remix.dart';
 export 'package:flutter_screenutil/flutter_screenutil.dart';
 export 'package:flutter_secure_storage/flutter_secure_storage.dart';
-// export 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+export 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 export 'package:flutter_svg/svg.dart';
 export 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 export 'package:geocoding/geocoding.dart';

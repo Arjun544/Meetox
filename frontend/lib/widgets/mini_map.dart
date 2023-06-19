@@ -20,7 +20,7 @@ class MiniMap extends GetView<MapScreenController> {
             latitude,
             longitude,
           ),
-          zoom: 14,
+          zoom: 12,
           minZoom: 1,
           maxZoom: 12,
           keepAlive: true,
@@ -35,7 +35,7 @@ class MiniMap extends GetView<MapScreenController> {
                           FMTCTileProviderSettings(),
                         ),
                     minZoom: 1,
-                    maxZoom: 14,
+                    maxZoom: 12,
                     urlTemplate: darkMapUrl,
                     userAgentPackageName: 'Monochrome dark',
                     additionalOptions: {
@@ -47,7 +47,7 @@ class MiniMap extends GetView<MapScreenController> {
                           FMTCTileProviderSettings(),
                         ),
                     minZoom: 1,
-                    maxZoom: 14,
+                    maxZoom: 12,
                     urlTemplate: lightMapUrl,
                     userAgentPackageName: 'Monochrome light',
                     additionalOptions: {
@@ -61,7 +61,7 @@ class MiniMap extends GetView<MapScreenController> {
                           FMTCTileProviderSettings(),
                         ),
                     minZoom: 1,
-                    maxZoom: 14,
+                    maxZoom: 12,
                     urlTemplate: skyMapUrl,
                     userAgentPackageName: 'Monochrome sky',
                     additionalOptions: {
@@ -73,7 +73,7 @@ class MiniMap extends GetView<MapScreenController> {
                           FMTCTileProviderSettings(),
                         ),
                     minZoom: 1,
-                    maxZoom: 14,
+                    maxZoom: 12,
                     urlTemplate: meetoxMapUrl,
                     userAgentPackageName: 'Monochrome meetox',
                     additionalOptions: {

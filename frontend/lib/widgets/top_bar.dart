@@ -8,6 +8,9 @@ import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/core/instances.dart';
 import 'package:frontend/widgets/user_initials.dart';
 
+import '../screens/map_screen/components/map_options.dart';
+import 'show_custom_sheet.dart';
+
 class TopBar extends GetView<MapScreenController> {
   const TopBar({
     required this.isPrecise,
@@ -151,11 +154,10 @@ class TopBar extends GetView<MapScreenController> {
             children: [
               if (isMapScreen)
                 InkWell(
-                  onTap: () {},
-                  // onTap: () => showCustomSheet(
-                  //   context: context,
-                  //   child: CustomMapOptions(),
-                  // ),
+                  onTap: () => showCustomSheet(
+                    context: context,
+                    child: const CustomMapOptions(),
+                  ),
                   child: Container(
                     height: 40.sp,
                     width: 40.sp,

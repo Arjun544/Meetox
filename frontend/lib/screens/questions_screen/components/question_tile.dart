@@ -12,13 +12,13 @@ class QuestionTile extends StatelessWidget {
   const QuestionTile({
     required this.question,
     required this.onTap,
-    required this.questionsController,
+     this.questionsController,
     super.key,
     this.isShowingOnMap = false,
   });
   final Question question;
   final bool isShowingOnMap;
-  final QuestionsController questionsController;
+  final QuestionsController? questionsController;
   final VoidCallback onTap;
 
   @override
@@ -87,7 +87,7 @@ class QuestionTile extends StatelessWidget {
                           document: gql(deleteQuestion),
                           fetchPolicy: FetchPolicy.networkOnly,
                           onCompleted: (Map<String, dynamic>? resultData) =>
-                              questionsController.onDeleteCompleted(
+                              questionsController!.onDeleteCompleted(
                             resultData,
                             context,
                           ),

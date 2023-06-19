@@ -7,17 +7,19 @@ import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/graphql/circle/queries.dart';
 import 'package:frontend/graphql/question/queries.dart';
 import 'package:frontend/graphql/user/queries.dart';
+import 'package:frontend/models/circle_model.dart' as circle_model;
 import 'package:frontend/models/question_model.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/screens/map_screen/components/current_user_layer.dart';
 import 'package:frontend/screens/map_screen/components/custom_tile_layer.dart';
 import 'package:frontend/screens/map_screen/components/main_filters.dart';
 import 'package:frontend/screens/map_screen/components/users_cluster_layer.dart';
+import 'package:frontend/widgets/show_custom_sheet.dart';
 import 'package:frontend/widgets/top_bar.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:frontend/models/circle_model.dart' as circle_model;
 
 import 'components/circles_cluster_layer.dart';
+import 'components/markers_list_sheet.dart';
 import 'components/questions_cluster_layer.dart';
 
 class MapScreen extends HookWidget {
@@ -282,12 +284,14 @@ class MapScreen extends HookWidget {
                           IconsaxBold.textalign_center,
                           color: context.theme.appBarTheme.iconTheme!.color,
                         ),
-                        onPressed: () {},
-                        // TODO:
-                        // onPressed: () => showCustomSheet(
-                        //   context: context,
-                        //   child: MarkersListSheet(),
-                        // ),
+                        onPressed: () => showCustomSheet(
+                          context: context,
+                          child: MarkersListSheet(
+                            usersResult,
+                            circlesResult,
+                            questionsResult,
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 14),
                       FloatingActionButton(

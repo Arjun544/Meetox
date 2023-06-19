@@ -1,34 +1,33 @@
+import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/core/instances.dart';
 import 'package:frontend/widgets/custom_tabbar.dart';
 import 'package:frontend/widgets/mini_map.dart';
 
-class MapOptions extends StatelessWidget {
-  const MapOptions({super.key});
+class CustomMapOptions extends HookWidget {
+  const CustomMapOptions({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final rootController = Get.find();
-    final mapScreenController = Get.find();
-
+    final MapScreenController controller = Get.find();
     Future<void> handleMapStyleChange(int value) async {
       if (value == 0) {
-        mapScreenController.currentMapStyle.value = 'default';
+        controller.currentMapStyle.value = 'default';
         await getStorage.write('currentMapStyle', 'default');
       } else if (value == 1) {
-        mapScreenController.currentMapStyle.value = 'sky';
+        controller.currentMapStyle.value = 'sky';
         await getStorage.write('currentMapStyle', 'sky');
       } else {
-        mapScreenController.currentMapStyle.value = 'meetox';
+        controller.currentMapStyle.value = 'meetox';
         await getStorage.write('currentMapStyle', 'meetox');
       }
     }
 
     final tabController = useTabController(
-      initialIndex: mapScreenController.currentMapStyle.value == 'default'
+      initialIndex: controller.currentMapStyle.value == 'default'
           ? 0
-          : mapScreenController.currentMapStyle.value == 'sky'
+          : controller.currentMapStyle.value == 'sky'
               ? 1
               : 2,
       initialLength: 3,
@@ -46,7 +45,6 @@ class MapOptions extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          // SizedBox(height: 10.sp),
           Center(
             child: Container(
               height: 5.sp,
@@ -68,14 +66,11 @@ class MapOptions extends StatelessWidget {
               height: 200.sp,
               width: Get.width,
               child: MiniMap(
-                latitude:
-                    rootController.currentPosition.value.latitude as double,
-                longitude:
-                    rootController.currentPosition.value.longitude as double,
+                latitude: currentUser.value.location!.coordinates![0],
+                longitude: currentUser.value.location!.coordinates![1],
               ),
             ),
           ),
-          // SizedBox(height: 10.sp),
           CustomTabbar(
             controller: tabController,
             onTap: handleMapStyleChange,
@@ -91,45 +86,6 @@ class MapOptions extends StatelessWidget {
               ),
             ],
           ),
-          // Container(
-          //   width: Get.width,
-          //   height: 40.sp,
-          //   decoration: BoxDecoration(
-          //     color: context.isDarkMode ? Colors.black : AppColors.customGrey,
-          //     borderRadius: BorderRadius.circular(12),
-          //   ),
-          //   child: TabBar(
-          //     controller: tabController,
-          //     indicatorColor: Colors.green,
-          //     onTap: handleMapStyleChange,
-          //     tabs: const [
-          //       Tab(
-          //         text: 'Default',
-          //       ),
-          //       Tab(
-          //         text: 'Sky',
-          //       ),
-          //       Tab(
-          //         text: 'Meetox',
-          //       ),
-          //     ],
-          //     labelStyle: context.theme.textTheme.labelSmall!
-          //         .copyWith(letterSpacing: 1),
-          //     unselectedLabelStyle: context.theme.textTheme.labelSmall!
-          //         .copyWith(letterSpacing: 1),
-          //     labelColor: context.theme.textTheme.labelMedium!.color,
-          //     indicator: RectangularIndicator(
-          //       color: AppColors.primaryYellow,
-          //       bottomLeftRadius: 12,
-          //       bottomRightRadius: 12,
-          //       topLeftRadius: 12,
-          //       topRightRadius: 12,
-          //       verticalPadding: 4,
-          //       horizontalPadding: 4,
-          //       paintingStyle: PaintingStyle.fill,
-          //     ),
-          //   ),
-          // ),
           SizedBox(height: 20.sp),
         ],
       ),

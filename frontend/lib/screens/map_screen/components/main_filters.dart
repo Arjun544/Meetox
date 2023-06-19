@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
-import 'package:frontend/widgets/show_custom_sheet.dart';
 
 class MainFilters extends GetView<MapScreenController> {
   const MainFilters({super.key});
@@ -14,45 +13,48 @@ class MainFilters extends GetView<MapScreenController> {
       padding: EdgeInsets.only(right: 15.sp),
       child: Column(
         children: [
-          InkWell(
-            onTap: () => showCustomSheet(
-              context: context,
-              child: const SizedBox(),
-              // child: FiltersSheet(),
-            ),
-            child: Container(
-              height: 50.sp,
-              width: 55.sp,
-              alignment: Alignment.center,
-              decoration: BoxDecoration(
-                color: context.theme.dividerColor,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  const Icon(IconsaxBold.setting_4),
-                  Obx(
-                    () => controller.hasAppliedFilters.value
-                        ? Positioned(
-                            right: -5,
-                            top: -5,
-                            child: Container(
-                              height: 10.sp,
-                              width: 10.sp,
-                              decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.green,
-                              ),
-                            ),
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: 20.sp),
+          // InkWell(
+          //   onTap: () => showCustomSheet(
+          //     context: context,
+          //     child: FiltersSheet(
+          //       usersResult,
+          //       circlesResult,
+          //       questionsResult,
+          //     ),
+          //   ),
+          //   child: Container(
+          //     height: 50.sp,
+          //     width: 55.sp,
+          //     alignment: Alignment.center,
+          //     decoration: BoxDecoration(
+          //       color: context.theme.dividerColor,
+          //       borderRadius: BorderRadius.circular(15),
+          //     ),
+          //     child: Stack(
+          //       clipBehavior: Clip.none,
+          //       children: [
+          //         const Icon(IconsaxBold.setting_4),
+          //         Obx(
+          //           () => controller.hasAppliedFilters.value
+          //               ? Positioned(
+          //                   right: -5,
+          //                   top: -5,
+          //                   child: Container(
+          //                     height: 10.sp,
+          //                     width: 10.sp,
+          //                     decoration: const BoxDecoration(
+          //                       shape: BoxShape.circle,
+          //                       color: Colors.green,
+          //                     ),
+          //                   ),
+          //                 )
+          //               : const SizedBox.shrink(),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
+          // ),
+          SizedBox(height: 20.h),
           Obx(
             () => AnimatedContainer(
               height:

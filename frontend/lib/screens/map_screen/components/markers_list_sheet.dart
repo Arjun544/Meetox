@@ -1,240 +1,321 @@
-// import 'package:fl_query/fl_query.dart';
-// import 'package:meetox/controllers/map_controller.dart';
-// import 'package:meetox/core/imports/packages_imports.dart';
-// import 'package:meetox/models/circle_model.dart' as circle_model;
-// import 'package:meetox/models/question_model.dart';
-// import 'package:meetox/models/user_model.dart';
-// import 'package:meetox/screens/add_circle_screen/components/circle_details.dart';
-// import 'package:meetox/screens/circles_screen/components/circle_tile.dart';
-// import 'package:meetox/screens/map_screen/components/circle_details_sheet.dart';
-// import 'package:meetox/screens/map_screen/components/question_details_sheet.dart';
-// import 'package:meetox/widgets/close_button.dart';
+import 'dart:convert';
 
-// import '../../../core/imports/core_imports.dart';
-// import '../../../utils/caching_keys.dart';
-// import '../../../utils/constants.dart';
-// import '../../../widgets/custom_error_widget.dart';
-// import '../../../widgets/show_custom_sheet.dart';
-// import '../../questions_screen/components/question_tile.dart';
-// import 'user_details_sheet.dart';
+import 'package:frontend/controllers/map_controller.dart';
+import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/models/circle_model.dart' as circle_model;
+import 'package:frontend/models/question_model.dart';
+import 'package:frontend/models/user_model.dart';
+import 'package:frontend/screens/circles_screen/components/circle_tile.dart';
+import 'package:frontend/widgets/close_button.dart';
+import 'package:frontend/widgets/loaders/circles_loader.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
-// class MarkersListSheet extends HookWidget {
-//   MarkersListSheet();
-//   @override
-//   Widget build(BuildContext context) {
-//     final MapScreenController mapScreenController = Get.find();
+import '../../../core/imports/core_imports.dart';
+import '../../../utils/constants.dart';
+import '../../../widgets/custom_error_widget.dart';
+import '../../../widgets/show_custom_sheet.dart';
+import '../../questions_screen/components/question_tile.dart';
+import 'circle_details_sheet.dart';
+import 'question_details_sheet.dart';
+import 'user_details_sheet.dart';
 
-//     final currentChoice = useState(
-//       mapScreenController.currentMainFilter.value == 'All'
-//           ? 'Circles'
-//           : mapScreenController.currentMainFilter.value,
-//     );
+class MarkersListSheet extends HookWidget {
+  final QueryHookResult<Object?> usersResult;
+  final QueryHookResult<Object?> circlesResult;
+  final QueryHookResult<Object?> questionsResult;
 
-//     final Query<List<circle_model.Circle>, dynamic>? circles =
-//         QueryBowl.of(context).getQuery(CachingKeys.nearByCirclesKey);
-//     final Query<List<QuestionModel>, dynamic>? questions =
-//         QueryBowl.of(context).getQuery(CachingKeys.nearByQuestionsKey);
-//     final Query<List<UserModel>, dynamic>? followers =
-//         QueryBowl.of(context).getQuery(CachingKeys.neayByFollowersKey);
-//     final Query<List<UserModel>, dynamic>? users =
-//         QueryBowl.of(context).getQuery(CachingKeys.nearByUsersKey);
+  const MarkersListSheet(
+      this.usersResult, this.circlesResult, this.questionsResult,
+      {super.key});
 
-//     return Container(
-//       height: Get.height * 0.95,
-//       width: Get.width,
-//       padding: EdgeInsets.symmetric(vertical: 20.sp, horizontal: 15.sp),
-//       decoration: BoxDecoration(
-//         color: context.theme.scaffoldBackgroundColor,
-//         borderRadius: BorderRadius.circular(30),
-//       ),
-//       child: Column(
-//         children: [
-//           Row(
-//             children: [
-//               Expanded(
-//                 child: Container(
-//                   padding:
-//                       const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
-//                   decoration: BoxDecoration(
-//                     color: context.theme.backgroundColor,
-//                     borderRadius: BorderRadius.circular(14),
-//                   ),
-//                   child: DropdownButton<String>(
-//                     value: currentChoice.value == 'All'
-//                         ? 'Circles'
-//                         : currentChoice.value,
-//                     underline: const SizedBox.shrink(),
-//                     isExpanded: true,
-//                     dropdownColor: context.theme.scaffoldBackgroundColor,
-//                     onChanged: (newValue) => currentChoice.value = newValue!,
-//                     items: <String>[
-//                       'Circles',
-//                       'Questions',
-//                       'Followers',
-//                       'Users'
-//                     ].map<DropdownMenuItem<String>>((String value) {
-//                       return DropdownMenuItem<String>(
-//                         value: value,
-//                         child: Text(value),
-//                       );
-//                     }).toList(),
-//                   ),
-//                 ),
-//               ),
-//               SizedBox(width: 20.sp),
-//               CustomCloseButton(onTap: () => Get.back()),
-//             ],
-//           ),
-//           SizedBox(height: 30),
-//           if (currentChoice.value == 'Circles')
-//             circles!.data!.isEmpty
-//                 ? CustomErrorWidget(
-//                     isWarining: true,
-//                     image: AssetsManager.sadState,
-//                     text: 'No circles',
-//                     onPressed: () => {},
-//                   )
-//                 : ListView.builder(
-//                     shrinkWrap: true,
-//                     scrollDirection: Axis.vertical,
-//                     itemCount: circles.data!.length,
-//                     itemBuilder: (context, index) {
-//                       return CircleTile(
-//                         circle: circles.data![index],
-//                         isShowingOnMap: true,
-//                         onTap: () => showCustomSheet(
-//                           context: context,
-//                           child: CircleDetailsSheet(
-//                             circles.data![index],
-//                             ValueNotifier(false),
-//                           ),
-//                         ),
-//                       );
-//                     })
-//           else if (currentChoice.value == 'Questions')
-//             questions!.data!.isEmpty
-//                 ? CustomErrorWidget(
-//                     isWarining: true,
-//                     image: AssetsManager.sadState,
-//                     text: 'No question',
-//                     onPressed: () => {},
-//                   )
-//                 : ListView.builder(
-//                     shrinkWrap: true,
-//                     scrollDirection: Axis.vertical,
-//                     itemCount: questions.data!.length,
-//                     itemBuilder: (context, index) {
-//                       return QuestionTile(
-//                         question: questions.data![index],
-//                         onTap: () => showCustomSheet(
-//                           context: context,
-//                           child: QuestionDetailsSheet(
-//                             questions.data![index],
-//                             ValueNotifier(false),
-//                           ),
-//                         ),
-//                       );
-//                     })
-//           else if (currentChoice.value == 'Followers')
-//             followers!.data!.isEmpty
-//                 ? CustomErrorWidget(
-//                     isWarining: true,
-//                     image: AssetsManager.sadState,
-//                     text: 'No followers',
-//                     onPressed: () => {},
-//                   )
-//                 : ListView.builder(
-//                     shrinkWrap: true,
-//                     scrollDirection: Axis.vertical,
-//                     itemCount: followers.data!.length,
-//                     itemBuilder: (context, index) {
-//                       final follower = followers.data![index];
-//                       return GestureDetector(
-//                         onTap: () => showCustomSheet(
-//                           context: context,
-//                           child: UserDetailsSheet(
-//                             followers.data![index],
-//                             ValueNotifier(false),
-//                           ),
-//                         ),
-//                         child: Container(
-//                           width: Get.width,
-//                           height: 60.sp,
-//                           margin: EdgeInsets.only(bottom: 15),
-//                           alignment: Alignment.center,
-//                           decoration: BoxDecoration(
-//                             color: context.theme.backgroundColor,
-//                             borderRadius: BorderRadius.circular(20),
-//                           ),
-//                           child: ListTile(
-//                             leading: CircleAvatar(
-//                               foregroundImage: CachedNetworkImageProvider(
-//                                 follower.displayPic!.profile == ''
-//                                     ? profilePlaceHolder
-//                                     : follower.displayPic!.profile!,
-//                               ),
-//                             ),
-//                             title: Text(
-//                               follower.name == ''
-//                                   ? 'Unknown'
-//                                   : follower.name!.capitalizeFirst!,
-//                               style: context.theme.textTheme.headline5,
-//                             ),
-//                           ),
-//                         ),
-//                       );
-//                     })
-//           else if (currentChoice.value == 'Users')
-//             users!.data!.isEmpty
-//                 ? CustomErrorWidget(
-//                     isWarining: true,
-//                     image: AssetsManager.sadState,
-//                     text: 'No users',
-//                     onPressed: () => {},
-//                   )
-//                 : ListView.builder(
-//                     shrinkWrap: true,
-//                     scrollDirection: Axis.vertical,
-//                     itemCount: users.data!.length,
-//                     itemBuilder: (context, index) {
-//                       final user = users.data![index];
-//                       return GestureDetector(
-//                         onTap: () => showCustomSheet(
-//                           context: context,
-//                           child: UserDetailsSheet(
-//                             user,
-//                             ValueNotifier(false),
-//                           ),
-//                         ),
-//                         child: Container(
-//                           width: Get.width,
-//                           height: 60.sp,
-//                           margin: EdgeInsets.only(bottom: 15),
-//                           alignment: Alignment.center,
-//                           decoration: BoxDecoration(
-//                             color: context.theme.backgroundColor,
-//                             borderRadius: BorderRadius.circular(20),
-//                           ),
-//                           child: ListTile(
-//                             leading: CircleAvatar(
-//                               foregroundImage: CachedNetworkImageProvider(
-//                                 user.displayPic!.profile == ''
-//                                     ? profilePlaceHolder
-//                                     : user.displayPic!.profile!,
-//                               ),
-//                             ),
-//                             title: Text(
-//                               user.name == ''
-//                                   ? 'Unknown'
-//                                   : user.name!.capitalizeFirst!,
-//                               style: context.theme.textTheme.headline5,
-//                             ),
-//                           ),
-//                         ),
-//                       );
-//                     }),
-//         ],
-//       ),
-//     );
-//   }
-// }
+  @override
+  Widget build(BuildContext context) {
+    final MapScreenController mapScreenController = Get.find();
+
+    final currentChoice = useState(
+      mapScreenController.currentMainFilter.value == 'All'
+          ? 'Circles'
+          : mapScreenController.currentMainFilter.value,
+    );
+
+    return Container(
+      height: Get.height * 0.95,
+      width: Get.width,
+      padding: EdgeInsets.symmetric(vertical: 20.sp, horizontal: 15.sp),
+      decoration: BoxDecoration(
+        color: context.theme.scaffoldBackgroundColor,
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                  decoration: BoxDecoration(
+                    color:
+                        context.theme.bottomNavigationBarTheme.backgroundColor,
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  child: DropdownButton<String>(
+                    value: currentChoice.value == 'All'
+                        ? 'Circles'
+                        : currentChoice.value,
+                    underline: const SizedBox.shrink(),
+                    isExpanded: true,
+                    borderRadius: BorderRadius.circular(14),
+                    elevation: 0,
+                    dropdownColor: context
+                        .theme.bottomSheetTheme.backgroundColor!
+                        .withOpacity(1),
+                    onChanged: (newValue) => currentChoice.value = newValue!,
+                    items: <String>[
+                      'Circles',
+                      'Questions',
+                      'Followers',
+                      'Users'
+                    ].map<DropdownMenuItem<String>>((String value) {
+                      return DropdownMenuItem<String>(
+                        value: value,
+                        child: Text(
+                          value,
+                          style: context.theme.textTheme.labelMedium,
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                ),
+              ),
+              SizedBox(width: 20.w),
+              CustomCloseButton(onTap: () => Navigator.of(context).pop()),
+            ],
+          ),
+          SizedBox(height: 30.h),
+          if (currentChoice.value == 'Circles')
+            usersResult.result.isLoading
+                ? const CirclesLoader()
+                : (circlesResult.result.data!['getNearByCircles']
+                            .map<circle_model.Circle>(
+                              (circle) => circle_model.Circle.fromRawJson(
+                                  json.encode(circle)),
+                            )
+                            .toList() as List<circle_model.Circle>)
+                        .isEmpty
+                    ? Center(
+                        heightFactor: 3.h,
+                        child: CustomErrorWidget(
+                          isWarining: true,
+                          image: AssetsManager.sadState,
+                          text: 'No circles',
+                          onPressed: () => {},
+                        ),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount:
+                            (circlesResult.result.data!['getNearByCircles']
+                                    .map<circle_model.Circle>(
+                                      (circle) =>
+                                          circle_model.Circle.fromRawJson(
+                                              json.encode(circle)),
+                                    )
+                                    .toList() as List<circle_model.Circle>)
+                                .length,
+                        itemBuilder: (context, index) {
+                          final circle_model.Circle circle = (circlesResult
+                              .result.data!['getNearByCircles']
+                              .map<circle_model.Circle>(
+                                (circle) => circle_model.Circle.fromRawJson(
+                                    json.encode(circle)),
+                              )
+                              .toList() as List<circle_model.Circle>)[index];
+                          return CircleTile(
+                            circle: circle,
+                            isShowingOnMap: true,
+                            onTap: () => showCustomSheet(
+                              context: context,
+                              child: CircleDetailsSheet(
+                                circle,
+                                circle_model.Circle().obs,
+                              ),
+                            ),
+                          );
+                        })
+          else if (currentChoice.value == 'Questions')
+            questionsResult.result.isLoading
+                ? const CirclesLoader()
+                : (questionsResult.result.data!['getNearByQuestions']
+                            .map<Question>(
+                              (question) =>
+                                  Question.fromRawJson(json.encode(question)),
+                            )
+                            .toList() as List<Question>)
+                        .isEmpty
+                    ? Center(
+                        heightFactor: 3.h,
+                        child: CustomErrorWidget(
+                          isWarining: true,
+                          image: AssetsManager.sadState,
+                          text: 'No questions',
+                          onPressed: () => {},
+                        ),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount:
+                            (questionsResult.result.data!['getNearByQuestions']
+                                    .map<Question>(
+                                      (question) => Question.fromRawJson(
+                                          json.encode(question)),
+                                    )
+                                    .toList() as List<Question>)
+                                .length,
+                        itemBuilder: (context, index) {
+                          final Question question = (questionsResult
+                              .result.data!['getNearByQuestions']
+                              .map<Question>(
+                                (question) =>
+                                    Question.fromRawJson(json.encode(question)),
+                              )
+                              .toList() as List<Question>)[index];
+                          return QuestionTile(
+                            question: question,
+                            onTap: () => showCustomSheet(
+                              context: context,
+                              child: QuestionDetailsSheet(
+                                question,
+                                Question().obs,
+                              ),
+                            ),
+                          );
+                        })
+          // else if (currentChoice.value == 'Followers')
+          //   followers!.data!.isEmpty
+          //       ? CustomErrorWidget(
+          //           isWarining: true,
+          //           image: AssetsManager.sadState,
+          //           text: 'No followers',
+          //           onPressed: () => {},
+          //         )
+          //       : ListView.builder(
+          //           shrinkWrap: true,
+          //           scrollDirection: Axis.vertical,
+          //           itemCount: followers.data!.length,
+          //           itemBuilder: (context, index) {
+          //             final follower = followers.data![index];
+          //             return GestureDetector(
+          //               onTap: () => showCustomSheet(
+          //                 context: context,
+          //                 child: UserDetailsSheet(
+          //                   followers.data![index],
+          //                   ValueNotifier(false),
+          //                 ),
+          //               ),
+          //               child: Container(
+          //                 width: Get.width,
+          //                 height: 60.sp,
+          //                 margin: const EdgeInsets.only(bottom: 15),
+          //                 alignment: Alignment.center,
+          //                 decoration: BoxDecoration(
+          //                   color: context.theme.bottomSheetTheme.backgroundColor,
+          //                   borderRadius: BorderRadius.circular(20),
+          //                 ),
+          //                 child: ListTile(
+          //                   leading: CircleAvatar(
+          //                     foregroundImage: CachedNetworkImageProvider(
+          //                       follower.displayPic!.profile == ''
+          //                           ? profilePlaceHolder
+          //                           : follower.displayPic!.profile!,
+          //                     ),
+          //                   ),
+          //                   title: Text(
+          //                     follower.name == ''
+          //                         ? 'Unknown'
+          //                         : follower.name!.capitalizeFirst!,
+          //                     style: context.theme.textTheme.labelSmall,
+          //                   ),
+          //                 ),
+          //               ),
+          //             );
+          //           })
+          else if (currentChoice.value == 'Users')
+            usersResult.result.isLoading
+                ? const CirclesLoader()
+                : (usersResult.result.data!['getNearByUsers']
+                            .map<User>(
+                              (user) => User.fromRawJson(json.encode(user)),
+                            )
+                            .toList() as List<User>)
+                        .isEmpty
+                    ? Center(
+                        heightFactor: 3.h,
+                        child: CustomErrorWidget(
+                          isWarining: true,
+                          image: AssetsManager.sadState,
+                          text: 'No users',
+                          onPressed: () => {},
+                        ),
+                      )
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: (usersResult.result.data!['getNearByUsers']
+                                .map<User>(
+                                  (user) => User.fromRawJson(json.encode(user)),
+                                )
+                                .toList() as List<User>)
+                            .length,
+                        itemBuilder: (context, index) {
+                          final User user =
+                              (usersResult.result.data!['getNearByUsers']
+                                  .map<User>(
+                                    (user) =>
+                                        User.fromRawJson(json.encode(user)),
+                                  )
+                                  .toList() as List<User>)[index];
+                          return GestureDetector(
+                            onTap: () => showCustomSheet(
+                              context: context,
+                              child: UserDetailsSheet(
+                                user,
+                                User().obs,
+                              ),
+                            ),
+                            child: Container(
+                              width: Get.width,
+                              height: 60.sp,
+                              margin: const EdgeInsets.only(bottom: 15),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: context
+                                    .theme.bottomSheetTheme.backgroundColor,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: ListTile(
+                                leading: CircleAvatar(
+                                  foregroundImage: CachedNetworkImageProvider(
+                                    user.displayPic!.profile == ''
+                                        ? profilePlaceHolder
+                                        : user.displayPic!.profile!,
+                                  ),
+                                ),
+                                title: Text(
+                                  user.name == ''
+                                      ? 'Unknown'
+                                      : user.name!.capitalizeFirst!,
+                                  style: context.theme.textTheme.labelSmall,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+        ],
+      ),
+    );
+  }
+}

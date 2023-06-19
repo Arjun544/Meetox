@@ -12,13 +12,13 @@ class CircleTile extends HookWidget {
   const CircleTile({
     required this.circle,
     required this.onTap,
-    required this.circlesController,
+     this.circlesController,
     super.key,
     this.isShowingOnMap = false,
   });
   final circle_model.Circle circle;
   final bool isShowingOnMap;
-  final CirclesController circlesController;
+  final CirclesController? circlesController;
   final VoidCallback onTap;
 
   @override
@@ -98,7 +98,7 @@ class CircleTile extends HookWidget {
                           document: gql(deleteCircle),
                           fetchPolicy: FetchPolicy.networkOnly,
                           onCompleted: (Map<String, dynamic>? resultData) =>
-                              circlesController.onDeleteCompleted(
+                              circlesController!.onDeleteCompleted(
                             resultData,
                             context,
                           ),
