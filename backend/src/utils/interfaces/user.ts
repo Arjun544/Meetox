@@ -9,6 +9,7 @@ export interface ISession extends Document {
 }
 
 export interface IUser extends Document {
+  id: string;
   name: string;
   email: string;
   display_pic: IDisplayPic;

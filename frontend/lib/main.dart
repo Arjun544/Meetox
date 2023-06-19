@@ -6,6 +6,7 @@ import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/core/instances.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/screens/splash_screen.dart';
+import 'package:frontend/widgets/unfocuser.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -66,17 +67,19 @@ class MyApp extends StatelessWidget {
       useInheritedMediaQuery: true,
       builder: (context, child) => GraphQLProvider(
         client: graphqlClient,
-        child: GetMaterialApp(
-          title: AppStrings.appName,
-          debugShowCheckedModeBanner: false,
-          theme: Themes.light,
-          darkTheme: Themes.dark,
-          themeMode: currentTheme == 'light'
-              ? ThemeMode.light
-              : currentTheme == 'dark'
-                  ? ThemeMode.dark
-                  : ThemeMode.system,
-          home: const SplashScreen(),
+        child: UnFocuser(
+          child: GetMaterialApp(
+            title: AppStrings.appName,
+            debugShowCheckedModeBanner: false,
+            theme: Themes.light,
+            darkTheme: Themes.dark,
+            themeMode: currentTheme == 'light'
+                ? ThemeMode.light
+                : currentTheme == 'dark'
+                    ? ThemeMode.dark
+                    : ThemeMode.system,
+            home: const SplashScreen(),
+          ),
         ),
       ),
     );

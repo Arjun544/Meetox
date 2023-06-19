@@ -88,7 +88,7 @@ class User {
             : Location.fromJson(
                 json['location'] as Map<String, dynamic>,
               ),
-        id: json['id'] as String,
+        id: json['id'] ?? json['_id'],
         name: json['name'] as String,
         email: json['email'] ?? '',
         displayPic: json['display_pic'] == null
@@ -98,7 +98,7 @@ class User {
         createdAt: json['createdAt'] == null
             ? null
             : DateTime.parse(json['createdAt'] as String),
-        userId: json['id'] as String,
+        userId: json['id']?? "",
         followers: json['followers'] ?? 0,
         followings: json['followings'] ?? 0,
       );

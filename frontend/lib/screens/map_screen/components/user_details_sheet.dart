@@ -5,6 +5,7 @@ import 'package:frontend/graphql/user/mutations.dart';
 import 'package:frontend/graphql/user/queries.dart';
 import 'package:frontend/helpers/get_distance.dart';
 import 'package:frontend/models/user_model.dart';
+import 'package:frontend/screens/followers_screen/followers_screen.dart';
 import 'package:frontend/utils/constants.dart';
 import 'package:frontend/widgets/online_indicator.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -175,7 +176,7 @@ class UserDetailsSheet extends HookWidget {
                         ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
-                            horizontal: 20.sp,
+                            horizontal: 12.sp,
                             vertical: 6.sp,
                           ),
                           child: checkIsFollowed.result.isLoading
@@ -214,12 +215,7 @@ class UserDetailsSheet extends HookWidget {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      // final FollowersScreenController
-                      //     followersScreenController =
-                      //     Get.put(FollowersScreenController());
-                      // followersScreenController.selectedUserId.value = user.id!;
-                      // Get.to(() => FollowersScreen(user));
-                      // followersScreenController.tabController.animateTo(0);
+                      Get.to(() => FollowersScreen(user, false));
                     },
                     child: Column(
                       children: [
@@ -237,11 +233,7 @@ class UserDetailsSheet extends HookWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      // final FollowersScreenController
-                      //     followersScreenController =
-                      //     Get.put(FollowersScreenController());
-                      // Get.to(() => FollowersScreen(user));
-                      // followersScreenController.tabController.animateTo(1);
+                      Get.to(() => FollowersScreen(user, true));
                     },
                     child: Column(
                       children: [

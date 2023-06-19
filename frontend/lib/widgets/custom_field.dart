@@ -52,6 +52,7 @@ class CustomField extends StatelessWidget {
         style: context.theme.textTheme.labelMedium,
         cursorColor: AppColors.primaryYellow,
         cursorWidth: 3,
+        textAlignVertical: TextAlignVertical.bottom,
         autofocus: autoFocus,
         decoration: InputDecoration(
           filled: context.theme.inputDecorationTheme.filled,

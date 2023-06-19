@@ -14,153 +14,150 @@ class FollowersLoader extends StatelessWidget {
       highlightColor:
           context.isDarkMode ? AppColors.customBlack : Colors.grey[300]!,
       direction: ShimmerDirection.ttb,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15.sp),
-        child: Column(
-          children: [
-            Container(
-              height: 70,
-              padding: EdgeInsets.symmetric(horizontal: 15.sp),
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    height: 40.sp,
-                    width: 40.sp,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryYellow,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  SizedBox(width: 20.sp),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: 12,
-                          width: 100.sp,
-                          decoration: const BoxDecoration(
-                            color: AppColors.primaryYellow,
-                          ),
-                        ),
-                        if (hasCheckBox)
-                          Container(
-                            height: 24.sp,
-                            width: 20.sp,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryYellow,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          )
-                        else
-                          const SizedBox(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+      child: Column(
+        children: [
+          Container(
+            height: 70,
+            padding: EdgeInsets.symmetric(horizontal: 15.sp),
+            decoration: BoxDecoration(
+              color: Colors.red.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(15),
             ),
-            SizedBox(height: 12.sp),
-            Container(
-              height: 70,
-              padding: EdgeInsets.symmetric(horizontal: 15.sp),
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    height: 40.sp,
-                    width: 40.sp,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryYellow,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
+            child: Row(
+              children: [
+                Container(
+                  height: 40.sp,
+                  width: 40.sp,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryYellow,
+                    borderRadius: BorderRadius.circular(15),
                   ),
-                  SizedBox(width: 20.sp),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: 12,
-                          width: 100.sp,
-                          decoration: const BoxDecoration(
-                            color: AppColors.primaryYellow,
-                          ),
+                ),
+                SizedBox(width: 20.sp),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: 12,
+                        width: 100.sp,
+                        decoration: const BoxDecoration(
+                          color: AppColors.primaryYellow,
                         ),
-                        if (hasCheckBox)
-                          Container(
-                            height: 24.sp,
-                            width: 20.sp,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryYellow,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          )
-                        else
-                          const SizedBox(),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: 12.sp),
-            Container(
-              height: 70,
-              padding: EdgeInsets.symmetric(horizontal: 15.sp),
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Row(
-                children: [
-                  Container(
-                    height: 40.sp,
-                    width: 40.sp,
-                    decoration: BoxDecoration(
-                      color: AppColors.primaryYellow,
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                  ),
-                  SizedBox(width: 20.sp),
-                  Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
+                      ),
+                      if (hasCheckBox)
                         Container(
-                          height: 12,
-                          width: 100.sp,
-                          decoration: const BoxDecoration(
+                          height: 24.sp,
+                          width: 20.sp,
+                          decoration: BoxDecoration(
                             color: AppColors.primaryYellow,
+                            borderRadius: BorderRadius.circular(6),
                           ),
-                        ),
-                        if (hasCheckBox)
-                          Container(
-                            height: 24.sp,
-                            width: 20.sp,
-                            decoration: BoxDecoration(
-                              color: AppColors.primaryYellow,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                          )
-                        else
-                          const SizedBox(),
-                      ],
-                    ),
+                        )
+                      else
+                        const SizedBox(),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-            SizedBox(height: 12.sp),
-          ],
-        ),
+          ),
+          SizedBox(height: 12.sp),
+          Container(
+            height: 70,
+            padding: EdgeInsets.symmetric(horizontal: 15.sp),
+            decoration: BoxDecoration(
+              color: Colors.red.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  height: 40.sp,
+                  width: 40.sp,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryYellow,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                SizedBox(width: 20.sp),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: 12,
+                        width: 100.sp,
+                        decoration: const BoxDecoration(
+                          color: AppColors.primaryYellow,
+                        ),
+                      ),
+                      if (hasCheckBox)
+                        Container(
+                          height: 24.sp,
+                          width: 20.sp,
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryYellow,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        )
+                      else
+                        const SizedBox(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 12.sp),
+          Container(
+            height: 70,
+            padding: EdgeInsets.symmetric(horizontal: 15.sp),
+            decoration: BoxDecoration(
+              color: Colors.red.withOpacity(0.5),
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Row(
+              children: [
+                Container(
+                  height: 40.sp,
+                  width: 40.sp,
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryYellow,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+                SizedBox(width: 20.sp),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        height: 12,
+                        width: 100.sp,
+                        decoration: const BoxDecoration(
+                          color: AppColors.primaryYellow,
+                        ),
+                      ),
+                      if (hasCheckBox)
+                        Container(
+                          height: 24.sp,
+                          width: 20.sp,
+                          decoration: BoxDecoration(
+                            color: AppColors.primaryYellow,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                        )
+                      else
+                        const SizedBox(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(height: 12.sp),
+        ],
       ),
     );
   }
