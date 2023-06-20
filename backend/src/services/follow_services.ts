@@ -1,4 +1,5 @@
 import { PaginateModel, model } from "mongoose";
+import Follow from "../models/follow_model";
 import { IFollow } from "../utils/interfaces/follow";
 
 export async function userFollowers(
@@ -86,4 +87,25 @@ export async function userFollowing(
     total_results: result.totalDocs,
     following: result.docs.map((doc) => doc.following),
   };
+}
+
+export async function nearbyFollowers(
+  id: String,
+  latitude: number,
+  longitude: number,
+  distanceInKM: number
+): Promise<Array<Object>> {
+  const radius = distanceInKM / 6378.1;
+  const followers = await Follow.find({
+    following: id,
+  }).populate({
+    path: "follower",
+    select: "id name display_pic isPremium location createdAt updatedAt",
+    match: {
+      "location.coordinates": {
+        $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
+      },
+    },
+  });
+  return followers.map((doc) => doc.follower);
 }

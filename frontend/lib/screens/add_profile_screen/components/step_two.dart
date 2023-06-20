@@ -116,7 +116,7 @@ class StepTwo extends GetView<AddProfileController> {
                             text: 'Set social profile',
                             hasIcon: true,
                             color:
-                                context.theme.bottomSheetTheme.backgroundColor!,
+                                context.theme.indicatorColor,
                             icon: IconTheme(
                               data: context.theme.iconTheme,
                               child: const Icon(
@@ -152,7 +152,7 @@ class StepTwo extends GetView<AddProfileController> {
                 width: Get.width * 0.9,
                 text: 'Choose from our avatars',
                 hasIcon: true,
-                color: context.theme.bottomSheetTheme.backgroundColor!,
+                color: context.theme.indicatorColor,
                 icon: IconTheme(
                   data: context.theme.iconTheme,
                   child: const Icon(
@@ -178,7 +178,7 @@ class StepTwo extends GetView<AddProfileController> {
                 width: Get.width * 0.9,
                 text: 'Capture with camera',
                 hasIcon: true,
-                color: context.theme.bottomSheetTheme.backgroundColor!,
+                color: context.theme.indicatorColor,
                 icon: IconTheme(
                   data: context.theme.iconTheme,
                   child: const Icon(
@@ -200,7 +200,7 @@ class StepTwo extends GetView<AddProfileController> {
                 width: Get.width * 0.9,
                 text: 'Choose from gallery',
                 hasIcon: true,
-                color: context.theme.bottomSheetTheme.backgroundColor!,
+                color: context.theme.indicatorColor,
                 icon: IconTheme(
                   data: context.theme.iconTheme,
                   child: const Icon(

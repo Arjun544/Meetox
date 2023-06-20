@@ -24,6 +24,11 @@ const typeDefs = gql`
       page: Int!
       limit: Int!
     ): FollowingsResponse
+    nearByFollowers(
+      latitude: Float!
+      longitude: Float!
+      distanceInKM: Float!
+    ): [NearByFollowerResponse]
   }
 
   type FollowersResponse {
@@ -46,6 +51,18 @@ const typeDefs = gql`
     total_pages: Int
     total_results: Int
     followings: [IUser]
+  }
+
+  type NearByFollowerResponse {
+    id: String
+    name: String
+    display_pic: IImage
+    isPremium: Boolean
+    location: ILocation
+    createdAt: Date
+    updatedAt: Date
+    followers: Int
+    followings: Int
   }
 `;
 

@@ -30,6 +30,7 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
     ),
   ),
   cardColor: AppColors.customBlack,
+  indicatorColor: AppColors.customGrey,
   dividerColor: Colors.white,
   canvasColor: AppColors.customBlack,
   dialogBackgroundColor: AppColors.customGrey,
@@ -143,5 +144,8 @@ final ThemeData lightTheme = ThemeData.light().copyWith(
       color: Colors.white,
       borderRadius: BorderRadius.circular(10),
     ),
+  ),
+  navigationBarTheme: const NavigationBarThemeData(
+    backgroundColor: Colors.black,
   ),
 );

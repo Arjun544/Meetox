@@ -18,7 +18,7 @@ class CustomTabbar extends StatelessWidget {
       padding: const EdgeInsets.all(2),
       height: 35.h,
       decoration: BoxDecoration(
-        color: const Color(0xFFECEDF2),
+        color: context.theme.indicatorColor,
         borderRadius: BorderRadius.circular(10),
       ),
       child: TabBar(

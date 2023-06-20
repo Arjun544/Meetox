@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import { Poppins } from "@next/font/google";
+import { Poppins } from "next/font/google";
 import Head from "next/head";
 import { NextUIProvider } from "@nextui-org/react";
 

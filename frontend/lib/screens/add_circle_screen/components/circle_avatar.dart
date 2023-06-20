@@ -56,7 +56,7 @@ class CircleAvatarDetails extends GetView<AddCircleController> {
                 width: Get.width * 0.9,
                 text: 'Choose from our avatars',
                 hasIcon: true,
-                color: context.theme.bottomSheetTheme.backgroundColor!,
+                color: context.theme.indicatorColor,
                 icon: IconTheme(
                   data: context.theme.iconTheme,
                   child: const Icon(
@@ -80,7 +80,7 @@ class CircleAvatarDetails extends GetView<AddCircleController> {
                 width: Get.width * 0.9,
                 text: 'Capture with camera',
                 hasIcon: true,
-                color: context.theme.bottomSheetTheme.backgroundColor!,
+                color: context.theme.indicatorColor,
                 icon: IconTheme(
                   data: context.theme.iconTheme,
                   child: const Icon(
@@ -101,7 +101,7 @@ class CircleAvatarDetails extends GetView<AddCircleController> {
                 width: Get.width * 0.9,
                 text: 'Choose from gallery',
                 hasIcon: true,
-                color: context.theme.bottomSheetTheme.backgroundColor!,
+                color: context.theme.indicatorColor,
                 icon: IconTheme(
                   data: context.theme.iconTheme,
                   child: const Icon(

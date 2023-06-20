@@ -64,3 +64,19 @@ query($id: String!, $page: Int!, $limit: Int!, $name: String) {
   }
 }
 ''';
+
+String getNearByFollowers = r'''
+query ($latitude: Float!, $longitude: Float!, $distanceInKM: Float!){
+   nearByFollowers(latitude: $latitude, longitude: $longitude, distanceInKM: $distanceInKM){
+    id
+    name
+    display_pic
+    isPremium
+    location
+    createdAt
+    updatedAt
+    followers
+    followings
+   }
+}
+''';

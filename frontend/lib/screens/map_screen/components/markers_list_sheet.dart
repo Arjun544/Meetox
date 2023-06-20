@@ -22,10 +22,11 @@ import 'user_details_sheet.dart';
 class MarkersListSheet extends HookWidget {
   final QueryHookResult<Object?> usersResult;
   final QueryHookResult<Object?> circlesResult;
+  final QueryHookResult<Object?> followerssResult;
   final QueryHookResult<Object?> questionsResult;
 
-  const MarkersListSheet(
-      this.usersResult, this.circlesResult, this.questionsResult,
+  const MarkersListSheet(this.usersResult, this.circlesResult,
+      this.followerssResult, this.questionsResult,
       {super.key});
 
   @override
@@ -55,8 +56,7 @@ class MarkersListSheet extends HookWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                   decoration: BoxDecoration(
-                    color:
-                        context.theme.bottomNavigationBarTheme.backgroundColor,
+                    color: context.theme.indicatorColor,
                     borderRadius: BorderRadius.circular(14),
                   ),
                   child: DropdownButton<String>(
@@ -67,9 +67,7 @@ class MarkersListSheet extends HookWidget {
                     isExpanded: true,
                     borderRadius: BorderRadius.circular(14),
                     elevation: 0,
-                    dropdownColor: context
-                        .theme.bottomSheetTheme.backgroundColor!
-                        .withOpacity(1),
+                    dropdownColor: context.theme.indicatorColor,
                     onChanged: (newValue) => currentChoice.value = newValue!,
                     items: <String>[
                       'Circles',
@@ -193,55 +191,72 @@ class MarkersListSheet extends HookWidget {
                             ),
                           );
                         })
-          // else if (currentChoice.value == 'Followers')
-          //   followers!.data!.isEmpty
-          //       ? CustomErrorWidget(
-          //           isWarining: true,
-          //           image: AssetsManager.sadState,
-          //           text: 'No followers',
-          //           onPressed: () => {},
-          //         )
-          //       : ListView.builder(
-          //           shrinkWrap: true,
-          //           scrollDirection: Axis.vertical,
-          //           itemCount: followers.data!.length,
-          //           itemBuilder: (context, index) {
-          //             final follower = followers.data![index];
-          //             return GestureDetector(
-          //               onTap: () => showCustomSheet(
-          //                 context: context,
-          //                 child: UserDetailsSheet(
-          //                   followers.data![index],
-          //                   ValueNotifier(false),
-          //                 ),
-          //               ),
-          //               child: Container(
-          //                 width: Get.width,
-          //                 height: 60.sp,
-          //                 margin: const EdgeInsets.only(bottom: 15),
-          //                 alignment: Alignment.center,
-          //                 decoration: BoxDecoration(
-          //                   color: context.theme.bottomSheetTheme.backgroundColor,
-          //                   borderRadius: BorderRadius.circular(20),
-          //                 ),
-          //                 child: ListTile(
-          //                   leading: CircleAvatar(
-          //                     foregroundImage: CachedNetworkImageProvider(
-          //                       follower.displayPic!.profile == ''
-          //                           ? profilePlaceHolder
-          //                           : follower.displayPic!.profile!,
-          //                     ),
-          //                   ),
-          //                   title: Text(
-          //                     follower.name == ''
-          //                         ? 'Unknown'
-          //                         : follower.name!.capitalizeFirst!,
-          //                     style: context.theme.textTheme.labelSmall,
-          //                   ),
-          //                 ),
-          //               ),
-          //             );
-          //           })
+          else if (currentChoice.value == 'Followers')
+            (followerssResult.result.data!['nearByFollowers']
+                        .map<User>(
+                          (follower) => User.fromRawJson(json.encode(follower)),
+                        )
+                        .toList() as List<User>)
+                    .isEmpty
+                ? CustomErrorWidget(
+                    isWarining: true,
+                    image: AssetsManager.sadState,
+                    text: 'No followers',
+                    onPressed: () => {},
+                  )
+                : ListView.builder(
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    itemCount: (followerssResult.result.data!['nearByFollowers']
+                            .map<User>(
+                              (follower) =>
+                                  User.fromRawJson(json.encode(follower)),
+                            )
+                            .toList() as List<User>)
+                        .length,
+                    itemBuilder: (context, index) {
+                      final User follower =
+                          (followerssResult.result.data!['nearByFollowers']
+                              .map<User>(
+                                (follower) =>
+                                    User.fromRawJson(json.encode(follower)),
+                              )
+                              .toList() as List<User>)[index];
+                      return GestureDetector(
+                        onTap: () => showCustomSheet(
+                          context: context,
+                          child: UserDetailsSheet(
+                            follower,
+                            User().obs,
+                          ),
+                        ),
+                        child: Container(
+                          width: Get.width,
+                          height: 60.sp,
+                          margin: const EdgeInsets.only(bottom: 15),
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: context.theme.dividerColor,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              foregroundImage: CachedNetworkImageProvider(
+                                follower.displayPic!.profile == ''
+                                    ? profilePlaceHolder
+                                    : follower.displayPic!.profile!,
+                              ),
+                            ),
+                            title: Text(
+                              follower.name == ''
+                                  ? 'Unknown'
+                                  : follower.name!.capitalizeFirst!,
+                              style: context.theme.textTheme.labelSmall,
+                            ),
+                          ),
+                        ),
+                      );
+                    })
           else if (currentChoice.value == 'Users')
             usersResult.result.isLoading
                 ? const CirclesLoader()
@@ -291,8 +306,7 @@ class MarkersListSheet extends HookWidget {
                               margin: const EdgeInsets.only(bottom: 15),
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: context
-                                    .theme.bottomSheetTheme.backgroundColor,
+                                color: context.theme.indicatorColor,
                                 borderRadius: BorderRadius.circular(20),
                               ),
                               child: ListTile(

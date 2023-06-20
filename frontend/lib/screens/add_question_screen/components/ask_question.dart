@@ -72,7 +72,7 @@ class AskQuestion extends GetView<AddQuestionController> {
                       padding: EdgeInsets.symmetric(
                           horizontal: 20.sp, vertical: 10.sp),
                       decoration: BoxDecoration(
-                        color: context.theme.bottomSheetTheme.backgroundColor,
+                        color: context.theme.indicatorColor,
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(

@@ -123,7 +123,7 @@ class CircleDetailsSheet extends GetView<MapScreenController> {
                       )
                     : DecoratedBox(
                         decoration: BoxDecoration(
-                          color: context.theme.bottomSheetTheme.backgroundColor,
+                          color: context.theme.indicatorColor,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Padding(
@@ -179,7 +179,7 @@ class CircleDetailsSheet extends GetView<MapScreenController> {
                       child: Container(
                         height: 45.sp,
                         decoration: BoxDecoration(
-                          color: context.theme.bottomSheetTheme.backgroundColor,
+                          color: context.theme.indicatorColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -204,7 +204,7 @@ class CircleDetailsSheet extends GetView<MapScreenController> {
                         height: 45.sp,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: context.theme.bottomSheetTheme.backgroundColor,
+                          color: context.theme.indicatorColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -218,7 +218,7 @@ class CircleDetailsSheet extends GetView<MapScreenController> {
                       child: Container(
                         height: 45.sp,
                         decoration: BoxDecoration(
-                          color: context.theme.bottomSheetTheme.backgroundColor,
+                          color: context.theme.indicatorColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(

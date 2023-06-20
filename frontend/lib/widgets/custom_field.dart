@@ -17,6 +17,7 @@ class CustomField extends StatelessWidget {
     this.isPassword = false,
     this.isNumber = false,
     this.autoFocus = true,
+    this.isSearchField = false,
     this.formats,
     this.validator,
     this.onChanged,
@@ -28,6 +29,7 @@ class CustomField extends StatelessWidget {
   final bool isPassword;
   final bool isNumber;
   final bool autoFocus;
+  final bool isSearchField;
   final TextInputType keyboardType;
   final RxBool hasFocus;
   final RxBool isPasswordVisible;
@@ -52,7 +54,7 @@ class CustomField extends StatelessWidget {
         style: context.theme.textTheme.labelMedium,
         cursorColor: AppColors.primaryYellow,
         cursorWidth: 3,
-        textAlignVertical: TextAlignVertical.bottom,
+        textAlignVertical: isSearchField? TextAlignVertical .bottom: TextAlignVertical.center,
         autofocus: autoFocus,
         decoration: InputDecoration(
           filled: context.theme.inputDecorationTheme.filled,

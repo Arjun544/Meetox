@@ -40,7 +40,7 @@ class CirclePrivacy extends GetView<AddCircleController> {
               width: Get.width * 0.5,
               padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 10.sp),
               decoration: BoxDecoration(
-                color: context.theme.bottomSheetTheme.backgroundColor,
+                color: context.theme.indicatorColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -81,7 +81,7 @@ class CirclePrivacy extends GetView<AddCircleController> {
             child: SliderTheme(
               data: SliderTheme.of(context).copyWith(
                 trackHeight: 5,
-                inactiveTrackColor: context.theme.scaffoldBackgroundColor,
+                inactiveTrackColor: context.theme.indicatorColor,
               ),
               child: Obx(
                 () => Slider(
@@ -89,7 +89,7 @@ class CirclePrivacy extends GetView<AddCircleController> {
                   min: 5,
                   max: 100,
                   thumbColor: context.theme.iconTheme.color,
-                  inactiveColor: context.theme.bottomSheetTheme.backgroundColor,
+                  inactiveColor: context.theme.indicatorColor,
                   activeColor: AppColors.primaryYellow,
                   onChanged: (val) => controller.limit.value = val,
                 ),
@@ -102,7 +102,7 @@ class CirclePrivacy extends GetView<AddCircleController> {
               width: Get.width * 0.7,
               padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 10.sp),
               decoration: BoxDecoration(
-                color: context.theme.bottomSheetTheme.backgroundColor,
+                color: context.theme.indicatorColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(

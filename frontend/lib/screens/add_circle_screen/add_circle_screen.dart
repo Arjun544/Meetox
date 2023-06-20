@@ -10,6 +10,7 @@ import 'package:frontend/screens/add_circle_screen/components/circle_privacy.dar
 import 'package:frontend/widgets/close_button.dart';
 import 'package:frontend/widgets/custom_button.dart';
 import 'package:frontend/widgets/loaders/botton_loader.dart';
+import 'package:frontend/widgets/unfocuser.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class AddCircleScreen extends GetView<AddCircleController> {
@@ -18,15 +19,11 @@ class AddCircleScreen extends GetView<AddCircleController> {
   @override
   Widget build(BuildContext context) {
     Get.put(AddCircleController());
-    return Scaffold(
-      body: Container(
-        padding: EdgeInsets.only(top: 50.sp),
-        decoration: BoxDecoration(
-          color: context.theme.scaffoldBackgroundColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
+    return UnFocuser(
+      child: Scaffold(
+        body: Column(
           children: [
+            SizedBox(height: 50.h),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 15.sp),
               child: Row(
@@ -65,8 +62,7 @@ class AddCircleScreen extends GetView<AddCircleController> {
               child: PageView(
                 controller: controller.pageController,
                 physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (value) =>
-                    controller.currentStep.value = value,
+                onPageChanged: (value) => controller.currentStep.value = value,
                 children: const [
                   CircleDetails(),
                   CirclePrivacy(),
@@ -77,65 +73,90 @@ class AddCircleScreen extends GetView<AddCircleController> {
             ),
           ],
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: SlideInUp(
-        child: FloatingActionButton.extended(
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          onPressed: () {},
-          label: Mutation(
-            options: MutationOptions(
-              document: gql(addCircle),
-              fetchPolicy: FetchPolicy.networkOnly,
-              onCompleted: (Map<String, dynamic>? resultData) =>
-                  controller.onComplete(resultData),
-              onError: (error) => showToast('Failed to create circle'),
-            ),
-            builder: (runMutation, result) {
-              return result!.isLoading
-                  ? ButtonLoader(
-                      width: Get.width * 0.4,
-                      color: AppColors.primaryYellow,
-                      loaderColor: Colors.white,
-                    )
-                  : Obx(
-                      () => Row(
-                        children: [
-                          if (controller.currentStep.value > 0)
-                            GestureDetector(
-                              onTap: () async =>
-                                  controller.pageController.previousPage(
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.easeInOut,
-                              ),
-                              child: Container(
-                                padding: EdgeInsets.all(12.sp),
-                                decoration: BoxDecoration(
-                                  color: context.theme.cardColor,
-                                  borderRadius: BorderRadius.circular(12),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: SlideInUp(
+          child: FloatingActionButton.extended(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            onPressed: () {},
+            label: Mutation(
+              options: MutationOptions(
+                document: gql(addCircle),
+                fetchPolicy: FetchPolicy.networkOnly,
+                onCompleted: (Map<String, dynamic>? resultData) =>
+                    controller.onComplete(resultData),
+                onError: (error) => showToast('Failed to create circle'),
+              ),
+              builder: (runMutation, result) {
+                return result!.isLoading
+                    ? ButtonLoader(
+                        width: Get.width * 0.4,
+                        color: AppColors.primaryYellow,
+                        loaderColor: Colors.white,
+                      )
+                    : Obx(
+                        () => Row(
+                          children: [
+                            if (controller.currentStep.value > 0)
+                              GestureDetector(
+                                onTap: () async =>
+                                    controller.pageController.previousPage(
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeInOut,
                                 ),
-                                child: Icon(
-                                  FlutterRemix.arrow_left_s_line,
-                                  color: Colors.white,
-                                  size: 30.sp,
+                                child: Container(
+                                  padding: EdgeInsets.all(12.sp),
+                                  decoration: BoxDecoration(
+                                    color: context.theme.cardColor,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Icon(
+                                    FlutterRemix.arrow_left_s_line,
+                                    color: Colors.white,
+                                    size: 30.sp,
+                                  ),
                                 ),
-                              ),
-                            )
-                          else
-                            const SizedBox.shrink(),
-                          SizedBox(width: 50.sp),
-                          Obx(
-                            () => CustomButton(
-                              width: Get.width * 0.4,
-                              text: controller.currentStep.value == 3
-                                  ? 'Submit'
-                                  : 'Next',
-                              color: AppColors.primaryYellow,
-                              onPressed: () async {
-                                if (controller.currentStep.value == 0) {
-                                  if (controller.formKey.currentState!
-                                      .validate()) {
+                              )
+                            else
+                              const SizedBox.shrink(),
+                            SizedBox(width: 50.sp),
+                            Obx(
+                              () => CustomButton(
+                                width: Get.width * 0.4,
+                                text: controller.currentStep.value == 3
+                                    ? 'Submit'
+                                    : 'Next',
+                                color: AppColors.primaryYellow,
+                                onPressed: () async {
+                                  if (controller.currentStep.value == 0) {
+                                    if (controller.formKey.currentState!
+                                        .validate()) {
+                                      FocusScope.of(context).unfocus();
+                                      await controller.pageController.nextPage(
+                                        duration:
+                                            const Duration(milliseconds: 500),
+                                        curve: Curves.easeInOut,
+                                      );
+                                    }
+                                  } else if (controller.currentStep.value ==
+                                      2) {
+                                    await controller.pageController.nextPage(
+                                      duration:
+                                          const Duration(milliseconds: 500),
+                                      curve: Curves.easeInOut,
+                                    );
+                                  } else if (controller.currentStep.value ==
+                                          3 &&
+                                      controller.selectedMembers.length >
+                                          controller.limit.value.toInt()) {
+                                    showToast(
+                                      'Your members limit is ${controller.limit.value.toInt()}',
+                                    );
+                                  } else if (controller.currentStep.value ==
+                                      3) {
+                                    await controller.handleAddCircle(
+                                        context, runMutation, result);
+                                  } else {
                                     FocusScope.of(context).unfocus();
                                     await controller.pageController.nextPage(
                                       duration:
@@ -143,40 +164,15 @@ class AddCircleScreen extends GetView<AddCircleController> {
                                       curve: Curves.easeInOut,
                                     );
                                   }
-                                } else if (controller.currentStep.value ==
-                                    2) {
-                                  await controller.pageController.nextPage(
-                                    duration:
-                                        const Duration(milliseconds: 500),
-                                    curve: Curves.easeInOut,
-                                  );
-                                } else if (controller.currentStep.value ==
-                                        3 &&
-                                    controller.selectedMembers.length >
-                                        controller.limit.value.toInt()) {
-                                  showToast(
-                                    'Your members limit is ${controller.limit.value.toInt()}',
-                                  );
-                                } else if (controller.currentStep.value ==
-                                    3) {
-                                  await controller.handleAddCircle(
-                                      context, runMutation, result);
-                                } else {
-                                  FocusScope.of(context).unfocus();
-                                  await controller.pageController.nextPage(
-                                    duration:
-                                        const Duration(milliseconds: 500),
-                                    curve: Curves.easeInOut,
-                                  );
-                                }
-                              },
+                                },
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 50.sp),
-                        ],
-                      ),
-                    );
-            },
+                            SizedBox(width: 50.sp),
+                          ],
+                        ),
+                      );
+              },
+            ),
           ),
         ),
       ),

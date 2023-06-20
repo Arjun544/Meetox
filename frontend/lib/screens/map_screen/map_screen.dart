@@ -19,6 +19,7 @@ import 'package:frontend/widgets/top_bar.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import 'components/circles_cluster_layer.dart';
+import 'components/followers_cluster_layer.dart';
 import 'components/markers_list_sheet.dart';
 import 'components/questions_cluster_layer.dart';
 
@@ -70,6 +71,18 @@ class MapScreen extends HookWidget {
       ),
     );
 
+    final followersResult = useQuery(
+      QueryOptions(
+        document: gql(getNearByFollowers),
+        pollInterval: const Duration(minutes: 5),
+        variables: {
+          'latitude': currentUser.value.location!.coordinates![0],
+          'longitude': currentUser.value.location!.coordinates![1],
+          'distanceInKM': currentUser.value.isPremium! ? 600 : 300,
+        },
+      ),
+    );
+
     return Scaffold(
       body: Stack(
         children: [
@@ -109,8 +122,9 @@ class MapScreen extends HookWidget {
                 },
               ),
               children: circlesResult.result.isNotLoading ||
-                      usersResult.result.isNotLoading ||
-                      questionsResult.result.isNotLoading
+                      questionsResult.result.isNotLoading ||
+                      followersResult.result.isNotLoading ||
+                      usersResult.result.isNotLoading
                   ? controller.currentMainFilter.value == 'All'
                       ? [
                           const CustomTileLayer(),
@@ -133,7 +147,6 @@ class MapScreen extends HookWidget {
                                   )
                                   .toList() as List<User>,
                             ),
-                          // const FollowersClusterlayer(),
                           if (questionsResult.result.data != null)
                             QuestionsClusterlayer(
                               questionsResult.result.data!['getNearByQuestions']
@@ -142,6 +155,15 @@ class MapScreen extends HookWidget {
                                         json.encode(question)),
                                   )
                                   .toList() as List<Question>,
+                            ),
+                          if (followersResult.result.data != null)
+                            FollowersClusterlayer(
+                              followersResult.result.data!['nearByFollowers']
+                                  .map<User>(
+                                    (user) =>
+                                        User.fromRawJson(json.encode(user)),
+                                  )
+                                  .toList() as List<User>,
                             ),
                         ]
                       : controller.currentMainFilter.value == 'Circles'
@@ -177,7 +199,15 @@ class MapScreen extends HookWidget {
                                   ? [
                                       const CustomTileLayer(),
                                       const CurrentUserLayer(),
-                                      // const FollowersClusterlayer(),
+                                      FollowersClusterlayer(
+                                        followersResult
+                                            .result.data!['nearByFollowers']
+                                            .map<User>(
+                                              (user) => User.fromRawJson(
+                                                  json.encode(user)),
+                                            )
+                                            .toList() as List<User>,
+                                      )
                                     ]
                                   : [
                                       const CustomTileLayer(),
@@ -289,6 +319,7 @@ class MapScreen extends HookWidget {
                           child: MarkersListSheet(
                             usersResult,
                             circlesResult,
+                            followersResult,
                             questionsResult,
                           ),
                         ),

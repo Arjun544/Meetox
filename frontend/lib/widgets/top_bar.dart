@@ -182,7 +182,11 @@ class TopBar extends GetView<MapScreenController> {
                 height: 40.sp,
                 width: 40.sp,
                 decoration: BoxDecoration(
-                  color: context.theme.dividerColor,
+                  color: !isMapScreen
+                      ? context.theme.indicatorColor
+                      : context.isDarkMode
+                          ? Colors.black
+                          : Colors.white,
                   borderRadius: BorderRadius.circular(15),
                   boxShadow: [
                     BoxShadow(

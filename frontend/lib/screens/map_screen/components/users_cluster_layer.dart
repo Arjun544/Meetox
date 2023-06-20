@@ -54,7 +54,7 @@ class UsersClusterlayer extends GetView<MapScreenController> {
                     )
                     .toList(),
             polygonOptions: const PolygonOptions(
-              borderColor: Colors.green,
+              borderColor: Colors.orange,
               borderStrokeWidth: 4,
             ),
             popupOptions: PopupOptions(

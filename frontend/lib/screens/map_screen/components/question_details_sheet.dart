@@ -165,7 +165,7 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                       child: Container(
                         height: 45.sp,
                         decoration: BoxDecoration(
-                          color: context.theme.bottomSheetTheme.backgroundColor,
+                          color: context.theme.indicatorColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -190,7 +190,7 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                         height: 45.sp,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: context.theme.bottomSheetTheme.backgroundColor,
+                          color: context.theme.indicatorColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -215,7 +215,7 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                         height: 45.sp,
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
-                          color: context.theme.bottomSheetTheme.backgroundColor,
+                          color: context.theme.indicatorColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -239,7 +239,7 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                       child: Container(
                         height: 45.sp,
                         decoration: BoxDecoration(
-                          color: context.theme.bottomSheetTheme.backgroundColor,
+                          color: context.theme.indicatorColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(

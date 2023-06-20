@@ -5,15 +5,15 @@ import 'package:frontend/utils/constants.dart';
 
 final ThemeData darkTheme = ThemeData.light().copyWith(
   brightness: Brightness.dark,
-  scaffoldBackgroundColor: AppColors.customBlack,
+  scaffoldBackgroundColor: Colors.black,
   textSelectionTheme: TextSelectionThemeData(
     selectionColor: AppColors.primaryYellow.withOpacity(0.5),
     selectionHandleColor: AppColors.primaryYellow,
   ),
   appBarTheme: AppBarTheme(
-    backgroundColor: AppColors.customBlack,
+    backgroundColor: Colors.black,
     systemOverlayStyle: const SystemUiOverlayStyle(
-      statusBarColor: AppColors.customBlack,
+      statusBarColor: Colors.black,
       statusBarIconBrightness: Brightness.light,
       statusBarBrightness: Brightness.dark,
     ),
@@ -27,9 +27,9 @@ final ThemeData darkTheme = ThemeData.light().copyWith(
       size: 20.sp,
     ),
   ),
-
   cardColor: Colors.black,
   dividerColor: Colors.black,
+  indicatorColor: AppColors.customBlack,
   canvasColor: AppColors.customGrey,
   dialogBackgroundColor: Colors.black,
   bottomSheetTheme: const BottomSheetThemeData(
@@ -88,7 +88,7 @@ final ThemeData darkTheme = ThemeData.light().copyWith(
   ),
   inputDecorationTheme: InputDecorationTheme(
     filled: true,
-    fillColor: Colors.black54,
+    fillColor: AppColors.customBlack,
     hintStyle: globalTextStyle(
       fontSize: headingSixFontSize,
       color: Colors.white,
@@ -142,5 +142,8 @@ final ThemeData darkTheme = ThemeData.light().copyWith(
       color: Colors.black,
       borderRadius: BorderRadius.circular(10),
     ),
+  ),
+  navigationBarTheme: const NavigationBarThemeData(
+    backgroundColor: AppColors.customBlack,
   ),
 );

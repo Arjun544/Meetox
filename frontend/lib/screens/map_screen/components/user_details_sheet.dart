@@ -262,7 +262,7 @@ class UserDetailsSheet extends HookWidget {
                       child: Container(
                         height: 45.sp,
                         decoration: BoxDecoration(
-                          color: context.theme.bottomSheetTheme.backgroundColor,
+                          color: context.theme.indicatorColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Row(
@@ -325,7 +325,7 @@ class UserDetailsSheet extends HookWidget {
                           width: 50.sp,
                           decoration: BoxDecoration(
                             color:
-                                context.theme.bottomSheetTheme.backgroundColor,
+                                context.theme.indicatorColor,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
@@ -341,7 +341,7 @@ class UserDetailsSheet extends HookWidget {
                       child: Container(
                         height: 45.sp,
                         decoration: BoxDecoration(
-                          color: context.theme.bottomSheetTheme.backgroundColor,
+                          color: context.theme.indicatorColor,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Icon(

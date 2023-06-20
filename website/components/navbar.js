@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect } from "react";
-import { RiMenu5Fill, RiShieldStarFill } from "react-icons/ri";
+import { useEffect, useRef, useState } from "react";
 import { MdClose } from "react-icons/md";
+import { RiMenu5Fill, RiShieldStarFill } from "react-icons/ri";
 import ScrollspyNav from "react-scrollspy-nav";
 import Logo from "./logo";
 
@@ -85,7 +85,7 @@ export default function NavBar() {
                   : "bg-black text-white"
               } flex gap-4 filter drop-shadow-lg font-semibold px-4 py-3 rounded-lg hover:scale-110 transition-all duration-700`}
             >
-              <RiShieldStarFill size={20}/>
+              <RiShieldStarFill size={20} />
               Meetox PLUS
             </a>
           </div>

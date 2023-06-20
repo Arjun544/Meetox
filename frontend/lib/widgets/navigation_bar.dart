@@ -4,7 +4,6 @@ import 'package:custom_navigation_bar/custom_navigation_bar.dart';
 import 'package:frontend/controllers/root_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
-
 import 'package:frontend/widgets/sheets/add_options_sheet.dart';
 import 'package:frontend/widgets/show_custom_sheet.dart';
 
@@ -54,7 +53,9 @@ class CustomBottomNavigationBar extends GetView<RootController> {
             selectedColor: AppColors.primaryYellow,
             strokeColor: Colors.transparent,
             unSelectedColor: AppColors.customGrey,
-            backgroundColor: Colors.black,
+            backgroundColor: controller.selectedTab.value == 0
+                ? Colors.black
+                : context.theme.navigationBarTheme.backgroundColor!,
             currentIndex: controller.selectedTab.value,
             onTap: (index) {
               if (index == 2) {

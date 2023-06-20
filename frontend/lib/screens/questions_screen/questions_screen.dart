@@ -40,7 +40,7 @@ class QuestionsScreen extends GetView<QuestionsController> {
               padding: const EdgeInsets.symmetric(vertical: 10),
               child: DecoratedBox(
                 decoration: BoxDecoration(
-                  color: context.theme.dialogBackgroundColor,
+                  color: context.theme.indicatorColor,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: const Padding(
@@ -73,6 +73,7 @@ class QuestionsScreen extends GetView<QuestionsController> {
                   isPasswordVisible: true.obs,
                   autoFocus: false,
                   hasFocus: false.obs,
+                  isSearchField: true,
                   keyboardType: TextInputType.text,
                   prefixIcon: FlutterRemix.search_2_fill,
                   onChanged: (value) => controller.searchQuery(value),

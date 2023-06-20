@@ -2,7 +2,11 @@ import { IncomingMessage } from "http";
 import Follow from "../../models/follow_model";
 import { decodeToken } from "../../services/token_services";
 import { GraphQLContext } from "../../utils/types";
-import { userFollowers, userFollowing } from "../../services/follow_services";
+import {
+  nearbyFollowers,
+  userFollowers,
+  userFollowing,
+} from "../../services/follow_services";
 
 const resolvers = {
   Mutation: {
@@ -26,6 +30,16 @@ const resolvers = {
         following: followingId,
       });
       return follow !== null;
+    },
+  },
+  NearByFollowerResponse: {
+    followers: async (parent: { id: any }) => {
+      const count = await Follow.countDocuments({ following: parent.id });
+      return count;
+    },
+    followings: async (parent: { id: any }) => {
+      const count = await Follow.countDocuments({ follower: parent.id });
+      return count;
     },
   },
   Query: {
@@ -64,6 +78,19 @@ const resolvers = {
         name,
         page,
         limit
+      );
+      return followers;
+    },
+    nearByFollowers: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { latitude, longitude, distanceInKM } = args;
+      const { id } = decodeToken(req as IncomingMessage);
+
+      const followers = await nearbyFollowers(
+        id as String,
+        latitude,
+        longitude,
+        distanceInKM
       );
       return followers;
     },
