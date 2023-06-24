@@ -100,7 +100,7 @@ class Circle {
   int? limit;
   String? admin;
   Location? location;
-  List<String>? members;
+  int? members;
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
@@ -127,7 +127,7 @@ class Circle {
   String toRawJson() => json.encode(toJson());
 
   factory Circle.fromJson(Map<String, dynamic> json) => Circle(
-        id: json["_id"],
+        id: json["_id"]?? json["id"],
         name: json["name"],
         description: json["description"],
         image: json["image"] == null ? null : Image.fromJson(json["image"]),
@@ -137,9 +137,7 @@ class Circle {
         location: json["location"] == null
             ? null
             : Location.fromJson(json["location"]),
-        members: json["members"] == null
-            ? []
-            : List<String>.from(json["members"]!.map((x) => x)),
+        members: json["members"],
         createdAt: json["createdAt"] == null
             ? null
             : DateTime.parse(json["createdAt"]),
@@ -159,8 +157,7 @@ class Circle {
         "limit": limit,
         "admin": admin,
         "location": location?.toJson(),
-        "members":
-            members == null ? [] : List<dynamic>.from(members!.map((x) => x)),
+        "members": members,
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
         "__v": v,
@@ -191,4 +188,3 @@ class Image {
         "imageId": imageId,
       };
 }
-

@@ -4,6 +4,18 @@ String addCircle = r'''
   }
 ''';
 
+String addMember = r'''
+    mutation($id: String!) {
+    addMember(id: $id)
+  }
+''';
+
+String leaveMember = r'''
+    mutation($id: String!) {
+    leaveMember(id: $id)
+  }
+''';
+
 String deleteCircle = r'''
 mutation($id: String!) {
   deleteCircle(id: $id)

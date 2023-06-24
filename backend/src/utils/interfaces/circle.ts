@@ -10,7 +10,6 @@ export interface ICircle extends Document {
   isPrivate: Boolean;
   limit: Number;
   admin: [Types.ObjectId];
-  members: [Types.ObjectId];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -19,5 +18,3 @@ export interface IImage {
   image: string;
   imageId: string;
 }
-
-

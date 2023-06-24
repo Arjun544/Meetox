@@ -2,6 +2,7 @@ import { UploadApiResponse } from "cloudinary";
 import { withFilter } from "graphql-subscriptions/dist/with-filter";
 import { IncomingMessage } from "http";
 import Circle from "../../models/circle_model";
+import Member from "../../models/member_model";
 import { uploadImage } from "../../services/storage_services";
 import { decodeToken } from "../../services/token_services";
 import { ICircle } from "../../utils/interfaces/circle";
@@ -38,8 +39,13 @@ const resolvers = {
         isPrivate,
         limit,
         location,
-        members,
       });
+
+      const newMember = new Member({
+        member: id,
+        circle: circle.id,
+      });
+      await newMember.save();
 
       return circle;
     },
@@ -49,7 +55,36 @@ const resolvers = {
       const { id } = decodeToken(req as IncomingMessage);
 
       const circle = await deleteCircle(circleId as String);
+      // TODO: Delete all members of this circle
+
       return circle;
+    },
+    addMember: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { id: circleId } = args;
+      const { id, token } = decodeToken(req as IncomingMessage);
+      const member = new Member({
+        member: id,
+        circle: circleId,
+      });
+      await member.save();
+      return member;
+    },
+    leaveMember: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { id: circleId } = args;
+      const { id, token } = decodeToken(req as IncomingMessage);
+      const member = await Member.findOneAndDelete({
+        member: id,
+        circle: circleId,
+      });
+      return member !== null;
+    },
+  },
+  CircleResponse: {
+    members: async (parent: { id: any }) => {
+      const count = await Member.countDocuments({ circle: parent.id });
+      return count;
     },
   },
   Query: {
@@ -73,6 +108,16 @@ const resolvers = {
         distanceInKM
       );
       return circles;
+    },
+    isMember: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { id: circleId } = args;
+      const { id, token } = decodeToken(req as IncomingMessage);
+      const member = await Member.findOne({
+        circle: circleId,
+        member: id,
+      });
+      return member !== null;
     },
   },
   //   Subscription: {

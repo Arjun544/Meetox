@@ -1,11 +1,15 @@
 import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/graphql/circle/mutations.dart';
+import 'package:frontend/graphql/circle/queries.dart';
 import 'package:frontend/helpers/get_distance.dart';
+import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/circle_model.dart' as circle_model;
 import 'package:frontend/utils/constants.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
-class CircleDetailsSheet extends GetView<MapScreenController> {
+class CircleDetailsSheet extends HookWidget {
   final circle_model.Circle circle;
   final Rx<circle_model.Circle> tappedCircle;
 
@@ -13,6 +17,9 @@ class CircleDetailsSheet extends GetView<MapScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<MapScreenController>();
+    final members = useState(circle.members!);
+
     final double currentLatitude =
         controller.rootController.currentPosition.value.latitude;
     final double currentLongitude =
@@ -25,6 +32,39 @@ class CircleDetailsSheet extends GetView<MapScreenController> {
       currentLongitude,
       circleLatitude,
       circleLongitude,
+    );
+
+    final checkIsMember = useQuery(
+      QueryOptions(
+        document: gql(isMember),
+        fetchPolicy: FetchPolicy.networkOnly,
+        variables: {
+          "id": circle.id,
+        },
+        onError: (data) => logError(data.toString()),
+      ),
+    );
+    final addNewMember = useMutation(
+      MutationOptions(
+        document: gql(addMember),
+        onCompleted: (data) {
+          if (data != null && data['addMember'] != null) {
+            members.value += 1;
+            checkIsMember.refetch();
+          }
+        },
+      ),
+    );
+    final removeMember = useMutation(
+      MutationOptions(
+        document: gql(leaveMember),
+        onCompleted: (data) {
+          if (data != null && data['leaveMember'] != null) {
+            members.value -= 1;
+            checkIsMember.refetch();
+          }
+        },
+      ),
     );
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -96,43 +136,90 @@ class CircleDetailsSheet extends GetView<MapScreenController> {
                   ),
                 ),
                 trailing: !circle.isPrivate!
-                    ? DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: AppColors.primaryYellow,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20.sp, vertical: 6.sp),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                FlutterRemix.login_circle_fill,
-                                size: 16.sp,
-                                color: Colors.black,
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'Join',
-                                style: context.theme.textTheme.labelSmall,
-                              ),
-                            ],
+                    ? InkWell(
+                        onTap: () async {
+                          if (checkIsMember.result.data!['isMember']) {
+                            removeMember.runMutation({
+                              "id": circle.id,
+                            });
+                          } else {
+                            if (members.value == circle.limit) {
+                              showToast('Circle reached members limit');
+                            } else {
+                              addNewMember.runMutation({
+                                "id": circle.id,
+                              });
+                            }
+                          }
+                        },
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: checkIsMember.result.isLoading
+                                ? AppColors.primaryYellow
+                                : checkIsMember.result.data?['isMember'] ==
+                                        false
+                                    ? members.value == circle.limit
+                                        ? context.theme.indicatorColor
+                                        : AppColors.primaryYellow
+                                    : checkIsMember.result.data?['isMember']
+                                        ? Colors.redAccent
+                                        : AppColors.primaryYellow,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: 12.sp,
+                              vertical: 6.sp,
+                            ),
+                            child: checkIsMember.result.isLoading
+                                ? LoadingAnimationWidget.staggeredDotsWave(
+                                    color: AppColors.customBlack,
+                                    size: 20.sp,
+                                  )
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon(
+                                        checkIsMember.result.data!['isMember']
+                                            ? FlutterRemix.logout_circle_fill
+                                            : FlutterRemix.login_circle_fill,
+                                        size: 16.sp,
+                                        color: context.theme.iconTheme.color!
+                                            .withOpacity(
+                                                members.value == circle.limit &&
+                                                        !checkIsMember.result
+                                                            .data!['isMember']
+                                                    ? 0.5
+                                                    : 1),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        checkIsMember.result.data!['isMember']
+                                            ? 'Leave'
+                                            : 'Join',
+                                        style:
+                                            context.theme.textTheme.labelSmall,
+                                      ),
+                                    ],
+                                  ),
                           ),
                         ),
                       )
-                    : DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: context.theme.indicatorColor,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 12.sp, vertical: 10.sp),
-                          child: Icon(
-                            FlutterRemix.door_lock_fill,
-                            size: 16.sp,
-                            color: context.theme.iconTheme.color,
+                    : InkWell(
+                        onTap: () => showToast('Circle is private'),
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: context.theme.indicatorColor,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 12.sp, vertical: 10.sp),
+                            child: Icon(
+                              FlutterRemix.door_lock_fill,
+                              size: 16.sp,
+                              color: context.theme.iconTheme.color,
+                            ),
                           ),
                         ),
                       ),
@@ -143,7 +230,7 @@ class CircleDetailsSheet extends GetView<MapScreenController> {
                   Column(
                     children: [
                       Text(
-                        circle.members!.length.toString(),
+                        members.value.toString(),
                         style: context.theme.textTheme.labelMedium,
                       ),
                       Text(

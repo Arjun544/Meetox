@@ -24,7 +24,7 @@ export async function nearbyCircles(
       $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
     },
   }).select(
-    "name description image isPrivate members createdAt location limit"
+    "name description image admin isPrivate members createdAt location limit"
   );
 
   return circles;

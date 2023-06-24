@@ -48,7 +48,7 @@ class CircleTile extends HookWidget {
           style: context.theme.textTheme.labelMedium,
         ),
         subtitle: Text(
-          'Memebers: ${circle.members!.length}',
+          'Memebers: ${circle.members!}',
           style: context.theme.textTheme.labelSmall!.copyWith(
             fontSize: 10.sp,
           ),

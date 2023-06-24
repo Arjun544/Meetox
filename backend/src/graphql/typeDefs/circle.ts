@@ -3,18 +3,18 @@ import gql from "graphql-tag";
 const typeDefs = gql`
   scalar Date
   scalar ICircle
+  scalar IUser
   scalar ILocation
+  scalar IImage
 
   type Query {
     getNearByCircles(
       latitude: Float!
       longitude: Float!
       distanceInKM: Float!
-    ): [ICircle]
-  }
-
-  type Query {
+    ): [CircleResponse]
     userCircles(name: String, page: Int!, limit: Int!): CirclesResponse
+    isMember(id: String!): Boolean
   }
 
   type Mutation {
@@ -27,7 +27,8 @@ const typeDefs = gql`
       members: [String]!
       location: ILocation
     ): ICircle
-
+    addMember(id: String!): IUser
+    leaveMember(id: String!): Boolean
     deleteCircle(id: String!): ICircle
   }
 
@@ -39,7 +40,21 @@ const typeDefs = gql`
     hasPrevPage: Boolean
     total_pages: Int
     total_results: Int
-    circles: [ICircle]
+    circles: [CircleResponse]
+  }
+
+  type CircleResponse {
+    id: String
+    name: String
+    description: String
+    image: IImage
+    location: ILocation
+    isPrivate: Boolean
+    limit: Int
+    admin: String
+    members: Int
+    createdAt: Date
+    updatedAt: Date
   }
 `;
 
