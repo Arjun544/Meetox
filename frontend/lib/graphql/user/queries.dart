@@ -80,3 +80,9 @@ query ($latitude: Float!, $longitude: Float!, $distanceInKM: Float!){
    }
 }
 ''';
+
+String socials = r'''
+query ($id: String!) {
+  socials(id: $id)
+}
+''';

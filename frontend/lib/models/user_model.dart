@@ -98,7 +98,7 @@ class User {
         createdAt: json['createdAt'] == null
             ? null
             : DateTime.parse(json['createdAt'] as String),
-        userId: json['id']?? "",
+        userId: json['id'] ?? "",
         followers: json['followers'] ?? 0,
         followings: json['followings'] ?? 0,
       );
@@ -180,5 +180,59 @@ class Location {
         'coordinates': coordinates == null
             ? []
             : List<dynamic>.from(coordinates!.map((x) => x)),
+      };
+}
+
+class SocialModel {
+  String? typename;
+  List<Social>? socials;
+
+  SocialModel({
+    this.typename,
+    this.socials,
+  });
+
+  factory SocialModel.fromRawJson(String str) =>
+      SocialModel.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory SocialModel.fromJson(Map<String, dynamic> json) => SocialModel(
+        typename: json["__typename"],
+        socials: json["socials"] == null
+            ? []
+            : List<Social>.from(
+                json["socials"]!.map((x) => Social.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "__typename": typename,
+        "socials": socials == null
+            ? []
+            : List<dynamic>.from(socials!.map((x) => x.toJson())),
+      };
+}
+
+class Social {
+  String? name;
+  String? url;
+
+  Social({
+    this.name,
+    this.url,
+  });
+
+  factory Social.fromRawJson(String str) => Social.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Social.fromJson(Map<String, dynamic> json) => Social(
+        name: json["name"],
+        url: json["url"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "name": name,
+        "url": url,
       };
 }

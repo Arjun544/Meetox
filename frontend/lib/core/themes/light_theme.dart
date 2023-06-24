@@ -7,6 +7,7 @@ import 'package:frontend/utils/constants.dart';
 
 final ThemeData lightTheme = ThemeData.light().copyWith(
   brightness: Brightness.light,
+  primaryColor: AppColors.primaryYellow,
   scaffoldBackgroundColor: Colors.white,
   textSelectionTheme: TextSelectionThemeData(
     selectionColor: AppColors.primaryYellow.withOpacity(0.5),

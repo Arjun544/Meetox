@@ -6,6 +6,7 @@ import 'package:frontend/graphql/user/queries.dart';
 import 'package:frontend/helpers/get_distance.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/screens/followers_screen/followers_screen.dart';
+import 'package:frontend/screens/user_profile_screen/user_profile_screen.dart';
 import 'package:frontend/utils/constants.dart';
 import 'package:frontend/widgets/online_indicator.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -123,9 +124,9 @@ class UserDetailsSheet extends HookWidget {
                       children: [
                         SizedBox(
                           width: 50,
-                          height: 60,
+                          height: 70,
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(14),
                             child: CachedNetworkImage(
                               imageUrl: user.displayPic!.profile!.isEmpty
                                   ? profilePlaceHolder
@@ -153,17 +154,19 @@ class UserDetailsSheet extends HookWidget {
                   trailing: Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: InkWell(
-                      onTap: () async {
-                        if (checkIsFollowed.result.data!['isFollowed']) {
-                          unFollowUser.runMutation({
-                            "id": user.id,
-                          });
-                        } else {
-                          followUser.runMutation({
-                            "id": user.id,
-                          });
-                        }
-                      },
+                      onTap: checkIsFollowed.result.isLoading
+                          ? () {}
+                          : () async {
+                              if (checkIsFollowed.result.data!['isFollowed']) {
+                                unFollowUser.runMutation({
+                                  "id": user.id,
+                                });
+                              } else {
+                                followUser.runMutation({
+                                  "id": user.id,
+                                });
+                              }
+                            },
                       child: DecoratedBox(
                         decoration: BoxDecoration(
                           color:
@@ -324,12 +327,11 @@ class UserDetailsSheet extends HookWidget {
                           height: 45.sp,
                           width: 50.sp,
                           decoration: BoxDecoration(
-                            color:
-                                context.theme.indicatorColor,
+                            color: context.theme.indicatorColor,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Icon(
-                            FlutterRemix.chat_smile_2_fill,
+                            FlutterRemix.chat_3_fill,
                             size: 22.sp,
                             color: context.theme.iconTheme.color,
                           ),
@@ -338,16 +340,22 @@ class UserDetailsSheet extends HookWidget {
                     ),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: Container(
-                        height: 45.sp,
-                        decoration: BoxDecoration(
-                          color: context.theme.indicatorColor,
-                          borderRadius: BorderRadius.circular(12),
+                      child: GestureDetector(
+                        onTap: () => Get.to(
+                          () => UserProfileScreen(
+                              user: user, followers: followers),
                         ),
-                        child: Icon(
-                          FlutterRemix.profile_fill,
-                          size: 22.sp,
-                          color: context.theme.iconTheme.color,
+                        child: Container(
+                          height: 45.sp,
+                          decoration: BoxDecoration(
+                            color: context.theme.indicatorColor,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            FlutterRemix.user_4_fill,
+                            size: 22.sp,
+                            color: context.theme.iconTheme.color,
+                          ),
                         ),
                       ),
                     ),

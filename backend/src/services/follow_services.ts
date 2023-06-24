@@ -4,7 +4,6 @@ import { IFollow } from "../utils/interfaces/follow";
 
 export async function userFollowers(
   id: String,
-  userId: String,
   name: String,
   page: number,
   limit: number
@@ -12,11 +11,9 @@ export async function userFollowers(
   const query =
     name === null
       ? {
-          following: userId,
           follower: id,
         }
       : {
-          following: userId,
           follower: id,
           $text: { $search: name as string },
         };
@@ -47,7 +44,6 @@ export async function userFollowers(
 }
 export async function userFollowing(
   id: String,
-  userId: String,
   name: String,
   page: number,
   limit: number
@@ -55,12 +51,10 @@ export async function userFollowing(
   const query =
     name === null
       ? {
-          following: userId,
-          follower: id,
+          following: id,
         }
       : {
-          following: userId,
-          follower: id,
+          following: id,
           $text: { $search: name as string },
         };
   const option = {

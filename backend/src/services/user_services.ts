@@ -28,3 +28,11 @@ export async function nearbyUsers(
 
   return users;
 }
+
+export async function userSocials(id: String): Promise<any> {
+  const user = await User.findOne({
+    _id: id,
+  }).select("socials");
+
+  return user?.socials;
+}

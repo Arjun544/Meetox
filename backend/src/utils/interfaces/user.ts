@@ -31,8 +31,8 @@ export interface IDisplayPic extends IUser {
   profileId: string;
 }
 export interface ISocialLink extends IUser {
-  type: string;
-  link: string;
+  name: string;
+  url: string;
 }
 export interface ILocation {
   address: string;

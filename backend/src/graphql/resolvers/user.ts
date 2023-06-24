@@ -4,7 +4,7 @@ import Follow from "../../models/follow_model";
 import User from "../../models/user_model";
 import { uploadImage } from "../../services/storage_services";
 import { decodeToken } from "../../services/token_services";
-import { nearbyUsers } from "../../services/user_services";
+import { nearbyUsers, userSocials } from "../../services/user_services";
 import { IUser } from "../../utils/interfaces/user";
 import { GraphQLContext } from "../../utils/types";
 
@@ -87,6 +87,14 @@ const resolvers = {
         followers
       );
       return users;
+    },
+    socials: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { id: userId } = args;
+      const { id, token } = decodeToken(req as IncomingMessage);
+
+      const socials = await userSocials(userId as String);
+      return socials;
     },
   },
   // Subscription: {

@@ -87,17 +87,19 @@ class FollowerTile extends HookWidget {
       ),
       trailing: user.id != currentUser.value.id
           ? InkWell(
-              onTap: () async {
-                if (checkIsFollowed.result.data!['isFollowed']) {
-                  unFollowUser.runMutation({
-                    "id": user.id,
-                  });
-                } else {
-                  followUser.runMutation({
-                    "id": user.id,
-                  });
-                }
-              },
+              onTap: checkIsFollowed.result.isLoading
+                  ? () {}
+                  : () async {
+                      if (checkIsFollowed.result.data!['isFollowed']) {
+                        unFollowUser.runMutation({
+                          "id": user.id,
+                        });
+                      } else {
+                        followUser.runMutation({
+                          "id": user.id,
+                        });
+                      }
+                    },
               child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: checkIsFollowed.result.data?['isFollowed'] == null

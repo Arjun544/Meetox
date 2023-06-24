@@ -49,9 +49,9 @@ const userSchema = new Schema(
       default: null,
     },
     socials: {
-      type: Map,
-      of: String,
-      default: {},
+      type: Array,
+      of: Map,
+      default: [],
     },
     location: {
       type: {

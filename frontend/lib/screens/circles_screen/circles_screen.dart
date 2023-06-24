@@ -80,12 +80,8 @@ class CirclesScreen extends GetView<CirclesController> {
               ),
               SizedBox(height: 15.sp),
               Expanded(
-                child: PagedListView.separated(
+                child: PagedListView(
                   pagingController: controller.circlesPagingController,
-                  separatorBuilder: (context, index) => Divider(
-                    thickness: 1,
-                    color: context.theme.canvasColor.withOpacity(0.1),
-                  ),
                   builderDelegate:
                       PagedChildBuilderDelegate<circle_model.Circle>(
                     animateTransitions: true,

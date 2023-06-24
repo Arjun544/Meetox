@@ -5,6 +5,7 @@ const typeDefs = gql`
   scalar IUser
   scalar ILocation
   scalar IImage
+  scalar ISocialLink
 
   type Query {
     getUser: UserResponse
@@ -14,6 +15,7 @@ const typeDefs = gql`
       distanceInKM: Float!
       followers: [String!]!
     ): [NearByUserResponse]
+    socials(id: String!): [ISocialLink]
   }
 
   type Mutation {
