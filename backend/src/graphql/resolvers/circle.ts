@@ -11,6 +11,7 @@ import {
   nearbyCircles,
   userCircles,
   deleteCircle,
+  circleMembers,
 } from "../../services/circle_services";
 
 const resolvers = {
@@ -118,6 +119,14 @@ const resolvers = {
         member: id,
       });
       return member !== null;
+    },
+    members: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { id: circleId, name, page, limit } = args;
+      const { id } = decodeToken(req as IncomingMessage);
+
+      const members = await circleMembers(circleId, name, page, limit);
+      return members;
     },
   },
   //   Subscription: {

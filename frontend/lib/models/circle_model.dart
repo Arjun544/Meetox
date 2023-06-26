@@ -98,7 +98,8 @@ class Circle {
   Image? image;
   bool? isPrivate;
   int? limit;
-  String? admin;
+  User? admin;
+  String? adminId;
   Location? location;
   int? members;
   DateTime? createdAt;
@@ -114,6 +115,7 @@ class Circle {
     this.isPrivate,
     this.limit,
     this.admin,
+    this.adminId,
     this.location,
     this.members,
     this.createdAt,
@@ -127,13 +129,13 @@ class Circle {
   String toRawJson() => json.encode(toJson());
 
   factory Circle.fromJson(Map<String, dynamic> json) => Circle(
-        id: json["_id"]?? json["id"],
+        id: json["_id"] ?? json["id"],
         name: json["name"],
         description: json["description"],
         image: json["image"] == null ? null : Image.fromJson(json["image"]),
         isPrivate: json["isPrivate"],
         limit: json["limit"],
-        admin: json["admin"],
+        admin: json["admin"] == null ? null : User.fromJson(json["admin"]),
         location: json["location"] == null
             ? null
             : Location.fromJson(json["location"]),

@@ -1,6 +1,8 @@
 import { PaginateModel, model } from "mongoose";
 import Circle from "../models/circle_model";
+import Member from "../models/member_model";
 import { ICircle } from "../utils/interfaces/circle";
+import { IMember } from "../utils/interfaces/member";
 
 /**
  * Retrieves all circles within a certain distance from a given latitude and longitude.
@@ -23,9 +25,14 @@ export async function nearbyCircles(
     "location.coordinates": {
       $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
     },
-  }).select(
-    "name description image admin isPrivate members createdAt location limit"
-  );
+  })
+    .select(
+      "name description image admin isPrivate members createdAt location limit"
+    )
+    .populate({
+      path: "admin",
+      select: "id name display_pic",
+    });
 
   return circles;
 }
@@ -86,6 +93,46 @@ export async function deleteCircle(id: String): Promise<ICircle> {
   const circle = await Circle.findByIdAndDelete(id).select(
     "name description image isPrivate members createdAt location limit"
   );
-  console.log("deleted circle", circle);
   return circle as ICircle;
+}
+
+export async function circleMembers(
+  id: String,
+  name: String,
+  page: number,
+  limit: number
+): Promise<any> {
+  const query =
+    name === null
+      ? {
+          circle: id,
+        }
+      : {
+          circle: id,
+          $text: { $search: name as string },
+        };
+  const option = {
+    lean: true,
+    sort: { createdAt: -1 },
+    populate: {
+      path: "member",
+      select: "id name display_pic isPremium location createdAt updatedAt",
+    },
+    page: page,
+    limit: limit,
+  };
+
+  const member = model<IMember, PaginateModel<IMember>>("Member");
+
+  const result = await member.paginate(query, option);
+  return {
+    page: result.page,
+    nextPage: result.nextPage,
+    prevPage: result.prevPage,
+    hasNextPage: result.hasNextPage,
+    hasPrevPage: result.hasPrevPage,
+    total_pages: result.totalPages,
+    total_results: result.totalDocs,
+    members: result.docs.map((doc) => doc.member),
+  };
 }

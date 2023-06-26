@@ -6,6 +6,7 @@ const typeDefs = gql`
   scalar IUser
   scalar ILocation
   scalar IImage
+  scalar IDisplayPic
 
   type Query {
     getNearByCircles(
@@ -15,6 +16,7 @@ const typeDefs = gql`
     ): [CircleResponse]
     userCircles(name: String, page: Int!, limit: Int!): CirclesResponse
     isMember(id: String!): Boolean
+    members(id: String!, name: String, page: Int!, limit: Int!): MembersResponse
   }
 
   type Mutation {
@@ -43,6 +45,17 @@ const typeDefs = gql`
     circles: [CircleResponse]
   }
 
+  type MembersResponse {
+    page: Int
+    nextPage: Int
+    prevPage: Int
+    hasNextPage: Boolean
+    hasPrevPage: Boolean
+    total_pages: Int
+    total_results: Int
+    members: [IUser]
+  }
+
   type CircleResponse {
     id: String
     name: String
@@ -51,10 +64,16 @@ const typeDefs = gql`
     location: ILocation
     isPrivate: Boolean
     limit: Int
-    admin: String
+    admin: AdminResponse
     members: Int
     createdAt: Date
     updatedAt: Date
+  }
+
+  type AdminResponse {
+    id: String
+    name: String
+    display_pic: IDisplayPic
   }
 `;
 

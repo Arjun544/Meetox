@@ -29,7 +29,6 @@ memberSchema.set("toJSON", {
 });
 
 memberSchema.index({ "member.name": "text" });
-memberSchema.index({ "member.name": "text" });
 
 memberSchema.plugin(paginate);
 

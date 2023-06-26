@@ -51,10 +51,11 @@ class CustomField extends StatelessWidget {
             : isPassword
                 ? TextInputType.visiblePassword
                 : keyboardType,
-        style: context.theme.textTheme.labelMedium,
+        style: context.theme.textTheme.labelSmall,
         cursorColor: AppColors.primaryYellow,
         cursorWidth: 3,
-        textAlignVertical: isSearchField? TextAlignVertical .bottom: TextAlignVertical.center,
+        textAlignVertical:
+            isSearchField ? TextAlignVertical.bottom : TextAlignVertical.center,
         autofocus: autoFocus,
         decoration: InputDecoration(
           filled: context.theme.inputDecorationTheme.filled,

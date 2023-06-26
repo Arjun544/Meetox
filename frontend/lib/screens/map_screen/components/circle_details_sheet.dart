@@ -9,6 +9,8 @@ import 'package:frontend/models/circle_model.dart' as circle_model;
 import 'package:frontend/utils/constants.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
+import '../../circle_profile_screen/circle_profile_screen.dart';
+
 class CircleDetailsSheet extends HookWidget {
   final circle_model.Circle circle;
   final Rx<circle_model.Circle> tappedCircle;
@@ -302,16 +304,24 @@ class CircleDetailsSheet extends HookWidget {
                     ),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: Container(
-                        height: 45.sp,
-                        decoration: BoxDecoration(
-                          color: context.theme.indicatorColor,
-                          borderRadius: BorderRadius.circular(12),
+                      child: InkWell(
+                        onTap: () => Get.to(
+                          () => CircleProfileScreen(
+                            circle: circle,
+                            allMembers: members,
+                          ),
                         ),
-                        child: Icon(
-                          FlutterRemix.profile_fill,
-                          size: 22.sp,
-                          color: context.theme.iconTheme.color,
+                        child: Container(
+                          height: 45.sp,
+                          decoration: BoxDecoration(
+                            color: context.theme.indicatorColor,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            FlutterRemix.profile_fill,
+                            size: 22.sp,
+                            color: context.theme.iconTheme.color,
+                          ),
                         ),
                       ),
                     ),

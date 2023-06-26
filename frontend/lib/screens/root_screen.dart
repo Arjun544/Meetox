@@ -15,19 +15,21 @@ class DrawerScreen extends GetView<RootController> {
   Widget build(BuildContext context) {
     Get.put(RootController());
 
-    return ZoomDrawer(
-      controller: controller.zoomDrawerController,
-      menuScreen: const CustomDrawer(),
-      mainScreen: const RootScreen(),
-      borderRadius: 24,
-      showShadow: true,
-      angle: 0,
-      mainScreenScale: 0.2,
-      slideWidth: Get.width * 0.8,
-      mainScreenTapClose: true,
-      drawerShadowsBackgroundColor:
-          context.theme.bottomSheetTheme.backgroundColor!,
-      menuBackgroundColor: AppColors.primaryYellow,
+    return Scaffold(
+      body: ZoomDrawer(
+        controller: controller.zoomDrawerController,
+        menuScreen: const CustomDrawer(),
+        mainScreen: const RootScreen(),
+        borderRadius: 24,
+        showShadow: true,
+        angle: 0,
+        mainScreenScale: 0.2,
+        slideWidth: Get.width * 0.8,
+        mainScreenTapClose: true,
+        drawerShadowsBackgroundColor:
+            context.theme.bottomSheetTheme.backgroundColor!,
+        menuBackgroundColor: AppColors.primaryYellow,
+      ),
     );
   }
 }

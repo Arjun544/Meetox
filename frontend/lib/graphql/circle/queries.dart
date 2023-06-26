@@ -34,10 +34,14 @@ query ($latitude: Float!, $longitude: Float!, $distanceInKM: Float!){
     location
     isPrivate
     limit
-    admin
     members
     createdAt
     updatedAt
+    admin {
+      name
+      id
+      display_pic
+    }
    }
 }
 ''';
@@ -45,5 +49,20 @@ query ($latitude: Float!, $longitude: Float!, $distanceInKM: Float!){
 String isMember = r'''
 query($id: String!) {
   isMember(id: $id)
+}
+''';
+
+String members = r'''
+query ($id: String!, $name: String, $page: Int!, $limit: Int!) {
+  members(id: $id, name: $name, page: $page, limit: $limit) {
+    page
+    nextPage
+    prevPage
+    hasNextPage
+    hasPrevPage
+    total_pages
+    total_results
+    members
+  }
 }
 ''';

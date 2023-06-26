@@ -94,7 +94,7 @@ class User {
         displayPic: json['display_pic'] == null
             ? null
             : DisplayPic.fromJson(json['display_pic'] as Map<String, dynamic>),
-        isPremium: json['isPremium'] as bool,
+        isPremium: json['isPremium'] ?? false,
         createdAt: json['createdAt'] == null
             ? null
             : DateTime.parse(json['createdAt'] as String),

@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:flutter_zoom_drawer/config.dart';
 import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
