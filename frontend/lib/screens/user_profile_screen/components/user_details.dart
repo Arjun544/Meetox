@@ -19,7 +19,6 @@ class UserDetails extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final checkIsFollowed = useQuery(
       QueryOptions(
         document: gql(isFollowed),
@@ -69,7 +68,10 @@ class UserDetails extends HookWidget {
       expandedHeight: Get.height * 0.37,
       collapsedHeight: 100,
       pinned: true,
-      title: Text(user.name!),
+      title: Text(
+        user.name!.capitalizeFirst!,
+        style: context.theme.textTheme.labelMedium,
+      ),
       bottom: PreferredSize(
         preferredSize: Size(Get.width, 0),
         child: Padding(

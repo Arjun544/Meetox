@@ -8,52 +8,18 @@ const questionSchema = new Schema(
       type: String,
       required: true,
     },
-    answers: [
-      {
-        type: Map,
-        default: {
-          answer: "",
-          user: {
-            type: Schema.Types.ObjectId,
-            ref: "Users",
-          },
-        },
-      },
-    ],
     admin: {
       type: Schema.Types.ObjectId,
       ref: "Users",
     },
-    upvotes: [
-      {
-        type: Map,
-        default: {
-          votes: {
-            type: Number,
-            default: 0,
-          },
-          user: {
-            type: Schema.Types.ObjectId,
-            ref: "Users",
-          },
-        },
-      },
-    ],
-    downvotes: [
-      {
-        type: Map,
-        default: {
-          votes: {
-            type: Number,
-            default: 0,
-          },
-          user: {
-            type: Schema.Types.ObjectId,
-            ref: "Users",
-          },
-        },
-      },
-    ],
+    upvotes: {
+      type: Number,
+      default: 0,
+    },
+    downvotes: {
+      type: Number,
+      default: 0,
+    },
     expiry: {
       type: Date,
       required: true,

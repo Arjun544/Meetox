@@ -74,6 +74,7 @@ const typeDefs = gql`
     id: String
     name: String
     display_pic: IDisplayPic
+    isPremium: Boolean
   }
 `;
 

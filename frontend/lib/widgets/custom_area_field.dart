@@ -5,12 +5,13 @@ import 'package:get/get.dart';
 
 class CustomAreaField extends StatelessWidget {
   const CustomAreaField({
+    super.key,
     required this.hintText,
     required this.text,
     required this.controller,
     required this.focusNode,
     required this.hasFocus,
-    super.key,
+    this.autoFocus = false,
     this.formats,
     this.validator,
   });
@@ -19,6 +20,7 @@ class CustomAreaField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final RxBool hasFocus;
+  final bool autoFocus;
   final List<TextInputFormatter>? formats;
   final String? Function(String?)? validator;
 
@@ -28,8 +30,9 @@ class CustomAreaField extends StatelessWidget {
       inputFormatters: formats,
       controller: controller,
       focusNode: focusNode,
+      autofocus: autoFocus,
       keyboardType: TextInputType.multiline,
-      style: context.theme.textTheme.labelMedium,
+      style: context.theme.textTheme.labelSmall,
       cursorColor: AppColors.primaryYellow,
       cursorWidth: 3,
       minLines: 6,

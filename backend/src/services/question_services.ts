@@ -1,6 +1,7 @@
 import { PaginateModel, model } from "mongoose";
 import Question from "../models/question_model";
 import { IQuestion } from "../utils/interfaces/question";
+import { IAnswer } from "../utils/interfaces/answer";
 
 /**
  * Returns an array of questions nearby a specific location based on the given
@@ -24,9 +25,12 @@ export async function nearbyQuestions(
     "location.coordinates": {
       $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
     },
-  }).select(
-    "question answers owner upvotes downvotes expiry createdAt location"
-  );
+  })
+    .select("question admin upvotes downvotes expiry createdAt location")
+    .populate({
+      path: "admin",
+      select: "id name display_pic isPremium",
+    });
 
   return questions;
 }
@@ -58,6 +62,10 @@ export async function userQuestions(
         };
   const option = {
     lean: true,
+    populate: {
+      path: "admin",
+      select: "id name display_pic isPremium",
+    },
     sort: { createdAt: -1 },
     page: page,
     limit: limit,
@@ -85,7 +93,41 @@ export async function userQuestions(
  */
 export async function deleteQuestion(id: String): Promise<any> {
   const question = await Question.findByIdAndDelete(id).select(
-    "question answers owner upvotes downvotes expiry createdAt location"
+    "question answers admin upvotes downvotes expiry createdAt location"
   );
   return question;
+}
+
+export async function getAnswers(
+  id: String,
+  page: number,
+  limit: number
+): Promise<object> {
+  const query = {
+    question: id,
+  };
+  const option = {
+    lean: true,
+    sort: { createdAt: -1 },
+    populate: {
+      path: "user",
+      select: "id name display_pic isPremium",
+    },
+    page: page,
+    limit: limit,
+  };
+
+  const answer = model<IAnswer, PaginateModel<IQuestion>>("Answer");
+
+  const result = await answer.paginate(query, option);
+  return {
+    page: result.page,
+    nextPage: result.nextPage,
+    prevPage: result.prevPage,
+    hasNextPage: result.hasNextPage,
+    hasPrevPage: result.hasPrevPage,
+    total_pages: result.totalPages,
+    total_results: result.totalDocs,
+    answers: result.docs,
+  };
 }

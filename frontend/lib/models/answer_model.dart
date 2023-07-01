@@ -6,36 +6,35 @@ import 'dart:convert';
 
 import 'user_model.dart';
 
-class QuestionModel {
+class AnswerModel {
   String? typename;
-  UserQuestions? userQuestions;
+  Answers? answers;
 
-  QuestionModel({
+  AnswerModel({
     this.typename,
-    this.userQuestions,
+    this.answers,
   });
 
-  factory QuestionModel.fromRawJson(String str) =>
-      QuestionModel.fromJson(json.decode(str));
+  factory AnswerModel.fromRawJson(String str) =>
+      AnswerModel.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory QuestionModel.fromJson(Map<String, dynamic> json) => QuestionModel(
+  factory AnswerModel.fromJson(Map<String, dynamic> json) => AnswerModel(
         typename: json["__typename"],
-        userQuestions: json["userQuestions"] == null
-            ? null
-            : UserQuestions.fromJson(json["userQuestions"]),
+        answers:
+            json["answers"] == null ? null : Answers.fromJson(json["answers"]),
       );
 
   Map<String, dynamic> toJson() => {
         "__typename": typename,
-        "userQuestions": userQuestions?.toJson(),
+        "answers": answers?.toJson(),
       };
 }
 
-class UserQuestions {
+class Answers {
   String? typename;
-  List<Question>? questions;
+  List<Answer>? answers;
   bool? hasNextPage;
   bool? hasPrevPage;
   dynamic nextPage;
@@ -44,9 +43,9 @@ class UserQuestions {
   int? totalPages;
   int? totalResults;
 
-  UserQuestions({
+  Answers({
     this.typename,
-    this.questions,
+    this.answers,
     this.hasNextPage,
     this.hasPrevPage,
     this.nextPage,
@@ -56,17 +55,16 @@ class UserQuestions {
     this.totalResults,
   });
 
-  factory UserQuestions.fromRawJson(String str) =>
-      UserQuestions.fromJson(json.decode(str));
+  factory Answers.fromRawJson(String str) => Answers.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory UserQuestions.fromJson(Map<String, dynamic> json) => UserQuestions(
+  factory Answers.fromJson(Map<String, dynamic> json) => Answers(
         typename: json["__typename"],
-        questions: json["questions"] == null
+        answers: json["answers"] == null
             ? []
-            : List<Question>.from(
-                json["questions"]!.map((x) => Question.fromJson(x))),
+            : List<Answer>.from(
+                json["answers"]!.map((x) => Answer.fromJson(x))),
         hasNextPage: json["hasNextPage"],
         hasPrevPage: json["hasPrevPage"],
         nextPage: json["nextPage"],
@@ -78,9 +76,9 @@ class UserQuestions {
 
   Map<String, dynamic> toJson() => {
         "__typename": typename,
-        "questions": questions == null
+        "answers": answers == null
             ? []
-            : List<dynamic>.from(questions!.map((x) => x.toJson())),
+            : List<dynamic>.from(answers!.map((x) => x.toJson())),
         "hasNextPage": hasNextPage,
         "hasPrevPage": hasPrevPage,
         "nextPage": nextPage,
@@ -91,73 +89,54 @@ class UserQuestions {
       };
 }
 
-class Question {
+class Answer {
   String? id;
-  String? question;
-  int? answers;
-  User? admin;
+  String? answer;
+  String? questionId;
+  User? user;
   int? upvotes;
   int? downvotes;
-  DateTime? expiry;
-  Location? location;
   DateTime? createdAt;
   DateTime? updatedAt;
-  int? v;
-  String? questionId;
 
-  Question({
+  Answer({
     this.id,
-    this.question,
-    this.answers,
-    this.admin,
+    this.answer,
+    this.user,
     this.upvotes,
     this.downvotes,
-    this.expiry,
-    this.location,
     this.createdAt,
     this.updatedAt,
-    this.v,
     this.questionId,
   });
 
-  factory Question.fromRawJson(String str) =>
-      Question.fromJson(json.decode(str));
+  factory Answer.fromRawJson(String str) => Answer.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Question.fromJson(Map<String, dynamic> json) => Question(
+  factory Answer.fromJson(Map<String, dynamic> json) => Answer(
         id: json["_id"] ?? json['id'],
-        question: json["question"],
-        answers: json["answers"] ?? 0,
-        admin: User.fromJson(json["admin"]),
+        answer: json["answer"],
+        user: User.fromJson(json["user"]),
         upvotes: json["upvotes"] ?? 0,
         downvotes: json["downvotes"] ?? 0,
-        expiry: json["expiry"] == null ? null : DateTime.parse(json["expiry"]),
-        location: json["location"] == null
-            ? null
-            : Location.fromJson(json["location"]),
         createdAt: json["createdAt"] == null
             ? null
             : DateTime.parse(json["createdAt"]),
         updatedAt: json["updatedAt"] == null
             ? null
             : DateTime.parse(json["updatedAt"]),
-        v: json["__v"],
         questionId: json["id"],
       );
 
   Map<String, dynamic> toJson() => {
         "_id": id,
-        "question": question,
-        "answers": answers,
-        "admin": admin,
+        "question": answer,
+        "user": user,
         "upvotes": upvotes,
         "downvotes": downvotes,
-        "expiry": expiry?.toIso8601String(),
-        "location": location?.toJson(),
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
-        "__v": v,
         "id": questionId,
       };
 }

@@ -5,6 +5,7 @@ import 'package:frontend/models/question_model.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../core/imports/packages_imports.dart';
+import '../../answers_screen/answers_screen.dart';
 
 class QuestionDetailsSheet extends GetView<MapScreenController> {
   final Question question;
@@ -93,28 +94,33 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                     color: Colors.grey,
                   ),
                 ),
-                trailing: DecoratedBox(
-                  decoration: BoxDecoration(
-                    color: AppColors.primaryYellow,
-                    borderRadius: BorderRadius.circular(10),
+                trailing: InkWell(
+                  onTap: () => Get.to(
+                    () => AnswersScreen(question: question),
                   ),
-                  child: Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 20.sp, vertical: 6.sp),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          FlutterRemix.question_answer_fill,
-                          size: 16.sp,
-                          color: Colors.black,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Answer',
-                          style: context.theme.textTheme.labelSmall,
-                        ),
-                      ],
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      color: AppColors.primaryYellow,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 20.sp, vertical: 6.sp),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            IconsaxBold.messages_1,
+                            size: 16.sp,
+                            color: Colors.black,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                            'Answers',
+                            style: context.theme.textTheme.labelSmall,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -125,7 +131,7 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                   Column(
                     children: [
                       Text(
-                        question.answers!.length.toString(),
+                        question.answers.toString(),
                         style: context.theme.textTheme.labelMedium,
                       ),
                       Text(
@@ -202,7 +208,7 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                               color: AppColors.primaryYellow,
                             ),
                             Text(
-                              question.upvotes!.length.toString(),
+                              question.upvotes!.toString(),
                               style: context.theme.textTheme.labelSmall,
                             ),
                           ],
@@ -227,7 +233,7 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                               color: Colors.redAccent,
                             ),
                             Text(
-                              question.downvotes!.length.toString(),
+                              question.downvotes!.toString(),
                               style: context.theme.textTheme.labelSmall,
                             ),
                           ],
@@ -236,16 +242,21 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                     ),
                     const SizedBox(width: 20),
                     Expanded(
-                      child: Container(
-                        height: 45.sp,
-                        decoration: BoxDecoration(
-                          color: context.theme.indicatorColor,
-                          borderRadius: BorderRadius.circular(12),
+                      child: InkWell(
+                        onTap: () => Get.to(
+                          () => AnswersScreen(question: question),
                         ),
-                        child: Icon(
-                          FlutterRemix.profile_fill,
-                          size: 22.sp,
-                          color: context.theme.iconTheme.color,
+                        child: Container(
+                          height: 45.sp,
+                          decoration: BoxDecoration(
+                            color: context.theme.indicatorColor,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            IconsaxBold.messages_1,
+                            size: 22.sp,
+                            color: context.theme.iconTheme.color,
+                          ),
                         ),
                       ),
                     ),

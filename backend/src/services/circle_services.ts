@@ -1,6 +1,5 @@
 import { PaginateModel, model } from "mongoose";
 import Circle from "../models/circle_model";
-import Member from "../models/member_model";
 import { ICircle } from "../utils/interfaces/circle";
 import { IMember } from "../utils/interfaces/member";
 
@@ -27,11 +26,11 @@ export async function nearbyCircles(
     },
   })
     .select(
-      "name description image admin isPrivate members createdAt location limit"
+      "name description image admin isPrivate createdAt location limit"
     )
     .populate({
       path: "admin",
-      select: "id name display_pic",
+      select: "id name display_pic isPremium",
     });
 
   return circles;

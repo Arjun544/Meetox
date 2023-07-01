@@ -1,6 +1,7 @@
 import { withFilter } from "graphql-subscriptions/dist/with-filter";
 import { IncomingMessage } from "http";
 import Question from "../../models/question_model";
+import Answer from "../../models/answer_model";
 import { decodeToken } from "../../services/token_services";
 import { IQuestion } from "../../utils/interfaces/question";
 import { GraphQLContext } from "../../utils/types";
@@ -8,7 +9,9 @@ import {
   nearbyQuestions,
   userQuestions,
   deleteQuestion,
+  getAnswers,
 } from "../../services/question_services";
+import { IAnswer } from "../../utils/interfaces/answer";
 
 const resolvers = {
   Mutation: {
@@ -30,6 +33,28 @@ const resolvers = {
 
       const question = await deleteQuestion(questionId as String);
       return question;
+    },
+    addAnswer: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { id: questionId, answer } = args;
+      const { id } = decodeToken(req as IncomingMessage);
+
+      const newAnswer: IAnswer | null = await Answer.create({
+        question: questionId,
+        answer: answer,
+        user: id,
+      });
+      const populatedAnswer = await newAnswer.populate({
+        path: "user",
+        select: "id name display_pic isPremium",
+      });
+      return populatedAnswer;
+    },
+  },
+  QuestionResponse: {
+    answers: async (parent: { _id: any }) => {
+      const count = await Answer.countDocuments({ question: parent._id });
+      return count;
     },
   },
   Query: {
@@ -53,6 +78,14 @@ const resolvers = {
         distanceInKM
       );
       return questions;
+    },
+    answers: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { id: questionId, page, limit } = args;
+      const { id } = decodeToken(req as IncomingMessage);
+
+      const answers = await getAnswers(questionId as String, page, limit);
+      return answers;
     },
   },
   //   Subscription: {

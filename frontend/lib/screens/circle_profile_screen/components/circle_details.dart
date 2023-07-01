@@ -7,11 +7,11 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../members_screen.dart';
 
-class GroupDetails extends HookWidget {
+class CircleDetails extends HookWidget {
   final circle_model.Circle circle;
   final ValueNotifier<int> members;
 
-  const GroupDetails(this.circle, this.members, {super.key});
+  const CircleDetails(this.circle, this.members, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,10 @@ class GroupDetails extends HookWidget {
       elevation: 0.1,
       expandedHeight: Get.height * 0.3,
       pinned: true,
-      title: Text(circle.name!.capitalizeFirst!),
+      title: Text(
+        circle.name!.capitalizeFirst!,
+        style: context.theme.textTheme.labelMedium,
+      ),
       flexibleSpace: FlexibleSpaceBar(
         background: Padding(
           padding: EdgeInsets.only(top: Get.height * 0.15),

@@ -5,7 +5,7 @@ import 'package:frontend/models/circle_model.dart' as circle_model;
 import 'package:frontend/widgets/mini_map.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import 'components/group_details.dart';
+import 'components/circle_details.dart';
 
 class CircleProfileScreen extends HookWidget {
   final circle_model.Circle circle;
@@ -21,7 +21,7 @@ class CircleProfileScreen extends HookWidget {
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
-            GroupDetails(circle, allMembers),
+            CircleDetails(circle, allMembers),
           ];
         },
         body: Padding(
