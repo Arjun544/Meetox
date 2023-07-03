@@ -85,7 +85,7 @@ class AddCircleScreen extends GetView<AddCircleController> {
                 fetchPolicy: FetchPolicy.networkOnly,
                 onCompleted: (Map<String, dynamic>? resultData) =>
                     controller.onComplete(resultData),
-                onError: (error) => showToast('Failed to create circle'),
+                onError: (error) => logError(error!.toString()),
               ),
               builder: (runMutation, result) {
                 return result!.isLoading

@@ -1,6 +1,23 @@
 String addCircle = r'''
     mutation($name: String!, $description: String!, $isPrivate: Boolean!, $members: [String]!, $location: ILocation, $limit: Int, $image: String!) {
-     addCircle(name: $name, description: $description, isPrivate: $isPrivate, members: $members, location: $location, limit: $limit, image: $image)
+     addCircle(name: $name, description: $description, isPrivate: $isPrivate, members: $members, location: $location, limit: $limit, image: $image){
+      id
+    name
+    description
+    image
+    location
+    isPrivate
+    limit
+    admin {
+      id
+      name
+      display_pic
+      isPremium
+    }
+    members
+    createdAt
+    updatedAt
+     }
   }
 ''';
 

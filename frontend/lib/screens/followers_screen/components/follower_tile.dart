@@ -10,8 +10,14 @@ import '../../../core/imports/packages_imports.dart';
 
 class FollowerTile extends HookWidget {
   final User user;
+  final bool showFollowButton;
+  final VoidCallback? onTap;
 
-  const FollowerTile({super.key, required this.user});
+  const FollowerTile(
+      {super.key,
+      required this.user,
+      this.showFollowButton = true,
+      this.onTap});
   @override
   Widget build(BuildContext context) {
     final checkIsFollowed = useQuery(
@@ -44,6 +50,8 @@ class FollowerTile extends HookWidget {
       ),
     );
     return ListTile(
+      onTap: onTap,
+      splashColor: Colors.transparent,
       contentPadding: EdgeInsets.zero,
       leading: Stack(
         children: [
@@ -85,7 +93,7 @@ class FollowerTile extends HookWidget {
           ),
         ],
       ),
-      trailing: user.id != currentUser.value.id
+      trailing: user.id != currentUser.value.id && showFollowButton
           ? InkWell(
               onTap: checkIsFollowed.result.isLoading
                   ? () {}

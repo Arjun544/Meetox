@@ -1,18 +1,14 @@
-import { UploadApiResponse } from "cloudinary";
-import { withFilter } from "graphql-subscriptions/dist/with-filter";
 import { IncomingMessage } from "http";
-import Circle from "../../models/circle_model";
 import Member from "../../models/member_model";
-import { uploadImage } from "../../services/storage_services";
-import { decodeToken } from "../../services/token_services";
-import { ICircle } from "../../utils/interfaces/circle";
-import { GraphQLContext } from "../../utils/types";
 import {
+  addCircle,
+  circleMembers,
+  deleteCircle,
   nearbyCircles,
   userCircles,
-  deleteCircle,
-  circleMembers,
 } from "../../services/circle_services";
+import { decodeToken } from "../../services/token_services";
+import { GraphQLContext } from "../../utils/types";
 
 const resolvers = {
   Mutation: {
@@ -22,33 +18,17 @@ const resolvers = {
         args;
       const { id, token } = decodeToken(req as IncomingMessage);
 
-      const results: string | UploadApiResponse = await uploadImage(
-        "Circles Profiles",
-        image
-      );
-
-      const response: UploadApiResponse = results as UploadApiResponse;
-
-      const circle: ICircle | null = await Circle.create({
+      const cirlce = await addCircle(
+        id as string,
+        image,
         name,
         description,
-        image: {
-          image: response.secure_url,
-          imageId: response.public_id,
-        },
-        admin: id,
         isPrivate,
         limit,
         location,
-      });
-
-      const newMember = new Member({
-        member: id,
-        circle: circle.id,
-      });
-      await newMember.save();
-
-      return circle;
+        members
+      );
+      return cirlce;
     },
     deleteCircle: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;

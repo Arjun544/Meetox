@@ -8,16 +8,16 @@ import 'package:frontend/helpers/convert_base64_image.dart';
 import 'package:frontend/helpers/get_asset_image.dart';
 import 'package:frontend/models/circle_model.dart' as circle_model;
 import 'package:frontend/models/user_model.dart';
+import 'package:frontend/services/follow_services.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import 'circles_controller.dart';
 
 class AddCircleController extends GetxController {
   final GlobalController globalController = Get.find();
-  // final ConversationController conversationController = Get.find();
-  // final PagingController<int, UserModel> followersPagingController =
-  //     PagingController(firstPageKey: 1);
-
+  final followersPagingController =
+      PagingController<int, User>(firstPageKey: 1);
   final RootController rootController = Get.find();
   final PageController pageController = PageController();
 
@@ -38,8 +38,21 @@ class AddCircleController extends GetxController {
   Rx<FilePickerResult> selectedImage = const FilePickerResult([]).obs;
   final RxList<User> selectedMembers = <User>[].obs;
 
+  final RxString followersSearchQuery = ''.obs;
+  late Worker followersSearchDebounce;
+
   @override
   void onInit() {
+    followersPagingController.addPageRequestListener((page) async {
+      await fetchFollowers(page);
+      followersSearchDebounce = debounce(
+        followersSearchQuery,
+        (value) {
+          followersPagingController.refresh();
+        },
+        time: const Duration(seconds: 2),
+      );
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       nameFocusNode.addListener(() {
         hasNameFocus.value = nameFocusNode.hasFocus;
@@ -50,6 +63,31 @@ class AddCircleController extends GetxController {
     });
 
     super.onInit();
+  }
+
+  Future<void> fetchFollowers(int pageKey) async {
+    try {
+      final newPage = await FollowServices.userFollowers(
+        id: currentUser.value.id!,
+        page: pageKey,
+        name: followersSearchQuery.value.isEmpty
+            ? null
+            : followersSearchQuery.value,
+      );
+
+      final newItems = newPage.followers;
+
+      if (newPage.nextPage == null &&
+          !newPage.hasNextPage! &&
+          newPage.nextPage == newPage.page) {
+        followersPagingController.appendLastPage(newItems!);
+      } else if (followersPagingController.nextPageKey != newPage.nextPage) {
+        followersPagingController.appendPage(newItems!, newPage.nextPage);
+      }
+    } catch (e) {
+      logError(e.toString());
+      followersPagingController.error = e;
+    }
   }
 
   Future<void> handleAddCircle(BuildContext context, dynamic runMutation,

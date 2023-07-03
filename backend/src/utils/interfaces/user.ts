@@ -26,7 +26,7 @@ export interface IUser extends Document {
   updatedAt: Date;
 }
 
-export interface IDisplayPic extends IUser {
+export interface IDisplayPic {
   profile: string;
   profileId: string;
 }

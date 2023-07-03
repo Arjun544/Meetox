@@ -28,7 +28,7 @@ const typeDefs = gql`
       image: String!
       members: [String]!
       location: ILocation
-    ): ICircle
+    ): CircleResponse
     addMember(id: String!): IUser
     leaveMember(id: String!): Boolean
     deleteCircle(id: String!): ICircle
