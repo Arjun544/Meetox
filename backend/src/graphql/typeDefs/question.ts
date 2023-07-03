@@ -22,6 +22,7 @@ const typeDefs = gql`
     deleteQuestion(id: String!): IQuestion
     addAnswer(id: String!, answer: String!): IAnswer
     toggleLikeQuestion(id: String!): Boolean
+    toggleLikeAnswer(id: String!): Boolean
   }
 
   type QuestionsResponse {

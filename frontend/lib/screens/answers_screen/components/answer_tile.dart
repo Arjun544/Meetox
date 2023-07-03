@@ -1,18 +1,38 @@
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/graphql/question/mutation.dart';
 import 'package:frontend/models/answer_model.dart';
 import 'package:frontend/utils/constants.dart';
 import 'package:frontend/widgets/online_indicator.dart';
-import 'package:reaction_askany/models/reaction_box_paramenters.dart';
-import 'package:reaction_askany/reaction_askany.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
-class AnswerTile extends StatelessWidget {
+class AnswerTile extends HookWidget {
   final Answer answer;
 
   const AnswerTile({super.key, required this.answer});
 
   @override
   Widget build(BuildContext context) {
+    final ValueNotifier<List<String>> likes = useState(answer.likes!);
+
+    final likeAnswerMutaion = useMutation(
+      MutationOptions(
+        document: gql(toggleLikeAnswer),
+        onCompleted: (data) {
+          if (data != null && data['toggleLikeAnswer'] != null) {
+            if (likes.value.contains(currentUser.value.id!)) {
+              likes.value.remove(currentUser.value.id!);
+              // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+              likes.notifyListeners();
+            } else {
+              likes.value.add(currentUser.value.id!);
+              // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+              likes.notifyListeners();
+            }
+          }
+        },
+      ),
+    );
     return Container(
       width: Get.width,
       margin: const EdgeInsets.only(bottom: 10),
@@ -54,24 +74,40 @@ class AnswerTile extends StatelessWidget {
           answer.answer!.capitalize!,
           style: context.theme.textTheme.labelSmall,
         ),
-        trailing: ReactionWrapper(
-          boxParamenters: ReactionBoxParamenters(
-            brightness: Brightness.light,
-            iconSize: 22,
-            iconSpacing: 10,
-            paddingHorizontal: 15,
-            radiusBox: 40,
-            quantityPerPage: 6,
+        trailing: GestureDetector(
+          onTap: likeAnswerMutaion.result.isLoading
+              ? () {}
+              : () {
+                  likeAnswerMutaion.runMutation({
+                    'id': answer.id,
+                  });
+                },
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                IconsaxBold.like_1,
+                color: likes.value.contains(currentUser.value.id!)
+                    ? Colors.blue
+                    : Colors.blueGrey,
+                size: 18,
+              ),
+              if (likes.value.isNotEmpty) ...[
+                const SizedBox(
+                  width: 5,
+                ),
+                Text(
+                  likes.value.length.toString(),
+                  style: context.theme.textTheme.labelSmall!.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+              SizedBox(
+                width: 10.w,
+              ),
+            ],
           ),
-          buttonReaction: const Padding(
-            padding: EdgeInsets.only(right: 10.0),
-            child: Icon(
-              IconsaxBold.like_1,
-              size: 20.0,
-              color: Colors.grey,
-            ),
-          ),
-          child: const SizedBox.shrink(),
         ),
       ),
     );

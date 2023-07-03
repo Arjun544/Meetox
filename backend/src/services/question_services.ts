@@ -1,8 +1,8 @@
 import { PaginateModel, model } from "mongoose";
 import Question from "../models/question_model";
+import Answer from "../models/answer_model";
 import { IQuestion } from "../utils/interfaces/question";
 import { IAnswer } from "../utils/interfaces/answer";
-import { IUser } from "../utils/interfaces/user";
 
 /**
  * Returns an array of questions nearby a specific location based on the given
@@ -160,5 +160,35 @@ export async function likeQuestion(
   } catch (error) {
     console.log(error)
     throw new Error("Failed to toggle like on question");
+  }
+}
+
+export async function likeAnswer(
+  userId: String,
+  id: String
+): Promise<Boolean> {
+  try {
+    const answer = await Answer.findById(id);
+    if (!answer) {
+      throw new Error("Answer not found");
+    }
+
+    const userLiked = answer.likes.some((like) => like.toString() === userId);
+    if (userLiked) {
+      // Unlike post
+      answer.likes = answer.likes.filter(
+        (like) => like.toString() !== userId
+      ) as [string];
+    } else {
+      // Like post
+      answer.likes.push(userId as string);
+    }
+
+    await answer.save();
+
+    return true;
+  } catch (error) {
+    console.log(error);
+    throw new Error("Failed to toggle like on answer");
   }
 }

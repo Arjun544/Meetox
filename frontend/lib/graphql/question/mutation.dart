@@ -21,3 +21,9 @@ mutation($id: String!) {
   toggleLikeQuestion(id: $id)
 }
 ''';
+
+String toggleLikeAnswer = r'''
+mutation($id: String!) {
+  toggleLikeAnswer(id: $id)
+}
+''';

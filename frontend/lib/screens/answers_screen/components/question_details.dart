@@ -3,7 +3,6 @@ import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/graphql/question/mutation.dart';
 import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/question_model.dart';
-import 'package:frontend/widgets/custom_button.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 class QuestionDetails extends HookWidget {
@@ -15,7 +14,7 @@ class QuestionDetails extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final likeMutaion = useMutation(
+    final likeQuestionMutaion = useMutation(
       MutationOptions(
         document: gql(toggleLikeQuestion),
         onCompleted: (data) {
@@ -41,38 +40,6 @@ class QuestionDetails extends HookWidget {
         'Question',
         style: context.theme.textTheme.labelMedium,
       ),
-      actions: [
-        InkWell(
-          onTap: likeMutaion.result.isLoading
-              ? () {}
-              : () {
-                  likeMutaion.runMutation({"id": question.id});
-                },
-          child: Row(
-            children: [
-              Icon(
-                IconsaxBold.like_1,
-                color: likes.value.contains(currentUser.value.id!)
-                    ? Colors.blue
-                    : Colors.blueGrey,
-                size: 18,
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              Text(
-                likes.value.length.toString(),
-                style: context.theme.textTheme.labelSmall!.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              SizedBox(
-                width: 15.w,
-              ),
-            ],
-          ),
-        ),
-      ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           alignment: Alignment.center,
@@ -80,7 +47,7 @@ class QuestionDetails extends HookWidget {
             Container(
               width: Get.width,
               margin: EdgeInsets.only(top: Get.height * 0.15),
-              padding: EdgeInsets.fromLTRB(20.h, 20.h, 20.h, 10.h),
+              padding: EdgeInsets.fromLTRB(0, 20.h, 0, 10.h),
               constraints: BoxConstraints(
                 minHeight: Get.height * 0.05,
                 maxHeight: Get.height * 0.3,
@@ -94,21 +61,17 @@ class QuestionDetails extends HookWidget {
                 children: [
                   const SizedBox(height: 20),
                   Flexible(
-                    child: Text(
-                      question.question!.capitalizeFirst!,
-                      style: context.theme.textTheme.labelMedium,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20.h, 20.h, 20.h, 10.h),
+                      child: Text(
+                        question.question!.capitalizeFirst!,
+                        style: context.theme.textTheme.labelMedium,
+                      ),
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      CustomButton(
-                        height: 32.h,
-                        width: Get.width * 0.25,
-                        text: 'Reply',
-                        onPressed: () {},
-                      ),
-                      SizedBox(width: 20.w),
                       InkWell(
                         onTap: () {
                           Clipboard.setData(
@@ -121,6 +84,39 @@ class QuestionDetails extends HookWidget {
                         child: const Icon(
                           IconsaxBold.copy,
                           color: Colors.blueGrey,
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      InkWell(
+                        onTap: likeQuestionMutaion.result.isLoading
+                            ? () {}
+                            : () {
+                                likeQuestionMutaion
+                                    .runMutation({"id": question.id});
+                              },
+                        child: Row(
+                          children: [
+                            Icon(
+                              IconsaxBold.like_1,
+                              color: likes.value.contains(currentUser.value.id!)
+                                  ? Colors.blue
+                                  : Colors.blueGrey,
+                              size: 18,
+                            ),
+                            const SizedBox(
+                              width: 5,
+                            ),
+                            Text(
+                              likes.value.length.toString(),
+                              style:
+                                  context.theme.textTheme.labelSmall!.copyWith(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 15.w,
+                            ),
+                          ],
                         ),
                       ),
                     ],

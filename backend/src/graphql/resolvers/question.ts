@@ -11,6 +11,7 @@ import {
   deleteQuestion,
   getAnswers,
   likeQuestion,
+  likeAnswer,
 } from "../../services/question_services";
 import { IAnswer } from "../../utils/interfaces/answer";
 
@@ -58,6 +59,14 @@ const resolvers = {
 
       const question = await likeQuestion(id as String, questionId as String);
       return question;
+    },
+    toggleLikeAnswer: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { id: answerId } = args;
+      const { id } = decodeToken(req as IncomingMessage);
+
+      const answer = await likeAnswer(id as String, answerId as String);
+      return answer;
     },
   },
   QuestionResponse: {
