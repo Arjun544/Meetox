@@ -1,19 +1,38 @@
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/graphql/question/mutation.dart';
 import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/question_model.dart';
 import 'package:frontend/widgets/custom_button.dart';
-import 'package:frontend/widgets/show_custom_sheet.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 
-import 'add_answer_sheet.dart';
-
-class QuestionDetails extends StatelessWidget {
+class QuestionDetails extends HookWidget {
   final Question question;
+  final ValueNotifier<List<String>> likes;
 
-  const QuestionDetails({super.key, required this.question});
+  const QuestionDetails(
+      {super.key, required this.question, required this.likes});
 
   @override
   Widget build(BuildContext context) {
+    final likeMutaion = useMutation(
+      MutationOptions(
+        document: gql(toggleLikeQuestion),
+        onCompleted: (data) {
+          if (data != null && data['toggleLikeQuestion'] != null) {
+            if (likes.value.contains(currentUser.value.id!)) {
+              likes.value.remove(currentUser.value.id!);
+              // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+              likes.notifyListeners();
+            } else {
+              likes.value.add(currentUser.value.id!);
+              // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+              likes.notifyListeners();
+            }
+          }
+        },
+      ),
+    );
     return SliverAppBar(
       elevation: 0.1,
       expandedHeight: Get.height * 0.4,
@@ -22,6 +41,38 @@ class QuestionDetails extends StatelessWidget {
         'Question',
         style: context.theme.textTheme.labelMedium,
       ),
+      actions: [
+        InkWell(
+          onTap: likeMutaion.result.isLoading
+              ? () {}
+              : () {
+                  likeMutaion.runMutation({"id": question.id});
+                },
+          child: Row(
+            children: [
+              Icon(
+                IconsaxBold.like_1,
+                color: likes.value.contains(currentUser.value.id!)
+                    ? Colors.blue
+                    : Colors.blueGrey,
+                size: 18,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                likes.value.length.toString(),
+                style: context.theme.textTheme.labelSmall!.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(
+                width: 15.w,
+              ),
+            ],
+          ),
+        ),
+      ],
       flexibleSpace: FlexibleSpaceBar(
         background: Stack(
           alignment: Alignment.center,
@@ -29,7 +80,7 @@ class QuestionDetails extends StatelessWidget {
             Container(
               width: Get.width,
               margin: EdgeInsets.only(top: Get.height * 0.15),
-              padding: EdgeInsets.all(20.h),
+              padding: EdgeInsets.fromLTRB(20.h, 20.h, 20.h, 10.h),
               constraints: BoxConstraints(
                 minHeight: Get.height * 0.05,
                 maxHeight: Get.height * 0.3,
@@ -52,24 +103,18 @@ class QuestionDetails extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomButton(
-                        width: Get.width * 0.3,
                         height: 32.h,
+                        width: Get.width * 0.25,
                         text: 'Reply',
-                        color: context.theme.cardColor,
-                        onPressed: () => showCustomSheet(
-                          context: context,
-                          child: AddAnswerSheet(
-                            id: question.id!,
-                            name: question.admin!.name!,
-                          ),
-                        ),
+                        onPressed: () {},
                       ),
                       SizedBox(width: 20.w),
                       InkWell(
                         onTap: () {
                           Clipboard.setData(
                             ClipboardData(
-                                text: question.question!.capitalizeFirst!),
+                              text: question.question!.capitalizeFirst!,
+                            ),
                           );
                           showToast('Question copied');
                         },

@@ -13,8 +13,7 @@ query ($name: String, $page: Int!, $limit: Int!){
       question
       location
       answers
-      upvotes
-      downvotes
+      likes
       admin {
         id
         name
@@ -35,8 +34,7 @@ query ($latitude: Float!, $longitude: Float!, $distanceInKM: Float!){
     question
     location
     answers
-    upvotes
-    downvotes
+    likes
     expiry
     createdAt
     updatedAt
@@ -62,8 +60,7 @@ query($page: Int!, $limit: Int!, $id: String) {
     answers {
       id
       answer
-      upvotes
-      downvotes
+      likes
       user {
         id
         name

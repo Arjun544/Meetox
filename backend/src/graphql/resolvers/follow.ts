@@ -12,22 +12,22 @@ const resolvers = {
   Mutation: {
     follow: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;
-      const { id: followerId } = args;
+      const { id: followingId } = args;
       const { id, token } = decodeToken(req as IncomingMessage);
       const follow = new Follow({
-        follower: followerId,
-        following: id,
+        follower: id,
+        following: followingId,
       });
       await follow.save();
       return follow;
     },
     unFollow: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;
-      const { id: followerId } = args;
+      const { id: followingId } = args;
       const { id, token } = decodeToken(req as IncomingMessage);
       const follow = await Follow.findOneAndDelete({
-        follower: followerId,
-        following: id,
+        follower: id,
+        following: followingId,
       });
       return follow !== null;
     },
@@ -45,11 +45,11 @@ const resolvers = {
   Query: {
     isFollowed: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;
-      const { id: followerId } = args;
+      const { id: followingId } = args;
       const { id, token } = decodeToken(req as IncomingMessage);
       const follow = await Follow.findOne({
-        follower: followerId,
-        following: id,
+        follower: id,
+        following: followingId,
       });
       return follow !== null;
     },

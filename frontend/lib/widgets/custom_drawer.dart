@@ -1,7 +1,9 @@
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/screens/auth_screens/screens_imports.dart';
 import 'package:frontend/screens/circles_screen/circles_screen.dart';
 import 'package:frontend/screens/questions_screen/questions_screen.dart';
+import 'package:frontend/services/secure_storage_service.dart';
 import 'package:frontend/widgets/drawer_tile.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -61,7 +63,10 @@ class CustomDrawer extends StatelessWidget {
                 DrawerTile(
                   icon: FlutterRemix.logout_circle_fill,
                   title: 'Logout',
-                  onPressed: () {},
+                  onPressed: () async {
+                    await SecureStorageServices.clearAll();
+                    Get.offAll(() => const AuthScreen());
+                  },
                 ),
               ],
             ),

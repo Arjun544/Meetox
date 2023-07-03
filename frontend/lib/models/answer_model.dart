@@ -94,8 +94,7 @@ class Answer {
   String? answer;
   String? questionId;
   User? user;
-  int? upvotes;
-  int? downvotes;
+  List<String>? likes;
   DateTime? createdAt;
   DateTime? updatedAt;
 
@@ -103,8 +102,7 @@ class Answer {
     this.id,
     this.answer,
     this.user,
-    this.upvotes,
-    this.downvotes,
+    this.likes,
     this.createdAt,
     this.updatedAt,
     this.questionId,
@@ -118,8 +116,9 @@ class Answer {
         id: json["_id"] ?? json['id'],
         answer: json["answer"],
         user: User.fromJson(json["user"]),
-        upvotes: json["upvotes"] ?? 0,
-        downvotes: json["downvotes"] ?? 0,
+        likes: json["likes"] == null
+            ? []
+            : List<String>.from(json["likes"]!.map((x) => x)),
         createdAt: json["createdAt"] == null
             ? null
             : DateTime.parse(json["createdAt"]),
@@ -133,8 +132,7 @@ class Answer {
         "_id": id,
         "question": answer,
         "user": user,
-        "upvotes": upvotes,
-        "downvotes": downvotes,
+        "likes": likes,
         "createdAt": createdAt?.toIso8601String(),
         "updatedAt": updatedAt?.toIso8601String(),
         "id": questionId,

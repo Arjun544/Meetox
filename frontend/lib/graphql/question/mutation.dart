@@ -15,3 +15,9 @@ mutation($id: String!) {
   deleteQuestion(id: $id)
 }
 ''';
+
+String toggleLikeQuestion = r'''
+mutation($id: String!) {
+  toggleLikeQuestion(id: $id)
+}
+''';

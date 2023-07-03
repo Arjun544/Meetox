@@ -7,7 +7,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import '../../../core/imports/packages_imports.dart';
 import '../../answers_screen/answers_screen.dart';
 
-class QuestionDetailsSheet extends GetView<MapScreenController> {
+class QuestionDetailsSheet extends HookWidget {
   final Question question;
   final Rx<Question> tappedQuestion;
 
@@ -15,6 +15,10 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
 
   @override
   Widget build(BuildContext context) {
+    final MapScreenController controller = Get.find<MapScreenController>();
+    final ValueNotifier<List<String>> likes = useState(question.likes!);
+    final ValueNotifier<int> answers = useState(question.answers!);
+
     final double currentLatitude =
         controller.rootController.currentPosition.value.latitude;
     final double currentLongitude =
@@ -96,7 +100,11 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                 ),
                 trailing: InkWell(
                   onTap: () => Get.to(
-                    () => AnswersScreen(question: question),
+                    () => AnswersScreen(
+                      question: question,
+                      likes: likes,
+                      answers: answers,
+                    ),
                   ),
                   child: DecoratedBox(
                     decoration: BoxDecoration(
@@ -131,7 +139,7 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                   Column(
                     children: [
                       Text(
-                        question.answers.toString(),
+                        answers.value.toString(),
                         style: context.theme.textTheme.labelMedium,
                       ),
                       Text(
@@ -203,37 +211,12 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              FlutterRemix.arrow_up_s_fill,
-                              size: 32.sp,
-                              color: AppColors.primaryYellow,
+                              IconsaxBold.like_1,
+                              size: 20.sp,
                             ),
+                            const SizedBox(width: 10),
                             Text(
-                              question.upvotes!.toString(),
-                              style: context.theme.textTheme.labelSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 20),
-                    Expanded(
-                      child: Container(
-                        height: 45.sp,
-                        alignment: Alignment.center,
-                        decoration: BoxDecoration(
-                          color: context.theme.indicatorColor,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              FlutterRemix.arrow_down_s_fill,
-                              size: 32.sp,
-                              color: Colors.redAccent,
-                            ),
-                            Text(
-                              question.downvotes!.toString(),
+                              likes.value.length.toString(),
                               style: context.theme.textTheme.labelSmall,
                             ),
                           ],
@@ -244,7 +227,11 @@ class QuestionDetailsSheet extends GetView<MapScreenController> {
                     Expanded(
                       child: InkWell(
                         onTap: () => Get.to(
-                          () => AnswersScreen(question: question),
+                          () => AnswersScreen(
+                            question: question,
+                            likes: likes,
+                            answers: answers,
+                          ),
                         ),
                         child: Container(
                           height: 45.sp,

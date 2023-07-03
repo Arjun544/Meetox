@@ -11,8 +11,10 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 class AddAnswerSheet extends HookWidget {
   final String id;
   final String name;
+  final ValueNotifier<int> answers;
 
-  const AddAnswerSheet({super.key, required this.name, required this.id});
+
+  const AddAnswerSheet({super.key, required this.name, required this.id, required this.answers});
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +32,7 @@ class AddAnswerSheet extends HookWidget {
             );
             // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
             answersController.answersPagingController.notifyListeners();
+            answers.value++;
             Navigator.pop(context);
           }
         },

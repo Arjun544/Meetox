@@ -1,7 +1,3 @@
-// To parse this JSON data, do
-//
-//     final followerModel = followerModelFromJson(jsonString);
-
 import 'dart:convert';
 
 import 'package:frontend/models/user_model.dart';

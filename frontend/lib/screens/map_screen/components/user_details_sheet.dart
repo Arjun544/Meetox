@@ -154,7 +154,7 @@ class UserDetailsSheet extends HookWidget {
                   trailing: Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: InkWell(
-                      onTap: checkIsFollowed.result.isLoading
+                      onTap: checkIsFollowed.result.isLoading || followUser.result.isLoading || unFollowUser.result.isLoading
                           ? () {}
                           : () async {
                               if (checkIsFollowed.result.data!['isFollowed']) {

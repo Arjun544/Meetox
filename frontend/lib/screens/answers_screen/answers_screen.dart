@@ -4,24 +4,35 @@ import 'package:frontend/models/answer_model.dart';
 import 'package:frontend/models/question_model.dart';
 import 'package:frontend/widgets/custom_error_widget.dart';
 import 'package:frontend/widgets/loaders/followers_loader.dart';
+import 'package:frontend/widgets/show_custom_sheet.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../controllers/answers_controller.dart';
+import 'components/add_answer_sheet.dart';
 import 'components/answer_tile.dart';
 import 'components/question_details.dart';
 
-class AnswersScreen extends GetView<AnswersController> {
+class AnswersScreen extends HookWidget {
   final Question question;
+  final ValueNotifier<List<String>> likes;
+  final ValueNotifier<int> answers;
 
-  const AnswersScreen({super.key, required this.question});
+  const AnswersScreen(
+      {super.key,
+      required this.question,
+      required this.likes,
+      required this.answers});
   @override
   Widget build(BuildContext context) {
-    Get.put(AnswersController(question.id!));
+    final controller = Get.put(AnswersController(question.id!));
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
-            QuestionDetails(question: question),
+            QuestionDetails(
+              question: question,
+              likes: likes,
+            ),
           ];
         },
         body: RefreshIndicator(
@@ -39,7 +50,7 @@ class AnswersScreen extends GetView<AnswersController> {
                       style: context.theme.textTheme.labelLarge,
                     ),
                     const SizedBox(width: 10),
-                    const Icon(IconsaxBold.messages_1)
+                    const Icon(IconsaxBold.messages_1),
                   ],
                 ),
                 SizedBox(height: 15.h),
@@ -83,6 +94,22 @@ class AnswersScreen extends GetView<AnswersController> {
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 1,
+        backgroundColor: context.theme.cardColor,
+        onPressed: () => showCustomSheet(
+          context: context,
+          child: AddAnswerSheet(
+            id: question.id!,
+            name: question.admin!.name!,
+            answers: answers,
+          ),
+        ),
+        child: Icon(
+          FlutterRemix.add_fill,
+          color: context.theme.scaffoldBackgroundColor,
         ),
       ),
     );

@@ -3,6 +3,8 @@ import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/models/answer_model.dart';
 import 'package:frontend/utils/constants.dart';
 import 'package:frontend/widgets/online_indicator.dart';
+import 'package:reaction_askany/models/reaction_box_paramenters.dart';
+import 'package:reaction_askany/reaction_askany.dart';
 
 class AnswerTile extends StatelessWidget {
   final Answer answer;
@@ -51,6 +53,25 @@ class AnswerTile extends StatelessWidget {
         subtitle: Text(
           answer.answer!.capitalize!,
           style: context.theme.textTheme.labelSmall,
+        ),
+        trailing: ReactionWrapper(
+          boxParamenters: ReactionBoxParamenters(
+            brightness: Brightness.light,
+            iconSize: 22,
+            iconSpacing: 10,
+            paddingHorizontal: 15,
+            radiusBox: 40,
+            quantityPerPage: 6,
+          ),
+          buttonReaction: const Padding(
+            padding: EdgeInsets.only(right: 10.0),
+            child: Icon(
+              IconsaxBold.like_1,
+              size: 20.0,
+              color: Colors.grey,
+            ),
+          ),
+          child: const SizedBox.shrink(),
         ),
       ),
     );

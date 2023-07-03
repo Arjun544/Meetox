@@ -10,6 +10,7 @@ import {
   userQuestions,
   deleteQuestion,
   getAnswers,
+  likeQuestion,
 } from "../../services/question_services";
 import { IAnswer } from "../../utils/interfaces/answer";
 
@@ -49,6 +50,14 @@ const resolvers = {
         select: "id name display_pic isPremium",
       });
       return populatedAnswer;
+    },
+    toggleLikeQuestion: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const { id: questionId } = args;
+      const { id } = decodeToken(req as IncomingMessage);
+
+      const question = await likeQuestion(id as String, questionId as String);
+      return question;
     },
   },
   QuestionResponse: {

@@ -2,6 +2,7 @@ import { PaginateModel, model } from "mongoose";
 import Question from "../models/question_model";
 import { IQuestion } from "../utils/interfaces/question";
 import { IAnswer } from "../utils/interfaces/answer";
+import { IUser } from "../utils/interfaces/user";
 
 /**
  * Returns an array of questions nearby a specific location based on the given
@@ -26,7 +27,7 @@ export async function nearbyQuestions(
       $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
     },
   })
-    .select("question admin upvotes downvotes expiry createdAt location")
+    .select("question admin likes expiry createdAt location")
     .populate({
       path: "admin",
       select: "id name display_pic isPremium",
@@ -93,7 +94,7 @@ export async function userQuestions(
  */
 export async function deleteQuestion(id: String): Promise<any> {
   const question = await Question.findByIdAndDelete(id).select(
-    "question answers admin upvotes downvotes expiry createdAt location"
+    "question answers admin likes expiry createdAt location"
   );
   return question;
 }
@@ -130,4 +131,34 @@ export async function getAnswers(
     total_results: result.totalDocs,
     answers: result.docs,
   };
+}
+
+export async function likeQuestion(
+  userId: String,
+  id: String
+): Promise<Boolean> {
+  try {
+    const question = await Question.findById(id);
+    if (!question) {
+      throw new Error("Question not found");
+    }
+
+    const userLiked = question.likes.some((like) => like.toString() === userId);
+    if (userLiked) {
+      // Unlike post
+      question.likes = question.likes.filter(
+        (like) => like.toString() !== userId
+      ) as [string];
+    } else {
+      // Like post
+      question.likes.push(userId as string);
+    }
+
+    await question.save();
+
+    return true;
+  } catch (error) {
+    console.log(error)
+    throw new Error("Failed to toggle like on question");
+  }
 }

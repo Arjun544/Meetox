@@ -13,7 +13,6 @@ const typeDefs = gql`
       latitude: Float!
       longitude: Float!
       distanceInKM: Float!
-      followers: [String!]!
     ): [NearByUserResponse]
     socials(id: String!): [ISocialLink]
   }

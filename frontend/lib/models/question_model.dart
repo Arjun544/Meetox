@@ -96,8 +96,7 @@ class Question {
   String? question;
   int? answers;
   User? admin;
-  int? upvotes;
-  int? downvotes;
+  List<String>? likes;
   DateTime? expiry;
   Location? location;
   DateTime? createdAt;
@@ -110,8 +109,7 @@ class Question {
     this.question,
     this.answers,
     this.admin,
-    this.upvotes,
-    this.downvotes,
+    this.likes,
     this.expiry,
     this.location,
     this.createdAt,
@@ -130,8 +128,9 @@ class Question {
         question: json["question"],
         answers: json["answers"] ?? 0,
         admin: User.fromJson(json["admin"]),
-        upvotes: json["upvotes"] ?? 0,
-        downvotes: json["downvotes"] ?? 0,
+        likes: json["likes"] == null
+            ? []
+            : List<String>.from(json["likes"]!.map((x) => x)),
         expiry: json["expiry"] == null ? null : DateTime.parse(json["expiry"]),
         location: json["location"] == null
             ? null
@@ -151,8 +150,7 @@ class Question {
         "question": question,
         "answers": answers,
         "admin": admin,
-        "upvotes": upvotes,
-        "downvotes": downvotes,
+        "likes": likes,
         "expiry": expiry?.toIso8601String(),
         "location": location?.toJson(),
         "createdAt": createdAt?.toIso8601String(),

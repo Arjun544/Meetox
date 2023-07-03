@@ -6,15 +6,9 @@ export interface IQuestion extends Document {
   question: string;
   answers: [IAnswer];
   admin: IUser;
-  upvotes: [IVote];
-  downvotes: [IVote];
+  likes: [string];
   expiry: Date;
   location: ILocation;
   createdAt: Date;
   updatedAt: Date;
-}
-
-export interface IVote {
-  votes: number;
-  user: IUser;
 }

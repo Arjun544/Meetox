@@ -84,7 +84,6 @@ const resolvers = {
         latitude,
         longitude,
         distanceInKM,
-        followers
       );
       return users;
     },

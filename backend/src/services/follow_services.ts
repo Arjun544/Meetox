@@ -11,10 +11,10 @@ export async function userFollowers(
   const query =
     name === null
       ? {
-          follower: id,
+          following: id,
         }
       : {
-          follower: id,
+          following: id,
           $text: { $search: name as string },
         };
   const option = {
@@ -51,10 +51,10 @@ export async function userFollowing(
   const query =
     name === null
       ? {
-          following: id,
+          follower: id,
         }
       : {
-          following: id,
+          follower: id,
           $text: { $search: name as string },
         };
   const option = {

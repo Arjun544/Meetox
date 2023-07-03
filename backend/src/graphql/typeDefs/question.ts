@@ -4,6 +4,7 @@ const typeDefs = gql`
   scalar Date
   scalar IQuestion
   scalar IAnswer
+  scalar IUser
   scalar ILocation
 
   type Query {
@@ -20,6 +21,7 @@ const typeDefs = gql`
     addQuestion(question: String!, location: ILocation!): IQuestion
     deleteQuestion(id: String!): IQuestion
     addAnswer(id: String!, answer: String!): IAnswer
+    toggleLikeQuestion(id: String!): Boolean
   }
 
   type QuestionsResponse {
@@ -38,8 +40,7 @@ const typeDefs = gql`
     question: String
     location: ILocation
     answers: Int
-    upvotes: Int
-    downvotes: Int
+    likes: [String]
     admin: AdminResponse
     expiry: Date
     createdAt: Date
@@ -56,8 +57,7 @@ const typeDefs = gql`
   type AnswerResponse {
     id: String
     answer: String
-    upvotes: Int
-    downvotes: Int
+    likes: [String]
     user: AdminResponse
     createdAt: Date
     updatedAt: Date

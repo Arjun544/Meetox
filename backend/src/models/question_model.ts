@@ -12,13 +12,9 @@ const questionSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: "Users",
     },
-    upvotes: {
-      type: Number,
-      default: 0,
-    },
-    downvotes: {
-      type: Number,
-      default: 0,
+    likes: {
+      type: Array,
+      default: [],
     },
     expiry: {
       type: Date,

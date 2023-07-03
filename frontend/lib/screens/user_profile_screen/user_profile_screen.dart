@@ -10,7 +10,8 @@ class UserProfileScreen extends HookWidget {
   final User user;
   final ValueNotifier<int> followers;
 
-  const UserProfileScreen({super.key, required this.user, required this.followers});
+  const UserProfileScreen(
+      {super.key, required this.user, required this.followers});
 
   @override
   Widget build(BuildContext context) {

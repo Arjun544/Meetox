@@ -39,7 +39,6 @@ class MapScreen extends HookWidget {
           'latitude': currentUser.value.location!.coordinates![0],
           'longitude': currentUser.value.location!.coordinates![1],
           'distanceInKM': currentUser.value.isPremium! ? 600 : 300,
-          'followers': const [],
         },
         onError: (error) {
           logError(error!.graphqlErrors.toString());
