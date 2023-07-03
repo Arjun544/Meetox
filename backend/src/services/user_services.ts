@@ -26,9 +26,7 @@ export async function nearbyUsers(
     }
   ).select("following");
 
-  console.log(followers);
   const followingsIds = followers.map((doc) => doc.following);
-  console.log(followingsIds);
   const users = await User.find({
     _id: { $nin: followingsIds != undefined ? [...followingsIds, id] : id }, // excludes followers with ids & id
     "location.coordinates": {
