@@ -12,7 +12,7 @@ class CircleTile extends HookWidget {
   const CircleTile({
     required this.circle,
     required this.onTap,
-     this.circlesController,
+    this.circlesController,
     super.key,
     this.isShowingOnMap = false,
   });
@@ -23,127 +23,131 @@ class CircleTile extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: Get.width,
-      height: 60.sp,
-      margin: const EdgeInsets.only(bottom: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        color: context.theme.scaffoldBackgroundColor,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: ListTile(
-        minLeadingWidth: 0,
-        contentPadding: EdgeInsets.zero,
-        leading: CircleAvatar(
-          radius: 24.h,
-          foregroundImage: CachedNetworkImageProvider(
-            circle.image!.image!.isEmpty
-                ? profilePlaceHolder
-                : circle.image!.image!,
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        width: Get.width,
+        height: 60.sp,
+        margin: const EdgeInsets.only(bottom: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: context.theme.scaffoldBackgroundColor,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: ListTile(
+          minLeadingWidth: 0,
+          contentPadding: EdgeInsets.zero,
+          leading: CircleAvatar(
+            radius: 24.h,
+            foregroundImage: CachedNetworkImageProvider(
+              circle.image!.image!.isEmpty
+                  ? profilePlaceHolder
+                  : circle.image!.image!,
+            ),
           ),
-        ),
-        title: Text(
-          circle.name == '' ? 'Unknown' : circle.name!.capitalizeFirst!,
-          style: context.theme.textTheme.labelMedium,
-        ),
-        subtitle: Text(
-          'Memebers: ${circle.members!}',
-          style: context.theme.textTheme.labelSmall!.copyWith(
-            fontSize: 10.sp,
+          title: Text(
+            circle.name == '' ? 'Unknown' : circle.name!.capitalizeFirst!,
+            style: context.theme.textTheme.labelMedium,
           ),
-        ),
-        trailing: isShowingOnMap
-            ? const SizedBox.shrink()
-            : InkWell(
-                onTap: () => showCupertinoModalPopup(
-                  context: context,
-                  builder: (context) => CupertinoActionSheet(
-                    title: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          foregroundImage: CachedNetworkImageProvider(
-                            circle.image!.image!.isEmpty
-                                ? profilePlaceHolder
-                                : circle.image!.image!,
+          subtitle: Text(
+            'Memebers: ${circle.members!}',
+            style: context.theme.textTheme.labelSmall!.copyWith(
+              fontSize: 10.sp,
+            ),
+          ),
+          trailing: isShowingOnMap
+              ? const SizedBox.shrink()
+              : InkWell(
+                  onTap: () => showCupertinoModalPopup(
+                    context: context,
+                    builder: (context) => CupertinoActionSheet(
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            foregroundImage: CachedNetworkImageProvider(
+                              circle.image!.image!.isEmpty
+                                  ? profilePlaceHolder
+                                  : circle.image!.image!,
+                            ),
+                          ),
+                          SizedBox(width: 15.sp),
+                          Text(
+                            circle.name == ''
+                                ? 'Unknown'
+                                : circle.name!.capitalizeFirst!,
+                            style: context.theme.textTheme.labelMedium,
+                          ),
+                        ],
+                      ),
+                      cancelButton: CupertinoActionSheetAction(
+                        onPressed: () => Navigator.pop(context),
+                        child: Text(
+                          'Cancel',
+                          style: context.theme.textTheme.labelMedium,
+                        ),
+                      ),
+                      actions: [
+                        CupertinoActionSheetAction(
+                          onPressed: () {},
+                          child: Text(
+                            'View profile',
+                            style: context.theme.textTheme.labelMedium,
                           ),
                         ),
-                        SizedBox(width: 15.sp),
-                        Text(
-                          circle.name == ''
-                              ? 'Unknown'
-                              : circle.name!.capitalizeFirst!,
-                          style: context.theme.textTheme.labelMedium,
+                        Mutation(
+                          options: MutationOptions(
+                            document: gql(deleteCircle),
+                            fetchPolicy: FetchPolicy.networkOnly,
+                            onCompleted: (Map<String, dynamic>? resultData) =>
+                                circlesController!.onDeleteCompleted(
+                              resultData,
+                              context,
+                            ),
+                            onError: (error) =>
+                                showToast('Failed to delete circle'),
+                          ),
+                          builder: (runMutation, result) {
+                            return result!.isLoading
+                                ? Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: Get.width * 0.42,
+                                        vertical: 8.h),
+                                    child: LoadingAnimationWidget
+                                        .staggeredDotsWave(
+                                      color: AppColors.primaryYellow,
+                                      size: 25.sp,
+                                    ),
+                                  )
+                                : CupertinoActionSheetAction(
+                                    isDestructiveAction: true,
+                                    onPressed: () => runMutation({
+                                      "id": circle.id,
+                                    }),
+                                    child: Text(
+                                      'Delete',
+                                      style: context
+                                          .theme.textTheme.labelMedium!
+                                          .copyWith(
+                                        color: Colors.redAccent,
+                                      ),
+                                    ),
+                                  );
+                          },
                         ),
                       ],
                     ),
-                    cancelButton: CupertinoActionSheetAction(
-                      onPressed: () => Navigator.pop(context),
-                      child: Text(
-                        'Cancel',
-                        style: context.theme.textTheme.labelMedium,
-                      ),
+                  ),
+                  child: const Padding(
+                    padding: EdgeInsets.only(bottom: 8),
+                    child: Icon(
+                      FlutterRemix.more_2_fill,
+                      color: Colors.grey,
+                      size: 18,
                     ),
-                    actions: [
-                      CupertinoActionSheetAction(
-                        onPressed: () {},
-                        child: Text(
-                          'View profile',
-                          style: context.theme.textTheme.labelMedium,
-                        ),
-                      ),
-                      Mutation(
-                        options: MutationOptions(
-                          document: gql(deleteCircle),
-                          fetchPolicy: FetchPolicy.networkOnly,
-                          onCompleted: (Map<String, dynamic>? resultData) =>
-                              circlesController!.onDeleteCompleted(
-                            resultData,
-                            context,
-                          ),
-                          onError: (error) =>
-                              showToast('Failed to delete circle'),
-                        ),
-                        builder: (runMutation, result) {
-                          return result!.isLoading
-                              ? Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: Get.width * 0.42,
-                                      vertical: 8.h),
-                                  child:
-                                      LoadingAnimationWidget.staggeredDotsWave(
-                                    color: AppColors.primaryYellow,
-                                    size: 25.sp,
-                                  ),
-                                )
-                              : CupertinoActionSheetAction(
-                                  isDestructiveAction: true,
-                                  onPressed: () => runMutation({
-                                    "id": circle.id,
-                                  }),
-                                  child: Text(
-                                    'Delete',
-                                    style: context.theme.textTheme.labelMedium!
-                                        .copyWith(
-                                      color: Colors.redAccent,
-                                    ),
-                                  ),
-                                );
-                        },
-                      ),
-                    ],
                   ),
                 ),
-                child: const Padding(
-                  padding: EdgeInsets.only(bottom: 8),
-                  child: Icon(
-                    FlutterRemix.more_2_fill,
-                    color: Colors.grey,
-                    size: 18,
-                  ),
-                ),
-              ),
+        ),
       ),
     );
   }
