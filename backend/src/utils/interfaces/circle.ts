@@ -5,7 +5,7 @@ export interface ICircle extends Document {
   id: string;
   name: string;
   description: string;
-  image: IImage;
+  image: any;
   location: ILocation;
   isPrivate: Boolean;
   limit: Number;

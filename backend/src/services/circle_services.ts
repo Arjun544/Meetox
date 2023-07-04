@@ -4,7 +4,7 @@ import Circle from "../models/circle_model";
 import Member from "../models/member_model";
 import { ICircle } from "../utils/interfaces/circle";
 import { IMember } from "../utils/interfaces/member";
-import { uploadImage } from "./storage_services";
+import { deleteImage, uploadImage } from "./storage_services";
 
 /**
  * Adds a circle to the database.
@@ -147,13 +147,18 @@ export async function userCircles(
  * @return {Promise} Returns a Promise that resolves to the deleted circle.
  */
 export async function deleteCircle(id: String): Promise<ICircle> {
-  const circle = await Circle.findByIdAndDelete(id).select(
-    "name description image isPrivate createdAt location limit"
-  );
-
+  const circle: ICircle | null = await Circle.findByIdAndDelete(id);
   // Delete members of circle in Members collection
   await Member.deleteMany({ circle: id });
 
+  if (circle && circle.image) {
+    const imageId: string = circle.image.get("imageId");
+    // Delete circle image from cloudinary
+    const results: string | UploadApiResponse = await deleteImage(imageId);
+    console.log("results", results);
+  } else {
+    console.log("No image found for the circle");
+  }
   return circle as ICircle;
 }
 

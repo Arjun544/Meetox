@@ -1,4 +1,4 @@
-import cloudinary, { UploadApiErrorResponse } from "cloudinary";
+import cloudinary from "cloudinary";
 import { GraphQLError } from "graphql/error/GraphQLError";
 
 /**
@@ -23,6 +23,20 @@ export async function uploadImage(folder: string, photo: string): Promise<any> {
     return result;
   } catch (e: any) {
     throw new GraphQLError(e?.message);
-    return `Image could not be uploaded: ${e.message}`;
+  }
+}
+
+export async function deleteImage(id: string): Promise<any> {
+  cloudinary.v2.config({
+    cloud_name: process.env.CLOUDINARY_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
+  });
+  try {
+    const result = await cloudinary.v2.uploader.destroy(id);
+    return result;
+  } catch (e: any) {
+    console.log("error", e);
+    throw new GraphQLError(e?.message);
   }
 }

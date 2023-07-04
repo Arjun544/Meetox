@@ -36,7 +36,6 @@ const resolvers = {
       const { id } = decodeToken(req as IncomingMessage);
 
       const circle = await deleteCircle(circleId as String);
-
       return circle;
     },
     addMember: async (_: any, args: any, context: GraphQLContext) => {
