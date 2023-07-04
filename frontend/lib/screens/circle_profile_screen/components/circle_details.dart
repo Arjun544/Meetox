@@ -1,8 +1,14 @@
+import 'package:flutter/cupertino.dart';
+import 'package:frontend/controllers/circles_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/graphql/circle/mutations.dart';
 import 'package:frontend/graphql/circle/queries.dart';
+import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/circle_model.dart' as circle_model;
+import 'package:frontend/screens/circle_profile_screen/components/add_member_sheet.dart';
+import 'package:frontend/widgets/custom_button.dart';
+import 'package:frontend/widgets/show_custom_sheet.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../members_screen.dart';
@@ -15,6 +21,7 @@ class CircleDetails extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    final CirclesController circlesController = Get.find();
     final checkIsMember = useQuery(
       QueryOptions(
         document: gql(isMember),
@@ -22,7 +29,6 @@ class CircleDetails extends HookWidget {
         variables: {
           "id": circle.id,
         },
-        onError: (data) => logError(data.toString()),
       ),
     );
     final addNewMember = useMutation(
@@ -56,6 +62,75 @@ class CircleDetails extends HookWidget {
         circle.name!.capitalizeFirst!,
         style: context.theme.textTheme.labelMedium,
       ),
+      actions: circle.admin == currentUser.value.id
+          ? [
+              IconButton(
+                onPressed: () => showCupertinoModalPopup(
+                  context: context,
+                  builder: (context) => CupertinoActionSheet(
+                    title: Text(
+                      'Are you sure?',
+                      style: context.theme.textTheme.labelMedium,
+                    ),
+                    cancelButton: CupertinoActionSheetAction(
+                      onPressed: () => Navigator.pop(context),
+                      child: Text(
+                        'Cancel',
+                        style: context.theme.textTheme.labelMedium,
+                      ),
+                    ),
+                    actions: [
+                      Mutation(
+                        options: MutationOptions(
+                          document: gql(deleteCircle),
+                          fetchPolicy: FetchPolicy.networkOnly,
+                          onCompleted: (Map<String, dynamic>? resultData) {
+                            circlesController.onDeleteCompleted(
+                              resultData,
+                              context,
+                            );
+                            Get.back();
+                          },
+                          onError: (error) =>
+                              showToast('Failed to delete circle'),
+                        ),
+                        builder: (runMutation, result) {
+                          return result!.isLoading
+                              ? Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: Get.width * 0.42,
+                                      vertical: 8.h),
+                                  child:
+                                      LoadingAnimationWidget.staggeredDotsWave(
+                                    color: AppColors.primaryYellow,
+                                    size: 25.sp,
+                                  ),
+                                )
+                              : CupertinoActionSheetAction(
+                                  isDestructiveAction: true,
+                                  onPressed: () => runMutation({
+                                    "id": circle.id,
+                                  }),
+                                  child: Text(
+                                    'Delete',
+                                    style: context.theme.textTheme.labelMedium!
+                                        .copyWith(
+                                      color: Colors.redAccent,
+                                    ),
+                                  ),
+                                );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+                icon: const Icon(
+                  IconsaxBold.trash,
+                  color: Colors.redAccent,
+                ),
+              ),
+            ]
+          : null,
       flexibleSpace: FlexibleSpaceBar(
         background: Padding(
           padding: EdgeInsets.only(top: Get.height * 0.15),
@@ -96,27 +171,56 @@ class CircleDetails extends HookWidget {
                       ],
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      // Get.to(() => FollowersScreen(circle, true));
-                    },
-                    child: Column(
-                      children: [
-                        Text(
-                          circle.limit.toString(),
-                          style: context.theme.textTheme.labelMedium,
-                        ),
-                        Text(
-                          'Limit',
-                          style: context.theme.textTheme.labelSmall!
-                              .copyWith(color: Colors.grey),
-                        ),
-                      ],
-                    ),
+                  Column(
+                    children: [
+                      Text(
+                        circle.limit.toString(),
+                        style: context.theme.textTheme.labelMedium,
+                      ),
+                      Text(
+                        'Limit',
+                        style: context.theme.textTheme.labelSmall!
+                            .copyWith(color: Colors.grey),
+                      ),
+                    ],
                   ),
                 ],
               ),
-              if (circle.isPrivate == false) ...[
+              if (circle.admin == currentUser.value.id) ...[
+                SizedBox(height: 30.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    CustomButton(
+                      width: Get.width * 0.15,
+                      height: 35.h,
+                      color: context.theme.indicatorColor,
+                      icon: const Icon(
+                        IconsaxBold.edit_2,
+                      ),
+                      onPressed: () {},
+                    ),
+                    CustomButton(
+                      width: Get.width * 0.15,
+                      height: 35.h,
+                      color: context.theme.indicatorColor,
+                      icon: const Icon(
+                        IconsaxBold.user_add,
+                      ),
+                      onPressed: () => showCustomSheet(
+                        context: context,
+                        child: AddMemberSheet(
+                          circle.id!,
+                          members,
+                          circle.limit!,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              if (circle.isPrivate == false &&
+                  circle.admin != currentUser.value.id) ...[
                 SizedBox(height: 30.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -128,9 +232,13 @@ class CircleDetails extends HookWidget {
                             "id": circle.id,
                           });
                         } else {
-                          addNewMember.runMutation({
-                            "id": circle.id,
-                          });
+                          if (members.value == circle.limit) {
+                            showToast('Circle reached members limit');
+                          } else {
+                            addNewMember.runMutation({
+                              "id": circle.id,
+                            });
+                          }
                         }
                       },
                       child: DecoratedBox(

@@ -36,7 +36,6 @@ const resolvers = {
       const { id } = decodeToken(req as IncomingMessage);
 
       const circle = await deleteCircle(circleId as String);
-      // TODO: Delete all members of this circle
 
       return circle;
     },

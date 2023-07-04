@@ -4,8 +4,6 @@ import Circle from "../models/circle_model";
 import Member from "../models/member_model";
 import { ICircle } from "../utils/interfaces/circle";
 import { IMember } from "../utils/interfaces/member";
-import { IUser } from "../utils/interfaces/user";
-import { CircleResponse } from "../utils/types";
 import { uploadImage } from "./storage_services";
 
 /**
@@ -30,7 +28,7 @@ export async function addCircle(
   limit: number,
   location: any,
   members: [String]
-): Promise<CircleResponse> {
+): Promise<ICircle> {
   const results: string | UploadApiResponse = await uploadImage(
     "Circles Profiles",
     image as string
@@ -61,29 +59,8 @@ export async function addCircle(
       await newMember.save();
     }
   }
-  const populatedCircle: ICircle = await circle.populate({
-    path: "admin",
-    select: "id name display_pic isPremium",
-  });
-  const admin: IUser = populatedCircle.admin as unknown as IUser;
-  return {
-    id: populatedCircle.id,
-    name: populatedCircle.name,
-    description: populatedCircle.description,
-    image: populatedCircle.image,
-    location: populatedCircle.location,
-    isPrivate: populatedCircle.isPrivate,
-    limit: populatedCircle.limit as number,
-    createdAt: populatedCircle.createdAt,
-    updatedAt: populatedCircle.updatedAt,
-    admin: {
-      id: admin.id,
-      name: admin.name,
-      display_pic: admin.display_pic,
-      isPremium: admin.isPremium,
-    },
-    members: members.length,
-  };
+
+  return circle;
 }
 
 /**
@@ -173,6 +150,10 @@ export async function deleteCircle(id: String): Promise<ICircle> {
   const circle = await Circle.findByIdAndDelete(id).select(
     "name description image isPrivate createdAt location limit"
   );
+
+  // Delete members of circle in Members collection
+  await Member.deleteMany({ circle: id });
+
   return circle as ICircle;
 }
 

@@ -8,7 +8,7 @@ const typeDefs = gql`
   scalar ISocialLink
 
   type Query {
-    getUser: UserResponse
+    getUser(id: String): UserResponse
     getNearByUsers(
       latitude: Float!
       longitude: Float!

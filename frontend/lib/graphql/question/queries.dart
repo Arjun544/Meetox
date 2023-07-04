@@ -14,11 +14,7 @@ query ($name: String, $page: Int!, $limit: Int!){
       location
       answers
       likes
-      admin {
-        id
-        name
-        display_pic
-      }
+      admin
       expiry
       createdAt
       updatedAt
@@ -38,11 +34,7 @@ query ($latitude: Float!, $longitude: Float!, $distanceInKM: Float!){
     expiry
     createdAt
     updatedAt
-    admin {
-      id
-      name
-      display_pic
-    }
+    admin
   }
 }
 ''';
@@ -62,7 +54,7 @@ query($page: Int!, $limit: Int!, $id: String) {
       answer
       likes
       user {
-        id
+        _id
         name
         display_pic
         isPremium

@@ -25,26 +25,3 @@ export interface TokenResponse {
   id: string | null;
   token: string | null;
 }
-
-/* Circle Types */
-
-export interface CircleResponse {
-  id: string;
-  name: string;
-  description: string;
-  image: IImage;
-  location: ILocation;
-  isPrivate: Boolean;
-  limit: number;
-  admin: AdminResponse;
-  members: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface AdminResponse {
-  id: string;
-  name: string;
-  display_pic: IDisplayPic;
-  isPremium: Boolean;
-}

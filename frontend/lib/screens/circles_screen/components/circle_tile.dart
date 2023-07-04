@@ -25,6 +25,7 @@ class CircleTile extends HookWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
+      splashColor: Colors.transparent,
       child: Container(
         width: Get.width,
         height: 60.sp,
@@ -36,6 +37,7 @@ class CircleTile extends HookWidget {
         ),
         child: ListTile(
           minLeadingWidth: 0,
+          splashColor: Colors.transparent,
           contentPadding: EdgeInsets.zero,
           leading: CircleAvatar(
             radius: 24.h,

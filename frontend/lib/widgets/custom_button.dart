@@ -6,7 +6,7 @@ import 'package:get/get.dart';
 class CustomButton extends StatelessWidget {
   const CustomButton({
     required this.width,
-    required this.text,
+    this.text,
     required this.onPressed,
     super.key,
     this.height,
@@ -17,7 +17,7 @@ class CustomButton extends StatelessWidget {
   });
   final double width;
   final double? height;
-  final String text;
+  final String? text;
   final Color color;
   final Widget icon;
   final bool hasIcon;
@@ -38,32 +38,34 @@ class CustomButton extends StatelessWidget {
           color: color,
           borderRadius: BorderRadius.circular(15),
         ),
-        child: hasIcon
-            ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  icon,
-                  SizedBox(
-                    width: 20.sp,
-                  ),
-                  Text(
-                    text,
+        child: text == null
+            ? icon
+            : hasIcon
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      icon,
+                      SizedBox(
+                        width: 20.sp,
+                      ),
+                      Text(
+                        text ?? '',
+                        style: context.theme.textTheme.labelMedium!.copyWith(
+                          color: color != context.theme.cardColor
+                              ? context.theme.textTheme.labelMedium!.color
+                              : Colors.white,
+                        ),
+                      ),
+                    ],
+                  )
+                : Text(
+                    text?? '',
                     style: context.theme.textTheme.labelMedium!.copyWith(
                       color: color != context.theme.cardColor
                           ? context.theme.textTheme.labelMedium!.color
                           : Colors.white,
                     ),
                   ),
-                ],
-              )
-            : Text(
-                text,
-                style: context.theme.textTheme.labelMedium!.copyWith(
-                  color: color != context.theme.cardColor
-                      ? context.theme.textTheme.labelMedium!.color
-                      : Colors.white,
-                ),
-              ),
       ),
     );
   }

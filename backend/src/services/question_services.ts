@@ -26,12 +26,7 @@ export async function nearbyQuestions(
     "location.coordinates": {
       $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
     },
-  })
-    .select("question admin likes expiry createdAt location")
-    .populate({
-      path: "admin",
-      select: "id name display_pic isPremium",
-    });
+  }).select("question admin likes expiry createdAt location");
 
   return questions;
 }
@@ -63,10 +58,6 @@ export async function userQuestions(
         };
   const option = {
     lean: true,
-    populate: {
-      path: "admin",
-      select: "id name display_pic isPremium",
-    },
     sort: { createdAt: -1 },
     page: page,
     limit: limit,
@@ -158,15 +149,12 @@ export async function likeQuestion(
 
     return true;
   } catch (error) {
-    console.log(error)
+    console.log(error);
     throw new Error("Failed to toggle like on question");
   }
 }
 
-export async function likeAnswer(
-  userId: String,
-  id: String
-): Promise<Boolean> {
+export async function likeAnswer(userId: String, id: String): Promise<Boolean> {
   try {
     const answer = await Answer.findById(id);
     if (!answer) {

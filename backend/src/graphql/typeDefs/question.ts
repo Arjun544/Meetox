@@ -42,7 +42,7 @@ const typeDefs = gql`
     location: ILocation
     answers: Int
     likes: [String]
-    admin: AdminResponse
+    admin: String
     expiry: Date
     createdAt: Date
     updatedAt: Date

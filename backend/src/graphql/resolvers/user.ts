@@ -66,9 +66,10 @@ const resolvers = {
   Query: {
     getUser: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;
+      const { id: userId } = args;
       const { id, token } = decodeToken(req as IncomingMessage);
 
-      const user: IUser | null = await User.findById(id).select(
+      const user: IUser | null = await User.findById(userId ?? id).select(
         "email name display_pic isPremium location createdAt updatedAt"
       );
 
@@ -83,7 +84,7 @@ const resolvers = {
         id as String,
         latitude,
         longitude,
-        distanceInKM,
+        distanceInKM
       );
       return users;
     },

@@ -64,17 +64,10 @@ const typeDefs = gql`
     location: ILocation
     isPrivate: Boolean
     limit: Int
-    admin: AdminResponse
+    admin: String
     members: Int
     createdAt: Date
     updatedAt: Date
-  }
-
-  type AdminResponse {
-    id: String
-    name: String
-    display_pic: IDisplayPic
-    isPremium: Boolean
   }
 `;
 

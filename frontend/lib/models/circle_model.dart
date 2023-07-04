@@ -98,7 +98,7 @@ class Circle {
   Image? image;
   bool? isPrivate;
   int? limit;
-  User? admin;
+  String? admin;
   String? adminId;
   Location? location;
   int? members;
@@ -135,7 +135,7 @@ class Circle {
         image: json["image"] == null ? null : Image.fromJson(json["image"]),
         isPrivate: json["isPrivate"],
         limit: json["limit"],
-        admin: json["admin"] == null ? null : User.fromJson(json["admin"]),
+        admin: json["admin"],
         location: json["location"] == null
             ? null
             : Location.fromJson(json["location"]),

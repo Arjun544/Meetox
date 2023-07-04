@@ -8,12 +8,7 @@ String addCircle = r'''
     location
     isPrivate
     limit
-    admin {
-      id
-      name
-      display_pic
-      isPremium
-    }
+    admin
     members
     createdAt
     updatedAt

@@ -1,8 +1,12 @@
+import 'package:frontend/controllers/circle_profile_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/graphql/user/queries.dart';
 import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/circle_model.dart' as circle_model;
+import 'package:frontend/models/user_model.dart';
 import 'package:frontend/widgets/mini_map.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import 'components/circle_details.dart';
@@ -16,6 +20,16 @@ class CircleProfileScreen extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
+    Get.put(CircleProfileController());
+    final adminResult = useQuery(
+      QueryOptions(
+        document: gql(getUser),
+        parserFn: (data) => User.fromJson(data['getUser']),
+        variables: {
+          'id': circle.admin!,
+        },
+      ),
+    );
     return Scaffold(
       backgroundColor: context.theme.scaffoldBackgroundColor,
       body: NestedScrollView(
@@ -42,18 +56,20 @@ class CircleProfileScreen extends HookWidget {
               ),
               Column(
                 children: [
-                  Text(
-                    'Created by ${circle.admin!.name!.capitalizeFirst!} ${timeago.format(
-                      circle.createdAt!,
-                      locale: 'en',
-                      allowFromNow: true,
-                    )}',
-                    style: context.theme.textTheme.labelSmall!.copyWith(
-                      color: context.theme.textTheme.labelSmall!.color!
-                          .withOpacity(0.5),
-                      letterSpacing: 1,
-                    ),
-                  ),
+                  adminResult.result.isLoading
+                      ? const SizedBox.shrink()
+                      : Text(
+                          'Created by ${circle.admin == currentUser.value.id ? 'YOU' : adminResult.result.parsedData!.name!.capitalizeFirst!} ${timeago.format(
+                            circle.createdAt!,
+                            locale: 'en',
+                            allowFromNow: true,
+                          )}',
+                          style: context.theme.textTheme.labelSmall!.copyWith(
+                            color: context.theme.textTheme.labelSmall!.color!
+                                .withOpacity(0.5),
+                            letterSpacing: 1,
+                          ),
+                        ),
                   SizedBox(height: 20.h),
                   ListTile(
                     contentPadding: EdgeInsets.zero,

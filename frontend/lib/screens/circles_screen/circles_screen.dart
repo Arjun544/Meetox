@@ -4,6 +4,7 @@ import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/models/circle_model.dart' as circle_model;
 import 'package:frontend/screens/add_circle_screen/add_circle_screen.dart';
+import 'package:frontend/screens/circle_profile_screen/circle_profile_screen.dart';
 import 'package:frontend/screens/circles_screen/components/circle_tile.dart';
 import 'package:frontend/screens/root_screen.dart';
 import 'package:frontend/widgets/custom_error_widget.dart';
@@ -116,7 +117,12 @@ class CirclesScreen extends GetView<CirclesController> {
                     itemBuilder: (context, item, index) => CircleTile(
                       circle: item,
                       circlesController: controller,
-                      onTap: () {},
+                      onTap: () => Get.to(
+                        () => CircleProfileScreen(
+                          circle: item,
+                          allMembers: ValueNotifier(item.members!),
+                        ),
+                      ),
                     ),
                   ),
                 ),

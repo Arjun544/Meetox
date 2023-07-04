@@ -39,6 +39,9 @@ class SplashScreen extends GetView<SplashController> {
                 document: gql(getUser),
                 fetchPolicy: FetchPolicy.networkOnly,
                 parserFn: User.fromJson,
+                variables: const {
+                  'id': null,
+                },
                 onComplete: (Map<String, dynamic>? data) {
                   logSuccess(data.toString());
                   if (data != null && data['getUser'] != null) {

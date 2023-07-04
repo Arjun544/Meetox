@@ -1,6 +1,6 @@
-String getUser = '''
-  query {
-  getUser {
+String getUser = r'''
+  query ($id: String) {
+  getUser(id: $id) {
     id
     email
     name

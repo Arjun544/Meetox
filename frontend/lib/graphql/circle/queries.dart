@@ -15,6 +15,7 @@ query ($name: String, $page: Int!, $limit: Int!){
       image
       location
       isPrivate
+      admin
       limit
       members
       createdAt
@@ -37,11 +38,7 @@ query ($latitude: Float!, $longitude: Float!, $distanceInKM: Float!){
     members
     createdAt
     updatedAt
-    admin {
-      name
-      id
-      display_pic
-    }
+    admin
    }
 }
 ''';

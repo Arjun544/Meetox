@@ -4,13 +4,18 @@ import 'package:frontend/graphql/question/mutation.dart';
 import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/question_model.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class QuestionDetails extends HookWidget {
   final Question question;
+  final String image;
   final ValueNotifier<List<String>> likes;
 
   const QuestionDetails(
-      {super.key, required this.question, required this.likes});
+      {super.key,
+      required this.question,
+      required this.likes,
+      required this.image});
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +52,7 @@ class QuestionDetails extends HookWidget {
             Container(
               width: Get.width,
               margin: EdgeInsets.only(top: Get.height * 0.15),
-              padding: EdgeInsets.fromLTRB(0, 20.h, 0, 10.h),
+              padding: EdgeInsets.fromLTRB(10.h, 20.h, 0, 10.h),
               constraints: BoxConstraints(
                 minHeight: Get.height * 0.05,
                 maxHeight: Get.height * 0.3,
@@ -70,54 +75,78 @@ class QuestionDetails extends HookWidget {
                     ),
                   ),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      InkWell(
-                        onTap: () {
-                          Clipboard.setData(
-                            ClipboardData(
-                              text: question.question!.capitalizeFirst!,
+                      Row(
+                        children: [
+                          Text(
+                            'Expires in',
+                            style: context.theme.textTheme.labelSmall!
+                                .copyWith(color: Colors.redAccent),
+                          ),
+                          const SizedBox(width: 5),
+                          Text(
+                            timeago.format(
+                              question.expiry!,
+                              locale: 'en',
+                              allowFromNow: true,
                             ),
-                          );
-                          showToast('Question copied');
-                        },
-                        child: const Icon(
-                          IconsaxBold.copy,
-                          color: Colors.blueGrey,
-                        ),
+                            style: context.theme.textTheme.labelSmall,
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 15),
-                      InkWell(
-                        onTap: likeQuestionMutaion.result.isLoading
-                            ? () {}
-                            : () {
-                                likeQuestionMutaion
-                                    .runMutation({"id": question.id});
-                              },
-                        child: Row(
-                          children: [
-                            Icon(
-                              IconsaxBold.like_1,
-                              color: likes.value.contains(currentUser.value.id!)
-                                  ? Colors.blue
-                                  : Colors.blueGrey,
-                              size: 18,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          InkWell(
+                            onTap: () {
+                              Clipboard.setData(
+                                ClipboardData(
+                                  text: question.question!.capitalizeFirst!,
+                                ),
+                              );
+                              showToast('Question copied');
+                            },
+                            child: const Icon(
+                              IconsaxBold.copy,
+                              color: Colors.blueGrey,
                             ),
-                            const SizedBox(
-                              width: 5,
+                          ),
+                          const SizedBox(width: 15),
+                          InkWell(
+                            onTap: likeQuestionMutaion.result.isLoading
+                                ? () {}
+                                : () {
+                                    likeQuestionMutaion
+                                        .runMutation({"id": question.id});
+                                  },
+                            child: Row(
+                              children: [
+                                Icon(
+                                  IconsaxBold.like_1,
+                                  color: likes.value
+                                          .contains(currentUser.value.id!)
+                                      ? Colors.blue
+                                      : Colors.blueGrey,
+                                  size: 18,
+                                ),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                                Text(
+                                  likes.value.length.toString(),
+                                  style: context.theme.textTheme.labelSmall!
+                                      .copyWith(
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: 15.w,
+                                ),
+                              ],
                             ),
-                            Text(
-                              likes.value.length.toString(),
-                              style:
-                                  context.theme.textTheme.labelSmall!.copyWith(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 15.w,
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -135,7 +164,7 @@ class QuestionDetails extends HookWidget {
                       color: context.theme.scaffoldBackgroundColor, width: 4),
                   image: DecorationImage(
                     image: CachedNetworkImageProvider(
-                      question.admin!.displayPic!.profile!,
+                      image,
                     ),
                   ),
                 ),

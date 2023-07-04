@@ -95,7 +95,7 @@ class Question {
   String? id;
   String? question;
   int? answers;
-  User? admin;
+  dynamic admin;
   List<String>? likes;
   DateTime? expiry;
   Location? location;
@@ -127,7 +127,9 @@ class Question {
         id: json["_id"] ?? json['id'],
         question: json["question"],
         answers: json["answers"] ?? 0,
-        admin: User.fromJson(json["admin"]),
+        admin: json["admin"].runtimeType == String
+            ? json["admin"]
+            : UserModel.fromJson(json["admin"]),
         likes: json["likes"] == null
             ? []
             : List<String>.from(json["likes"]!.map((x) => x)),

@@ -1,10 +1,13 @@
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/graphql/user/queries.dart';
 import 'package:frontend/models/answer_model.dart';
 import 'package:frontend/models/question_model.dart';
+import 'package:frontend/models/user_model.dart';
 import 'package:frontend/widgets/custom_error_widget.dart';
 import 'package:frontend/widgets/loaders/followers_loader.dart';
 import 'package:frontend/widgets/show_custom_sheet.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../controllers/answers_controller.dart';
@@ -25,12 +28,28 @@ class AnswersScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(AnswersController(question.id!));
+    final adminResult = useQuery(
+      QueryOptions(
+        document: gql(getUser),
+        parserFn: (data) => User.fromJson(data['getUser']),
+        variables: {
+          'id': question.admin!,
+        },
+        onError: (error) {
+          logError(error!.graphqlErrors.toString());
+        },
+      ),
+    );
+
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             QuestionDetails(
               question: question,
+              image: adminResult.result.isLoading
+                  ? ''
+                  : adminResult.result.parsedData!.displayPic!.profile!,
               likes: likes,
             ),
           ];
@@ -103,7 +122,7 @@ class AnswersScreen extends HookWidget {
           context: context,
           child: AddAnswerSheet(
             id: question.id!,
-            name: question.admin!.name!,
+            name: adminResult.result.parsedData?.name ?? '',
             answers: answers,
           ),
         ),
