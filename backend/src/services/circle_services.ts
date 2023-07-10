@@ -85,11 +85,9 @@ export async function nearbyCircles(
       $geoWithin: { $centerSphere: [[latitude, longitude], radius] },
     },
   })
-    .select("name description image admin isPrivate createdAt location limit")
-    .populate({
-      path: "admin",
-      select: "id name display_pic isPremium",
-    });
+    .select(
+      "name description image admin isPrivate createdAt updatedAt location limit"
+    );
 
   return circles;
 }
@@ -160,6 +158,64 @@ export async function deleteCircle(id: String): Promise<ICircle> {
     console.log("No image found for the circle");
   }
   return circle as ICircle;
+}
+
+export async function editCircle(
+  id: String,
+  image: String,
+  imageId: String,
+  name: String,
+  desc: String,
+  isPrivate: Boolean
+): Promise<any> {
+  let response: UploadApiResponse;
+
+  if (image !== null) {
+    // Delete old circle image from cloudinary
+    const results: string | UploadApiResponse = await deleteImage(
+      imageId as string
+    );
+    console.log("results", results);
+
+    const newResults: string | UploadApiResponse = await uploadImage(
+      "Circles Profiles",
+      image as string
+    );
+
+    response = newResults as UploadApiResponse;
+  }
+
+  // Update circle with above fields
+  const circle: ICircle | null =
+    image === null
+      ? await Circle.findByIdAndUpdate(
+          id,
+          {
+            name,
+            description: desc,
+            isPrivate,
+          },
+          {
+            new: true,
+          }
+        )
+      : await Circle.findByIdAndUpdate(
+          id,
+          {
+            name,
+            description: desc,
+            image: {
+              image: response!.secure_url,
+              imageId: response!.public_id,
+            },
+            isPrivate,
+          },
+          {
+            new: true,
+          }
+        );
+
+  return circle;
 }
 
 export async function circleMembers(

@@ -6,28 +6,32 @@ import 'package:frontend/graphql/circle/mutations.dart';
 import 'package:frontend/graphql/circle/queries.dart';
 import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/circle_model.dart' as circle_model;
-import 'package:frontend/screens/circle_profile_screen/components/add_member_sheet.dart';
 import 'package:frontend/widgets/custom_button.dart';
 import 'package:frontend/widgets/show_custom_sheet.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../members_screen.dart';
+import 'add_member_sheet.dart';
+import 'edit_circle.dart';
 
 class CircleDetails extends HookWidget {
-  final circle_model.Circle circle;
+  final ValueNotifier<circle_model.Circle> circle;
   final ValueNotifier<int> members;
 
   const CircleDetails(this.circle, this.members, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    final CirclesController circlesController = Get.find();
+    final bool isAdmin = circle.value.admin == currentUser.value.id;
+
+    final CirclesController circlesController = Get.put(CirclesController());
+
     final checkIsMember = useQuery(
       QueryOptions(
         document: gql(isMember),
         fetchPolicy: FetchPolicy.networkOnly,
         variables: {
-          "id": circle.id,
+          "id": circle.value.id,
         },
       ),
     );
@@ -59,10 +63,10 @@ class CircleDetails extends HookWidget {
       expandedHeight: Get.height * 0.3,
       pinned: true,
       title: Text(
-        circle.name!.capitalizeFirst!,
+        circle.value.name!.capitalizeFirst!,
         style: context.theme.textTheme.labelMedium,
       ),
-      actions: circle.admin == currentUser.value.id
+      actions: circle.value.admin == currentUser.value.id
           ? [
               IconButton(
                 onPressed: () => showCupertinoModalPopup(
@@ -79,49 +83,53 @@ class CircleDetails extends HookWidget {
                         style: context.theme.textTheme.labelMedium,
                       ),
                     ),
-                    actions: [
-                      Mutation(
-                        options: MutationOptions(
-                          document: gql(deleteCircle),
-                          fetchPolicy: FetchPolicy.networkOnly,
-                          onCompleted: (Map<String, dynamic>? resultData) {
-                            circlesController.onDeleteCompleted(
-                              resultData,
-                              context,
-                            );
-                            Get.back();
-                          },
-                          onError: (error) =>
-                              showToast('Failed to delete circle'),
-                        ),
-                        builder: (runMutation, result) {
-                          return result!.isLoading
-                              ? Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: Get.width * 0.42,
-                                      vertical: 8.h),
-                                  child:
-                                      LoadingAnimationWidget.staggeredDotsWave(
-                                    color: AppColors.primaryYellow,
-                                    size: 25.sp,
-                                  ),
-                                )
-                              : CupertinoActionSheetAction(
-                                  isDestructiveAction: true,
-                                  onPressed: () => runMutation({
-                                    "id": circle.id,
-                                  }),
-                                  child: Text(
-                                    'Delete',
-                                    style: context.theme.textTheme.labelMedium!
-                                        .copyWith(
-                                      color: Colors.redAccent,
-                                    ),
-                                  ),
-                                );
-                        },
-                      ),
-                    ],
+                    actions: !isAdmin
+                        ? null
+                        : [
+                            Mutation(
+                              options: MutationOptions(
+                                document: gql(deleteCircle),
+                                fetchPolicy: FetchPolicy.networkOnly,
+                                onCompleted:
+                                    (Map<String, dynamic>? resultData) {
+                                  circlesController.onDeleteCompleted(
+                                    resultData,
+                                    context,
+                                  );
+                                  Get.back();
+                                },
+                                onError: (error) =>
+                                    showToast('Failed to delete circle'),
+                              ),
+                              builder: (runMutation, result) {
+                                return result!.isLoading
+                                    ? Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: Get.width * 0.42,
+                                            vertical: 8.h),
+                                        child: LoadingAnimationWidget
+                                            .staggeredDotsWave(
+                                          color: AppColors.primaryYellow,
+                                          size: 25.sp,
+                                        ),
+                                      )
+                                    : CupertinoActionSheetAction(
+                                        isDestructiveAction: true,
+                                        onPressed: () => runMutation({
+                                          "id": circle.value.id,
+                                        }),
+                                        child: Text(
+                                          'Delete',
+                                          style: context
+                                              .theme.textTheme.labelMedium!
+                                              .copyWith(
+                                            color: Colors.redAccent,
+                                          ),
+                                        ),
+                                      );
+                              },
+                            ),
+                          ],
                   ),
                 ),
                 icon: const Icon(
@@ -148,14 +156,14 @@ class CircleDetails extends HookWidget {
                       image: DecorationImage(
                         fit: BoxFit.cover,
                         image: CachedNetworkImageProvider(
-                          circle.image!.image!,
+                          circle.value.image!.image!,
                         ),
                       ),
                     ),
                   ),
                   GestureDetector(
                     onTap: () {
-                      Get.to(() => MembersScreen(circle));
+                      Get.to(() => MembersScreen(circle.value));
                     },
                     child: Column(
                       children: [
@@ -174,7 +182,7 @@ class CircleDetails extends HookWidget {
                   Column(
                     children: [
                       Text(
-                        circle.limit.toString(),
+                        circle.value.limit.toString(),
                         style: context.theme.textTheme.labelMedium,
                       ),
                       Text(
@@ -186,7 +194,7 @@ class CircleDetails extends HookWidget {
                   ),
                 ],
               ),
-              if (circle.admin == currentUser.value.id) ...[
+              if (circle.value.admin == currentUser.value.id) ...[
                 SizedBox(height: 30.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -198,7 +206,9 @@ class CircleDetails extends HookWidget {
                       icon: const Icon(
                         IconsaxBold.edit_2,
                       ),
-                      onPressed: () {},
+                      onPressed: () => Get.to(
+                        () => EditCircle(circle),
+                      ),
                     ),
                     CustomButton(
                       width: Get.width * 0.15,
@@ -210,37 +220,39 @@ class CircleDetails extends HookWidget {
                       onPressed: () => showCustomSheet(
                         context: context,
                         child: AddMemberSheet(
-                          circle.id!,
+                          circle.value.id!,
                           members,
-                          circle.limit!,
+                          circle.value.limit!,
                         ),
                       ),
                     ),
                   ],
                 ),
               ],
-              if (circle.isPrivate == false &&
-                  circle.admin != currentUser.value.id) ...[
+              if (circle.value.isPrivate == false &&
+                  circle.value.admin != currentUser.value.id) ...[
                 SizedBox(height: 30.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     InkWell(
-                      onTap: () async {
-                        if (checkIsMember.result.data!['isMember']) {
-                          removeMember.runMutation({
-                            "id": circle.id,
-                          });
-                        } else {
-                          if (members.value == circle.limit) {
-                            showToast('Circle reached members limit');
-                          } else {
-                            addNewMember.runMutation({
-                              "id": circle.id,
-                            });
-                          }
-                        }
-                      },
+                      onTap: checkIsMember.result.isLoading
+                          ? () {}
+                          : () async {
+                              if (checkIsMember.result.data!['isMember']) {
+                                removeMember.runMutation({
+                                  "id": circle.value.id,
+                                });
+                              } else {
+                                if (members.value == circle.value.limit) {
+                                  showToast('Circle reached members limit');
+                                } else {
+                                  addNewMember.runMutation({
+                                    "id": circle.value.id,
+                                  });
+                                }
+                              }
+                            },
                       child: DecoratedBox(
                         decoration: BoxDecoration(
                           color: checkIsMember.result.data?['isMember'] == null

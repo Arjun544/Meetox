@@ -163,4 +163,18 @@ class AddCircleController extends GetxController {
       Get.back();
     }
   }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    followersSearchDebounce.dispose();
+    followersPagingController.dispose();
+    followersPagingController.dispose();
+    followersSearchDebounce.dispose();
+    nameController.dispose();
+    descController.dispose();
+    nameFocusNode.dispose();
+    descFocusNode.dispose();
+    super.dispose();
+  }
 }

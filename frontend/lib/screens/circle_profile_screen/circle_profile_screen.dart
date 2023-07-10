@@ -6,6 +6,7 @@ import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/circle_model.dart' as circle_model;
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/widgets/mini_map.dart';
+import 'package:frontend/widgets/read_more.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -21,6 +22,8 @@ class CircleProfileScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(CircleProfileController());
+    final ValueNotifier<circle_model.Circle> profileCircle = useState(circle);
+
     final adminResult = useQuery(
       QueryOptions(
         document: gql(getUser),
@@ -32,17 +35,41 @@ class CircleProfileScreen extends HookWidget {
     );
     return Scaffold(
       backgroundColor: context.theme.scaffoldBackgroundColor,
+      resizeToAvoidBottomInset: false,
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
-            CircleDetails(circle, allMembers),
+            CircleDetails(profileCircle, allMembers),
           ];
         },
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 15.w),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              Container(
+                padding: EdgeInsets.symmetric(vertical: 5, horizontal: 15.w),
+                decoration: BoxDecoration(
+                  color: context.theme.indicatorColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: ListTile(
+                  contentPadding: EdgeInsets.zero,
+                  title: ReadMoreText(
+                    "${profileCircle.value.description!.capitalizeFirst!}Amet pariatur irure velit non sit dolore est. Ipsum nulla ad cillum aliquip velit labore reprehenderit ut duis. Esse adipisicing nulla deserunt pariatur anim quis aliquip. Ut Lorem aute voluptate fugiat mollit quis est labore quis commodo elit consequat non. Sunt ad nulla proident ex dolor ea veniam. Duis proident anim ut laboris incididunt est laboris amet ullamco deserunt dolore.",
+                    style: context.theme.textTheme.labelSmall,
+                    trimLines: 3,
+                    colorClickableText: Colors.redAccent,
+                    trimMode: TrimMode.Line,
+                    trimCollapsedText: ' Read more',
+                    trimExpandedText: ' Read less',
+                    moreStyle: context.theme.textTheme.labelSmall!.copyWith(
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                  splashColor: Colors.transparent,
+                ),
+              ),
+              SizedBox(height: 20.h),
               ClipRRect(
                 borderRadius: BorderRadius.circular(20),
                 child: SizedBox(
@@ -54,6 +81,7 @@ class CircleProfileScreen extends HookWidget {
                   ),
                 ),
               ),
+              const Spacer(),
               Column(
                 children: [
                   adminResult.result.isLoading
@@ -95,6 +123,7 @@ class CircleProfileScreen extends HookWidget {
                   ),
                 ],
               ),
+              SizedBox(height: 30.h),
             ],
           ),
         ),

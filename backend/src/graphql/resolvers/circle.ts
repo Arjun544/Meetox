@@ -4,6 +4,7 @@ import {
   addCircle,
   circleMembers,
   deleteCircle,
+  editCircle,
   nearbyCircles,
   userCircles,
 } from "../../services/circle_services";
@@ -36,6 +37,28 @@ const resolvers = {
       const { id } = decodeToken(req as IncomingMessage);
 
       const circle = await deleteCircle(circleId as String);
+      return circle;
+    },
+    editCircle: async (_: any, args: any, context: GraphQLContext) => {
+      const { req } = context;
+      const {
+        id: circleId,
+        name,
+        description,
+        imageId,
+        image,
+        isPrivate,
+      } = args;
+      const { id } = decodeToken(req as IncomingMessage);
+
+      const circle = await editCircle(
+        circleId as String,
+        image,
+        imageId,
+        name,
+        description,
+        isPrivate
+      );
       return circle;
     },
     addMember: async (_: any, args: any, context: GraphQLContext) => {

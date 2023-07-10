@@ -33,3 +33,21 @@ mutation($id: String!) {
   deleteCircle(id: $id)
 }
 ''';
+
+String editCircle = r'''
+mutation($id: String!, $name: String!, $description: String!, $imageId: String!, $isPrivate: Boolean!, $image: String) {
+  editCircle(id: $id, name: $name, description: $description, imageId: $imageId, isPrivate: $isPrivate, image: $image){
+    id
+    name
+    description
+    image
+    location
+    isPrivate
+    limit
+    admin
+    members
+    createdAt
+    updatedAt
+  }
+}
+''';

@@ -26,9 +26,8 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onPressed,
-      borderRadius: BorderRadius.circular(15),
       child: Container(
         width: width,
         height: height ?? 55.sp,
@@ -59,7 +58,7 @@ class CustomButton extends StatelessWidget {
                     ],
                   )
                 : Text(
-                    text?? '',
+                    text ?? '',
                     style: context.theme.textTheme.labelMedium!.copyWith(
                       color: color != context.theme.cardColor
                           ? context.theme.textTheme.labelMedium!.color

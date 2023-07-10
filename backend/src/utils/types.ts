@@ -1,9 +1,8 @@
 import { PubSub } from "graphql-subscriptions";
 import { Context } from "graphql-ws/lib/server";
 import { IncomingMessage } from "http";
-import { Types } from "mongoose";
 import { IImage } from "./interfaces/circle";
-import { IDisplayPic, ILocation } from "./interfaces/user";
+import { ILocation } from "./interfaces/user";
 
 export interface GraphQLContext {
   req: IncomingMessage | null;
@@ -24,4 +23,17 @@ export interface LoginArgs {
 export interface TokenResponse {
   id: string | null;
   token: string | null;
+}
+export interface CircleResponse {
+  id: string;
+  name: string;
+  description: string;
+  image: IImage;
+  location: ILocation;
+  isPrivate: Boolean;
+  limit: number;
+  admin: string;
+  members: number;
+  createdAt: Date;
+  updatedAt: Date;
 }

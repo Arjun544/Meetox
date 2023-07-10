@@ -32,67 +32,81 @@ class SplashScreen extends GetView<SplashController> {
           ),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Query<User>(
-              options: QueryOptions(
-                document: gql(getUser),
-                fetchPolicy: FetchPolicy.networkOnly,
-                parserFn: User.fromJson,
-                variables: const {
-                  'id': null,
-                },
-                onComplete: (Map<String, dynamic>? data) {
-                  logSuccess(data.toString());
-                  if (data != null && data['getUser'] != null) {
-                    final getUser = data['getUser'] as Map<String, dynamic>;
-                    final user = User.fromJson(getUser);
-                    currentUser.value = user;
-                    // ignore: invalid_use_of_protected_member
-                    currentUser.refresh();
-                    controller.onCompleted(user);
-                  } else {
-                    Get.offAll(() => const AuthScreen());
-                  }
-                },
-                onError: (error) {
-                  logError(error!.graphqlErrors.toString());
-                  if (error.graphqlErrors.isNotEmpty && error.graphqlErrors[0].message == 'jwt expired') {
-                    showToast('Session expired, please login again');
-                  Get.offAll(() => const AuthScreen());
-                  }
-                },
-              ),
-              builder: (
-                QueryResult<User> result, {
-                VoidCallback? refetch,
-                FetchMore? fetchMore,
-              }) {
-                return Swing(
-                  infinite: true,
-                  child: Hero(
-                    tag: 'Logo',
-                    child: SvgPicture.asset(
-                      AssetsManager.appLogo,
-                      height: 50.h,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
-                      ),
-                      theme: const SvgTheme(currentColor: Colors.white),
-                    ),
+            SizedBox.shrink(),
+            Column(
+              children: [
+                Query<User>(
+                  options: QueryOptions(
+                    document: gql(getUser),
+                    fetchPolicy: FetchPolicy.networkOnly,
+                    parserFn: User.fromJson,
+                    variables: const {
+                      'id': null,
+                    },
+                    onComplete: (Map<String, dynamic>? data) {
+                      logSuccess(data.toString());
+                      if (data != null && data['getUser'] != null) {
+                        final getUser = data['getUser'] as Map<String, dynamic>;
+                        final user = User.fromJson(getUser);
+                        currentUser.value = user;
+                        // ignore: invalid_use_of_protected_member
+                        currentUser.refresh();
+                        controller.onCompleted(user);
+                      } else {
+                        Get.offAll(() => const AuthScreen());
+                      }
+                    },
+                    onError: (error) {
+                      logError(error!.graphqlErrors.toString());
+                      if (error.graphqlErrors.isNotEmpty &&
+                          error.graphqlErrors[0].message == 'jwt expired') {
+                        showToast('Session expired, please login again');
+                        Get.offAll(() => const AuthScreen());
+                      }
+                    },
                   ),
-                );
-              },
+                  builder: (
+                    QueryResult<User> result, {
+                    VoidCallback? refetch,
+                    FetchMore? fetchMore,
+                  }) {
+                    return Swing(
+                      infinite: true,
+                      child: Hero(
+                        tag: 'Logo',
+                        child: SvgPicture.asset(
+                          AssetsManager.appLogo,
+                          height: 50.h,
+                          colorFilter: const ColorFilter.mode(
+                            AppColors.customBlack,
+                            BlendMode.srcIn,
+                          ),
+                          theme: const SvgTheme(
+                            currentColor: AppColors.customBlack,
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                SizedBox(height: 14.h),
+                Text(
+                  'Meetox',
+                  style: context.theme.textTheme.titleLarge!.copyWith(
+                    letterSpacing: 1,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.customBlack,
+                  ),
+                ),
+              ],
             ),
             Padding(
-              padding: EdgeInsets.only(top: 14.sp),
-              child: Text(
-                'Meetox',
-                style: context.theme.textTheme.titleLarge!.copyWith(
-                  letterSpacing: 1,
-                  fontWeight: FontWeight.bold,
-                ),
+              padding: EdgeInsets.only(bottom: 30.h),
+              child: LoadingAnimationWidget.threeArchedCircle(
+                color: AppColors.customBlack,
+                size: 20.sp,
               ),
             ),
           ],

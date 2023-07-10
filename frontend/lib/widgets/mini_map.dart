@@ -116,7 +116,7 @@ class MiniMap extends GetView<MapScreenController> {
           ),
         ),
         Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 8),
           margin: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: context.theme.scaffoldBackgroundColor.withOpacity(0.7),
@@ -131,7 +131,7 @@ class MiniMap extends GetView<MapScreenController> {
                 size: 18,
                 color: context.theme.iconTheme.color,
               ),
-              SizedBox(width: 10),
+              const SizedBox(width: 10),
               Text(
                 '~ ${distanceBtw.toStringAsFixed(0)} KMs',
                 style: context.theme.textTheme.labelSmall,

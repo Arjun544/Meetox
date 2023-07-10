@@ -26,7 +26,6 @@ Future<void> Function({
     ),
     builder: (context) => GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: Get.back,
       child: BackdropFilter(
         filter: ImageFilter.blur(
           sigmaX: hasBlur ? 4 : 0,

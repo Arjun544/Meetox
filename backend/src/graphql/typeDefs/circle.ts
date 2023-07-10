@@ -32,6 +32,14 @@ const typeDefs = gql`
     addMember(id: String!): IUser
     leaveMember(id: String!): Boolean
     deleteCircle(id: String!): ICircle
+    editCircle(
+      id: String!
+      name: String!
+      description: String!
+      image: String
+      imageId: String
+      isPrivate: Boolean!
+    ): CircleResponse
   }
 
   type CirclesResponse {
