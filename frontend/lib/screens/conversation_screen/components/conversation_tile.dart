@@ -30,13 +30,26 @@ class ConversationTile extends GetView<ConversationController> {
         contentPadding: EdgeInsets.zero,
         leading: Stack(
           children: [
-            CircleAvatar(
-              backgroundColor: AppColors.primaryYellow,
-              foregroundColor: AppColors.primaryYellow,
-              foregroundImage: CachedNetworkImageProvider(
-                conversation.participants![0].displayPic!.profile!,
+            Container(
+              height: 45.sp,
+              width: 45.sp,
+              decoration: BoxDecoration(
+                color: context.theme.dividerColor,
+                borderRadius: BorderRadius.circular(14),
+                boxShadow: [
+                  BoxShadow(
+                    color:
+                        context.isDarkMode ? Colors.black : Colors.grey[400]!,
+                    blurRadius: 0.3,
+                  ),
+                ],
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: CachedNetworkImageProvider(
+                    conversation.participants![0].displayPic!.profile!,
+                  ),
+                ),
               ),
-              radius: 25,
             ),
             OnlineIndicator(id: conversation.participants![0].id!),
           ],
