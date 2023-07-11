@@ -83,15 +83,15 @@ class ConversationTile extends GetView<ConversationController> {
                 conversation.lastMessage!.message == null
                     ? ''
                     : conversation.lastMessage!.sender == currentUser.value.id
-                        ? "You: ${conversation.lastMessage!.message!.capitalizeFirst!}"
+                        ? "You: ${conversation.lastMessage!.message!.capitalizeFirst!} lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit"
                         : conversation.lastMessage!.message!.capitalizeFirst!,
-                maxLines: 1,
+                maxLines: 2,
                 overflow: TextOverflow.ellipsis,
                 style: context.theme.textTheme.labelSmall!.copyWith(
                   color: context.theme.textTheme.labelSmall!.color!
                       .withOpacity(!hasLastMessageSeen ? 1 : 0.5),
                   fontWeight:
-                      !hasLastMessageSeen ? FontWeight.w700 : FontWeight.w700,
+                      !hasLastMessageSeen ? FontWeight.w700 : FontWeight.w500,
                 ),
               ),
             ),

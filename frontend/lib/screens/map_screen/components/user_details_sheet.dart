@@ -288,40 +288,7 @@ class UserDetailsSheet extends HookWidget {
                     Expanded(
                       child: InkWell(
                         onTap: () async {
-                          // Fetches user conversations and checks if any conversation is available with this user
-                          // isFetchingConversations.value = true;
-                          // final List<Conversation> conversations =
-                          //     await ConversationServices.getConversations();
-                          // isFetchingConversations.value = false;
-
-                          // final Conversation conversation =
-                          //     conversations.firstWhere(
-                          //         (conversation) =>
-                          //             conversation.members!.contains(user),
-                          //         orElse: () => Conversation());
-
-                          // if (isFetchingConversations.value == false &&
-                          //     conversation.id != null) {
-                          //   final ConversationController
-                          //       conversationController =
-                          //       Get.put(ConversationController());
-                          //   conversationController.currentConversationId.value =
-                          //       conversation.id!;
-
-                          //   await Get.to(
-                          //     () => ChatScreen(
-                          //       user: user,
-                          //       conversation: conversation,
-                          //     ),
-                          //   );
-                          // } else {
-                          //   await Get.to(
-                          //     () => ChatScreen(
-                          //       user: user,
-                          //       conversation: Conversation(type: 'private'),
-                          //     ),
-                          //   );
-                          // }
+                          
                         },
                         child: Container(
                           height: 45.sp,
