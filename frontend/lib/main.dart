@@ -5,7 +5,6 @@ import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/core/instances.dart';
 import 'package:frontend/models/user_model.dart';
 import 'package:frontend/screens/splash_screen.dart';
-import 'package:frontend/widgets/unfocuser.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -66,7 +65,9 @@ class MyApp extends StatelessWidget {
       useInheritedMediaQuery: true,
       builder: (context, child) => GraphQLProvider(
         client: graphqlClient,
-        child: UnFocuser(
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: GetMaterialApp(
             title: 'Meetox',
             debugShowCheckedModeBanner: false,

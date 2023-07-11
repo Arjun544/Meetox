@@ -34,7 +34,7 @@ class SplashScreen extends GetView<SplashController> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SizedBox.shrink(),
+            const SizedBox.shrink(),
             Column(
               children: [
                 Query<User>(
@@ -55,7 +55,7 @@ class SplashScreen extends GetView<SplashController> {
                         currentUser.refresh();
                         controller.onCompleted(user);
                       } else {
-                        Get.offAll(() => const AuthScreen());
+                        // Get.offAll(() => const AuthScreen());
                       }
                     },
                     onError: (error) {
@@ -64,6 +64,8 @@ class SplashScreen extends GetView<SplashController> {
                           error.graphqlErrors[0].message == 'jwt expired') {
                         showToast('Session expired, please login again');
                         Get.offAll(() => const AuthScreen());
+                      } else {
+                        showToast('Failed to load, please try again');
                       }
                     },
                   ),

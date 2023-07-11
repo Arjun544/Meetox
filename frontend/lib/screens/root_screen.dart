@@ -16,6 +16,7 @@ class DrawerScreen extends GetView<RootController> {
     Get.put(RootController());
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: ZoomDrawer(
         controller: controller.zoomDrawerController,
         menuScreen: const CustomDrawer(),
