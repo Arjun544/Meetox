@@ -1,24 +1,26 @@
 import 'dart:convert';
 
 import 'package:frontend/core/imports/core_imports.dart';
-import 'package:frontend/graphql/conversation/queries.dart';
-import 'package:frontend/models/conversation_model.dart';
+import 'package:frontend/graphql/message/queries.dart';
+import 'package:frontend/models/message_model.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
-class ConversationServices {
-  static Future<Conversations> conversations({
-    String? name,
+class MessageServices {
+  static Future<Messages> messages({
+    required String id,
+    String? text,
     required int page,
   }) async {
     try {
       final result = await graphqlClient!.value.query(
-        QueryOptions<Conversations>(
-          document: gql(getConversations),
+        QueryOptions<Messages>(
+          document: gql(getMessages),
           fetchPolicy: FetchPolicy.networkOnly,
-          parserFn: (data) => Conversations.fromJson(
-              data['conversations'] as Map<String, dynamic>),
+          parserFn: (data) =>
+              Messages.fromJson(data['messages'] as Map<String, dynamic>),
           variables: {
-            'name': name,
+            'id': id,
+            'text': text,
             'page': page,
             'limit': 20,
           },
@@ -29,6 +31,6 @@ class ConversationServices {
     } catch (e) {
       logError(e.toString());
     }
-    throw Exception('Failed to get user conversations');
+    throw Exception('Failed to get messages');
   }
 }

@@ -100,7 +100,7 @@ class Conversation {
   DateTime? createdAt;
   DateTime? updatedAt;
   int? v;
-  MessageModel? lastMessage;
+  Message? lastMessage;
   String? conversationId;
 
   Conversation({
@@ -137,7 +137,7 @@ class Conversation {
         v: json["__v"],
         lastMessage: json["lastMessage"] == null
             ? null
-            : MessageModel.fromJson(json["lastMessage"]),
+            : Message.fromJson(json["lastMessage"]),
         conversationId: json["id"],
       );
 

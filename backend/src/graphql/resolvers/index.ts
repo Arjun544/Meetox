@@ -5,6 +5,7 @@ import followResolvers from "./follow";
 import circleResolvers from "./circle";
 import questionResolvers from "./question";
 import conversationResolvers from "./conversation";
+import messageResolvers from "./message";
 
 const resolvers = merge(
   {},
@@ -13,7 +14,8 @@ const resolvers = merge(
   followResolvers,
   circleResolvers,
   questionResolvers,
-  conversationResolvers
+  conversationResolvers,
+  messageResolvers
 );
 
 export default resolvers;

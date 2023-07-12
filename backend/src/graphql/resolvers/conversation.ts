@@ -2,10 +2,9 @@ import { IncomingMessage } from "http";
 import {
   createConversation,
   getConversations,
-  sendMessage,
 } from "../../services/conversation_services";
 import { decodeToken } from "../../services/token_services";
-import { IConversation, IMessage } from "../../utils/interfaces/conversation";
+import { IConversation } from "../../utils/interfaces/conversation";
 import { GraphQLContext } from "../../utils/types";
 import { GraphQLError } from "graphql";
 import Conversation from "../../models/conversation_model";
@@ -25,24 +24,6 @@ const resolvers = {
 
       return newConversation;
     },
-    sendMessage: async (_: any, args: any, context: GraphQLContext) => {
-      const { req } = context;
-      const { id: conversationId, message, type, latitude, longitude } = args;
-      const { id } = decodeToken(req as IncomingMessage);
-
-      const newMessage: IMessage | null = await sendMessage(
-        id as string,
-        conversationId as string,
-        message,
-        type,
-        latitude,
-        longitude
-      );
-
-      return newMessage;
-    },
-  },
-  Query: {
     hasConversation: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;
       const { sender, receiver } = args;
@@ -60,6 +41,8 @@ const resolvers = {
         throw new GraphQLError("Failed to check conversation existence");
       }
     },
+  },
+  Query: {
     conversations: async (_: any, args: any, context: GraphQLContext) => {
       const { req } = context;
       const { name, page, limit } = args;

@@ -74,33 +74,30 @@ class TopBar extends GetView<MapScreenController> {
         children: [
           InkWell(
             onTap: () => rootController.zoomDrawerController.open!(),
-            child: Hero(
-              tag: 'Profile',
-              child: currentUser.value.displayPic == null
-                  ? UserInititals(name: currentUser.value.name!)
-                  : Container(
-                      height: 45.sp,
-                      width: 45.sp,
-                      decoration: BoxDecoration(
-                        color: context.theme.dividerColor,
-                        borderRadius: BorderRadius.circular(14),
-                        boxShadow: [
-                          BoxShadow(
-                            color: context.isDarkMode
-                                ? Colors.black
-                                : Colors.grey[400]!,
-                            blurRadius: 0.3,
-                          ),
-                        ],
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: CachedNetworkImageProvider(
-                            currentUser.value.displayPic!.profile!,
-                          ),
+            child: currentUser.value.displayPic == null
+                ? UserInititals(name: currentUser.value.name!)
+                : Container(
+                    height: 45.sp,
+                    width: 45.sp,
+                    decoration: BoxDecoration(
+                      color: context.theme.dividerColor,
+                      borderRadius: BorderRadius.circular(14),
+                      boxShadow: [
+                        BoxShadow(
+                          color: context.isDarkMode
+                              ? Colors.black
+                              : Colors.grey[400]!,
+                          blurRadius: 0.3,
+                        ),
+                      ],
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: CachedNetworkImageProvider(
+                          currentUser.value.displayPic!.profile!,
                         ),
                       ),
                     ),
-            ),
+                  ),
           ),
           if (isMapScreen)
             Row(

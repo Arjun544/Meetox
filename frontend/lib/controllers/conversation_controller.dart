@@ -27,7 +27,7 @@ class ConversationController extends GetxController {
 
   Future<void> fetchConversations(int pageKey) async {
     try {
-      final newPage = await ConversationServices.userConversations(
+      final newPage = await ConversationServices.conversations(
         page: pageKey,
         name: searchQuery.value.isEmpty ? null : searchQuery.value,
       );

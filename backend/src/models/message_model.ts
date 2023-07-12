@@ -19,7 +19,7 @@ const messageSchema = new Schema(
     },
     sender: {
       type: Schema.Types.ObjectId,
-      ref: "Participants",
+      ref: "Users",
     },
     conversationId: {
       type: Schema.Types.ObjectId,
@@ -41,6 +41,8 @@ messageSchema.virtual("id").get(function () {
 messageSchema.set("toJSON", {
   virtuals: true,
 });
+
+messageSchema.index({ message: "text" });
 
 messageSchema.plugin(paginate);
 

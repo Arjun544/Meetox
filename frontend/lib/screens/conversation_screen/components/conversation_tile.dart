@@ -1,6 +1,7 @@
 import 'package:frontend/controllers/conversation_controller.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/models/conversation_model.dart';
+import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/widgets/online_indicator.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
@@ -18,13 +19,9 @@ class ConversationTile extends GetView<ConversationController> {
         .hasSeenLastMessage!;
     return InkWell(
       onTap: () {
-        // controller.currentConversationId.value = conversation.id!;
-        // Get.to(
-        //   () => ChatScreen(
-        //     user: receiver,
-        //     conversation: conversation,
-        //   ),
-        // );
+        Get.to(
+          () => ChatScreen(conversation: conversation),
+        );
       },
       child: ListTile(
         contentPadding: EdgeInsets.zero,
@@ -83,7 +80,7 @@ class ConversationTile extends GetView<ConversationController> {
                 conversation.lastMessage!.message == null
                     ? ''
                     : conversation.lastMessage!.sender == currentUser.value.id
-                        ? "You: ${conversation.lastMessage!.message!.capitalizeFirst!} lorem ipsum dolor sit amet consectetur adipiscing elit lorem ipsum dolor sit amet consectetur adipiscing elit"
+                        ? "You: ${conversation.lastMessage!.message!.capitalizeFirst!}"
                         : conversation.lastMessage!.message!.capitalizeFirst!,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,

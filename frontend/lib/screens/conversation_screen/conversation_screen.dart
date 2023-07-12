@@ -75,17 +75,11 @@ class ConversationScreen extends GetView<ConversationController> {
                         const CirclesLoader(),
                     newPageProgressIndicatorBuilder: (_) =>
                         const CirclesLoader(),
-                    firstPageErrorIndicatorBuilder: (_) => Center(
-                      child: Center(
-                        heightFactor: 2.h,
-                        child: CustomErrorWidget(
-                          image: AssetsManager.angryState,
-                          text: 'Failed to fetch conversations',
-                          onPressed: () => controller
-                              .conversationsPagingController
-                              .refresh(),
-                        ),
-                      ),
+                    firstPageErrorIndicatorBuilder: (_) => CustomErrorWidget(
+                      image: AssetsManager.angryState,
+                      text: 'Failed to fetch conversations',
+                      onPressed: () =>
+                          controller.conversationsPagingController.refresh(),
                     ),
                     newPageErrorIndicatorBuilder: (_) => Center(
                       child: Center(

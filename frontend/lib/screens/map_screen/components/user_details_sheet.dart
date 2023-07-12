@@ -1,6 +1,7 @@
 import 'package:frontend/controllers/map_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
+import 'package:frontend/graphql/conversation/mutations.dart';
 import 'package:frontend/graphql/user/mutations.dart';
 import 'package:frontend/graphql/user/queries.dart';
 import 'package:frontend/helpers/get_distance.dart';
@@ -63,6 +64,17 @@ class UserDetailsSheet extends HookWidget {
             followers.value -= 1;
             checkIsFollowed.refetch();
           }
+        },
+      ),
+    );
+
+    final checkHasConversation = useMutation(
+      MutationOptions(
+        document: gql(hasConversation),
+        fetchPolicy: FetchPolicy.networkOnly,
+        onCompleted: (data) {
+          logSuccess(data.toString());
+
         },
       ),
     );
@@ -154,7 +166,9 @@ class UserDetailsSheet extends HookWidget {
                   trailing: Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: InkWell(
-                      onTap: checkIsFollowed.result.isLoading || followUser.result.isLoading || unFollowUser.result.isLoading
+                      onTap: checkIsFollowed.result.isLoading ||
+                              followUser.result.isLoading ||
+                              unFollowUser.result.isLoading
                           ? () {}
                           : () async {
                               if (checkIsFollowed.result.data!['isFollowed']) {
@@ -287,21 +301,35 @@ class UserDetailsSheet extends HookWidget {
                     const SizedBox(width: 20),
                     Expanded(
                       child: InkWell(
-                        onTap: () async {
-                          
-                        },
+                        onTap: checkHasConversation.result.isLoading
+                            ? () {}
+                            : () {
+                                checkHasConversation.runMutation({
+                                  'sender': user.id,
+                                  'receiver': currentUser.value.id,
+                                });
+                              },
                         child: Container(
                           height: 45.sp,
                           width: 50.sp,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: checkHasConversation.result.isLoading
+                                  ? 25.w
+                                  : 0),
                           decoration: BoxDecoration(
                             color: context.theme.indicatorColor,
                             borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Icon(
-                            FlutterRemix.chat_3_fill,
-                            size: 22.sp,
-                            color: context.theme.iconTheme.color,
-                          ),
+                          child: checkHasConversation.result.isLoading
+                              ? LoadingAnimationWidget.staggeredDotsWave(
+                                  color: AppColors.primaryYellow,
+                                  size: 20.w,
+                                )
+                              : Icon(
+                                  FlutterRemix.chat_3_fill,
+                                  size: 22.sp,
+                                  color: context.theme.iconTheme.color,
+                                ),
                         ),
                       ),
                     ),

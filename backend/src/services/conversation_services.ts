@@ -2,10 +2,9 @@ import Message from "../models/message_model";
 import Conversation from "../models/conversation_model";
 import {
   IConversation,
-  IExtra,
   IMessage,
 } from "../utils/interfaces/conversation";
-import { PaginateModel, model, Types } from "mongoose";
+import { PaginateModel, model } from "mongoose";
 
 export async function createConversation(
   sender: any,
@@ -49,31 +48,6 @@ export async function createConversation(
       });
 
   return updatedConversation as IConversation;
-}
-
-export async function sendMessage(
-  id: string,
-  conversationId: string,
-  message: string,
-  type: string,
-  latitude: number,
-  longitude: number
-): Promise<IMessage> {
-  const newMessage: IMessage | null = await Message.create({
-    message: message,
-    type: type,
-    latitude: latitude,
-    longitude: longitude,
-    sender: id,
-    conversationId: conversationId,
-  });
-
-  // Update lastMessage of the conversation
-  await Conversation.findByIdAndUpdate(conversationId, {
-    lastMessage: newMessage,
-  });
-
-  return newMessage;
 }
 
 export async function getConversations(
