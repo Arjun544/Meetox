@@ -1,7 +1,7 @@
 import 'package:frontend/controllers/answers_controller.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
-import 'package:frontend/graphql/question/mutation.dart';
+import 'package:frontend/graphql/question/mutations.dart';
 import 'package:frontend/models/answer_model.dart';
 import 'package:frontend/widgets/custom_area_field.dart';
 import 'package:frontend/widgets/custom_button.dart';

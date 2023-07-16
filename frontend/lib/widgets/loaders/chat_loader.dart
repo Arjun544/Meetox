@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:shimmer/shimmer.dart';
 
+import '../../screens/chat_screen/components/chat_shape.dart';
+
 // import '../../screens/chat_screen/components/chat_shape.dart';
 
 class ChatLoader extends StatelessWidget {
@@ -52,10 +54,9 @@ class ChatLoader extends StatelessWidget {
                     ),
                   ),
                 ),
-                // TODO:
-                // CustomPaint(
-                //   painter: CustomShape(context.theme.scaffoldBackgroundColor),
-                // ),
+                CustomPaint(
+                  painter: CustomShape(context.theme.scaffoldBackgroundColor),
+                ),
               ],
             ),
             Padding(

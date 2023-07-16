@@ -126,7 +126,7 @@ class Message {
         id: json["_id"],
         message: json["message"],
         type: json["type"],
-        latitude: json["latitude"].toDouble(),
+        latitude:  json["latitude"].toDouble(),
         longitude: json["longitude"].toDouble(),
         sender: json["sender"].runtimeType == String
             ? json["sender"]

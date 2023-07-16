@@ -91,7 +91,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                       textAlign: TextAlign.center,
                       text: TextSpan(
                         text: 'We sent a verification code to\n',
-                        style: context.theme.textTheme.headline5,
+                        style: context.theme.textTheme.labelMedium,
                         children: [
                           TextSpan(
                             text: widget.email,
@@ -163,7 +163,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                               children: [
                                 Text(
                                   'Resend code after',
-                                  style: context.theme.textTheme.headline5,
+                                  style: context.theme.textTheme.labelMedium,
                                 ),
                                 SizedBox(height: 10.sp),
                                 SlideCountdown(
@@ -172,7 +172,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
                                   padding: const EdgeInsets.all(16),
                                   separatorPadding: const EdgeInsets.symmetric(
                                       horizontal: 20,),
-                                  textStyle: context.theme.textTheme.headline3!
+                                  textStyle: context.theme.textTheme.labelLarge!
                                       .copyWith(
                                     color: context.isDarkMode
                                         ? Colors.white

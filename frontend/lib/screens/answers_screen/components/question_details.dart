@@ -1,6 +1,6 @@
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
-import 'package:frontend/graphql/question/mutation.dart';
+import 'package:frontend/graphql/question/mutations.dart';
 import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/models/question_model.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';

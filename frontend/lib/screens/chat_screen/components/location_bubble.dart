@@ -42,21 +42,21 @@ class LocationBubble extends StatelessWidget {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Icon(
+                      const Icon(
                         FlutterRemix.map_pin_2_fill,
                         size: 16,
                         color: AppColors.customBlack,
                       ),
-                      SizedBox(width: 6),
+                      const SizedBox(width: 6),
                       Text(
                         msg.message!,
-                        style: context.theme.textTheme.headline6!
+                        style: context.theme.textTheme.labelSmall!
                             .copyWith(color: AppColors.customBlack),
                       ),
                     ],
                   ),
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ],
       ),
     );

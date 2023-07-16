@@ -60,7 +60,7 @@ class CustomDialogue extends StatelessWidget {
               ),
               CustomTextButton(
                 text: 'Later',
-                color: context.theme.textTheme.headline5!.color!,
+                color: context.theme.textTheme.labelMedium!.color!,
                 onPressed: () => Get.back(),
               ),
             ],

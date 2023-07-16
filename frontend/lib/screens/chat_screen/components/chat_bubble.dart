@@ -1,8 +1,8 @@
 import 'dart:math' as math;
-import 'package:frontend/core/imports/packages_imports.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
+import 'package:frontend/core/imports/packages_imports.dart';
 import 'package:frontend/models/message_model.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../core/imports/core_imports.dart';
 import 'chat_shape.dart';
@@ -85,8 +85,7 @@ class ChatBubble extends StatelessWidget {
                       alignment: Alignment.center,
                       transform: Matrix4.rotationY(math.pi),
                       child: CustomPaint(
-                        painter:
-                            CustomShape(context.theme.scaffoldBackgroundColor),
+                        painter: CustomShape(context.theme.indicatorColor),
                       ),
                     ),
                     Flexible(
@@ -98,7 +97,7 @@ class ChatBubble extends StatelessWidget {
                             EdgeInsets.all(msg.type == 'location' ? 6 : 14),
                         margin: const EdgeInsets.only(bottom: 6),
                         decoration: BoxDecoration(
-                          color: context.theme.backgroundColor,
+                          color: context.theme.indicatorColor,
                           borderRadius: const BorderRadius.only(
                             topRight: Radius.circular(18),
                             bottomLeft: Radius.circular(18),

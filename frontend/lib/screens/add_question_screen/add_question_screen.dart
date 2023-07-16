@@ -1,6 +1,6 @@
 import 'package:frontend/controllers/add_question_controller.dart';
 import 'package:frontend/core/imports/packages_imports.dart';
-import 'package:frontend/graphql/question/mutation.dart';
+import 'package:frontend/graphql/question/mutations.dart';
 import 'package:frontend/helpers/show_toast.dart';
 import 'package:frontend/widgets/close_button.dart';
 import 'package:frontend/widgets/custom_button.dart';
