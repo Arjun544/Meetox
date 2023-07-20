@@ -14,6 +14,10 @@ const typeDefs = gql`
     conversations(name: String, page: Int, limit: Int): ConversationsResponse
   }
 
+  type Subscription {
+    conversationCreated: IConversation
+  }
+
   type ConversationsResponse {
     page: Int
     nextPage: Int

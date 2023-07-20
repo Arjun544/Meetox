@@ -66,6 +66,7 @@ class SplashScreen extends GetView<SplashController> {
                         Get.offAll(() => const AuthScreen());
                       } else {
                         showToast('Failed to load, please try again');
+                        Get.offAll(() => const AuthScreen());
                       }
                     },
                   ),

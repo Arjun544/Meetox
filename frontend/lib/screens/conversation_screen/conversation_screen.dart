@@ -1,3 +1,4 @@
+// ignore_for_file: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
 import 'package:frontend/controllers/conversation_controller.dart';
 import 'package:frontend/models/conversation_model.dart';
 import 'package:frontend/widgets/custom_error_widget.dart';
@@ -63,82 +64,118 @@ class ConversationScreen extends GetView<ConversationController> {
               ),
             ),
             SliverFillRemaining(
-              child: RefreshIndicator(
-                backgroundColor: context.theme.scaffoldBackgroundColor,
-                color: AppColors.primaryYellow,
-                onRefresh: () async =>
-                    controller.conversationsPagingController.refresh(),
-                child: PagedListView(
-                  pagingController: controller.conversationsPagingController,
-                  padding: EdgeInsets.only(top: 10.h, right: 15.w, left: 15.w),
-                  builderDelegate: PagedChildBuilderDelegate<Conversation>(
-                    animateTransitions: true,
-                    transitionDuration: const Duration(milliseconds: 500),
-                    firstPageProgressIndicatorBuilder: (_) =>
-                        const CirclesLoader(),
-                    newPageProgressIndicatorBuilder: (_) =>
-                        const CirclesLoader(),
-                    firstPageErrorIndicatorBuilder: (_) => CustomErrorWidget(
-                      image: AssetsManager.angryState,
-                      text: 'Failed to fetch conversations',
-                      onPressed: () =>
-                          controller.conversationsPagingController.refresh(),
-                    ),
-                    newPageErrorIndicatorBuilder: (_) => Center(
-                      child: Center(
-                        heightFactor: 2.h,
-                        child: CustomErrorWidget(
-                          image: AssetsManager.angryState,
-                          text: 'Failed to fetch conversations',
-                          onPressed: () => controller
-                              .conversationsPagingController
-                              .refresh(),
-                        ),
-                      ),
-                    ),
-                    noItemsFoundIndicatorBuilder: (_) => Center(
-                      heightFactor: 3.h,
-                      child: CustomErrorWidget(
-                        image: AssetsManager.sadState,
-                        text: 'No conversations found',
-                        isWarining: true,
-                        onPressed: () {},
-                      ),
-                    ),
-                    itemBuilder: (context, item, index) => Subscription(
-                      options: SubscriptionOptions(
-                        document: gql(connversationUpdated),
-                        variables: {'id': item.id!},
-                        parserFn: (data) => Conversation.fromJson(
-                          data['conversationUpdated'] as Map<String, dynamic>,
-                        ),
-                      ),
-                      onSubscriptionResult: (subscriptionResult, client) {
-                        if (subscriptionResult.hasException) {
-                          logError(subscriptionResult.exception.toString());
-                          return;
-                        } else {
-                          controller.conversationsPagingController.itemList!
-                              .removeWhere((element) =>
-                                  element.id ==
-                                  subscriptionResult.parsedData!.id);
-
-                          controller.conversationsPagingController.itemList!
-                              .insert(0, subscriptionResult.parsedData!);
-                          controller.conversationsPagingController
-                              // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
-                              .notifyListeners();
-                        }
-                      },
-                      builder: (context) {
-                        return ConversationTile(
-                          conversation: item,
-                        );
-                      },
+              child: Subscription(
+                  options: SubscriptionOptions(
+                    document: gql(conversationCreated),
+                    parserFn: (data) => Conversation.fromJson(
+                      data['conversationCreated'] as Map<String, dynamic>,
                     ),
                   ),
-                ),
-              ),
+                  onSubscriptionResult: (subscriptionResult, client) {
+                    if (subscriptionResult.hasException) {
+                      logError(subscriptionResult.exception.toString());
+                      return;
+                    } else {
+                      final ids = subscriptionResult.parsedData!.extra!
+                          .map((e) => e.participant)
+                          .toList();
+                      if (ids.contains(currentUser.value.id)) {
+                        controller.conversationsPagingController.itemList!
+                            .insert(0, subscriptionResult.parsedData!);
+
+                        controller.conversationsPagingController
+                            .notifyListeners();
+                      }
+                    }
+                  },
+                  builder: (_) {
+                    return RefreshIndicator(
+                      backgroundColor: context.theme.scaffoldBackgroundColor,
+                      color: AppColors.primaryYellow,
+                      onRefresh: () async =>
+                          controller.conversationsPagingController.refresh(),
+                      child: PagedListView(
+                        pagingController:
+                            controller.conversationsPagingController,
+                        padding:
+                            EdgeInsets.only(top: 10.h, right: 15.w, left: 15.w),
+                        builderDelegate:
+                            PagedChildBuilderDelegate<Conversation>(
+                          animateTransitions: true,
+                          transitionDuration: const Duration(milliseconds: 500),
+                          firstPageProgressIndicatorBuilder: (_) =>
+                              const CirclesLoader(),
+                          newPageProgressIndicatorBuilder: (_) =>
+                              const CirclesLoader(),
+                          firstPageErrorIndicatorBuilder: (_) =>
+                              CustomErrorWidget(
+                            image: AssetsManager.angryState,
+                            text: 'Failed to fetch conversations',
+                            onPressed: () => controller
+                                .conversationsPagingController
+                                .refresh(),
+                          ),
+                          newPageErrorIndicatorBuilder: (_) => Center(
+                            child: Center(
+                              heightFactor: 2.h,
+                              child: CustomErrorWidget(
+                                image: AssetsManager.angryState,
+                                text: 'Failed to fetch conversations',
+                                onPressed: () => controller
+                                    .conversationsPagingController
+                                    .refresh(),
+                              ),
+                            ),
+                          ),
+                          noItemsFoundIndicatorBuilder: (_) => Center(
+                            heightFactor: 3.h,
+                            child: CustomErrorWidget(
+                              image: AssetsManager.sadState,
+                              text: 'No conversations found',
+                              isWarining: true,
+                              onPressed: () {},
+                            ),
+                          ),
+                          itemBuilder: (context, item, index) => Subscription(
+                            options: SubscriptionOptions(
+                              document: gql(conversationUpdated),
+                              variables: {'id': item.id!},
+                              parserFn: (data) => Conversation.fromJson(
+                                data['conversationUpdated']
+                                    as Map<String, dynamic>,
+                              ),
+                            ),
+                            onSubscriptionResult: (subscriptionResult, client) {
+                              if (subscriptionResult.hasException) {
+                                logError(
+                                    subscriptionResult.exception.toString());
+                                return;
+                              } else {
+                                // Updatel last message of conversation with new conversation last message
+                                controller
+                                        .conversationsPagingController.itemList!
+                                        .where((element) =>
+                                            element.id ==
+                                            subscriptionResult.parsedData!.id)
+                                        .toList()
+                                        .first
+                                        .lastMessage =
+                                    subscriptionResult.parsedData!.lastMessage;
+
+                                controller.conversationsPagingController
+                                    .notifyListeners();
+                              }
+                            },
+                            builder: (context) {
+                              return ConversationTile(
+                                conversation: item,
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                    );
+                  }),
             ),
           ],
         ),

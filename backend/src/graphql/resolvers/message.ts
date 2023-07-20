@@ -47,7 +47,7 @@ const resolvers = {
           const { pubsub } = context;
           const { id } = args;
 
-          return pubsub.asyncIterator([`CONVERSATION_UPDATED_${id}`]);
+          return pubsub.asyncIterator(`CONVERSATION_UPDATED_${id}`);
         },
         (payload: any, _, context: GraphQLContext) => {
           return true;
@@ -60,7 +60,7 @@ const resolvers = {
           const { pubsub } = context;
           const { id } = args;
 
-          return pubsub.asyncIterator([`NEW_MESSAGE_${id}`]);
+          return pubsub.asyncIterator(`NEW_MESSAGE_${id}`);
         },
         (payload: any, _, context: GraphQLContext) => {
           return true;

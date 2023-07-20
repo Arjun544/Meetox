@@ -14,7 +14,7 @@ class ConversationTile extends GetView<ConversationController> {
   @override
   Widget build(BuildContext context) {
     final bool hasLastMessageSeen = conversation.extra!
-        .where((element) => element.participant == currentUser.value.id)
+        .where((element) => element.participant != currentUser.value.id)
         .toList()[0]
         .hasSeenLastMessage!;
     return InkWell(
@@ -86,9 +86,9 @@ class ConversationTile extends GetView<ConversationController> {
                 overflow: TextOverflow.ellipsis,
                 style: context.theme.textTheme.labelSmall!.copyWith(
                   color: context.theme.textTheme.labelSmall!.color!
-                      .withOpacity(!hasLastMessageSeen ? 1 : 0.5),
+                      .withOpacity(hasLastMessageSeen ? 1 : 0.5),
                   fontWeight:
-                      !hasLastMessageSeen ? FontWeight.w700 : FontWeight.w500,
+                      hasLastMessageSeen ? FontWeight.w700 : FontWeight.w500,
                 ),
               ),
             ),
@@ -105,7 +105,7 @@ class ConversationTile extends GetView<ConversationController> {
               ),
               style: context.theme.textTheme.labelSmall!.copyWith(fontSize: 9),
             ),
-            if (!hasLastMessageSeen)
+            if (hasLastMessageSeen)
               Container(
                 height: 8,
                 width: 8,

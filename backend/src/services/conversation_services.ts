@@ -1,12 +1,11 @@
 import Message from "../models/message_model";
 import Conversation from "../models/conversation_model";
-import {
-  IConversation,
-  IMessage,
-} from "../utils/interfaces/conversation";
+import { IConversation, IMessage } from "../utils/interfaces/conversation";
 import { PaginateModel, model } from "mongoose";
+import { PubSub } from "graphql-subscriptions/dist/pubsub";
 
 export async function createConversation(
+  pubsub: PubSub,
   sender: any,
   receiver: any,
   message: string
@@ -47,6 +46,11 @@ export async function createConversation(
         path: "lastMessage",
       });
 
+  // Publish the new conversation event
+  pubsub.publish("CONVERSATION_CREATED", {
+    conversationCreated: updatedConversation,
+  });
+
   return updatedConversation as IConversation;
 }
 
@@ -56,7 +60,7 @@ export async function getConversations(
   page: number,
   limit: number
 ): Promise<any> {
-  console.log(name)
+  console.log(name);
   const query =
     name === null
       ? {
@@ -72,7 +76,7 @@ export async function getConversations(
     populate: [
       {
         path: "participants",
-        match: { _id: {$ne: id} },
+        match: { _id: { $ne: id } },
         select: "id name display_pic",
       },
       {

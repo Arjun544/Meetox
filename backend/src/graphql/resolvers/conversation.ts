@@ -8,15 +8,17 @@ import { IConversation } from "../../utils/interfaces/conversation";
 import { GraphQLContext } from "../../utils/types";
 import { GraphQLError } from "graphql";
 import Conversation from "../../models/conversation_model";
+import { withFilter } from "graphql-subscriptions/dist/with-filter";
 
 const resolvers = {
   Mutation: {
     createConversation: async (_: any, args: any, context: GraphQLContext) => {
-      const { req } = context;
+      const { req, pubsub } = context;
       const { receiver, message } = args;
       const { id } = decodeToken(req as IncomingMessage);
 
       const newConversation: IConversation | null = await createConversation(
+        pubsub,
         id as string,
         receiver,
         message
@@ -57,20 +59,20 @@ const resolvers = {
     },
   },
 
-  //   Subscription: {
-  //     locationUpdated: {
-  //       subscribe: withFilter(
-  //         (_: any, __: any, context: GraphQLContext) => {
-  //           const { pubsub } = context;
+  Subscription: {
+    conversationCreated: {
+      subscribe: withFilter(
+        (_: any, args: any, context: GraphQLContext) => {
+          const { pubsub } = context;
 
-  //           return pubsub.asyncIterator(["LOCATION_UPDATED"]);
-  //         },
-  //         (payload: any, _, context: GraphQLContext) => {
-  //           return true;
-  //         }
-  //       ),
-  //     },
-  //   },
+          return pubsub.asyncIterator("CONVERSATION_CREATED");
+        },
+        (payload: any, _, context: GraphQLContext) => {
+          return true;
+        }
+      ),
+    },
+  },
 };
 
 export default resolvers;
