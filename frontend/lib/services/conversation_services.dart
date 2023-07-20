@@ -15,6 +15,7 @@ class ConversationServices {
         QueryOptions<Conversations>(
           document: gql(getConversations),
           fetchPolicy: FetchPolicy.networkOnly,
+          pollInterval: const Duration(seconds: 5),
           parserFn: (data) => Conversations.fromJson(
               data['conversations'] as Map<String, dynamic>),
           variables: {

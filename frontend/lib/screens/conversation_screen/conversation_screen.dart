@@ -4,10 +4,12 @@ import 'package:frontend/widgets/custom_error_widget.dart';
 import 'package:frontend/widgets/custom_field.dart';
 import 'package:frontend/widgets/top_bar.dart';
 import 'package:frontend/widgets/unfocuser.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../core/imports/core_imports.dart';
 import '../../core/imports/packages_imports.dart';
+import '../../graphql/conversation/subscriptions.dart';
 import '../../widgets/loaders/circles_loader.dart';
 import 'components/conversation_tile.dart';
 
@@ -17,6 +19,7 @@ class ConversationScreen extends GetView<ConversationController> {
   @override
   Widget build(BuildContext context) {
     Get.put(ConversationController());
+
     return UnFocuser(
       child: Scaffold(
         body: CustomScrollView(
@@ -102,8 +105,36 @@ class ConversationScreen extends GetView<ConversationController> {
                         onPressed: () {},
                       ),
                     ),
-                    itemBuilder: (context, item, index) => ConversationTile(
-                      conversation: item,
+                    itemBuilder: (context, item, index) => Subscription(
+                      options: SubscriptionOptions(
+                        document: gql(connversationUpdated),
+                        variables: {'id': item.id!},
+                        parserFn: (data) => Conversation.fromJson(
+                          data['conversationUpdated'] as Map<String, dynamic>,
+                        ),
+                      ),
+                      onSubscriptionResult: (subscriptionResult, client) {
+                        if (subscriptionResult.hasException) {
+                          logError(subscriptionResult.exception.toString());
+                          return;
+                        } else {
+                          controller.conversationsPagingController.itemList!
+                              .removeWhere((element) =>
+                                  element.id ==
+                                  subscriptionResult.parsedData!.id);
+
+                          controller.conversationsPagingController.itemList!
+                              .insert(0, subscriptionResult.parsedData!);
+                          controller.conversationsPagingController
+                              // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member
+                              .notifyListeners();
+                        }
+                      },
+                      builder: (context) {
+                        return ConversationTile(
+                          conversation: item,
+                        );
+                      },
                     ),
                   ),
                 ),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:frontend/core/imports/core_imports.dart';
 import 'package:frontend/models/conversation_model.dart';
 import 'package:frontend/services/conversation_services.dart';
@@ -46,5 +48,11 @@ class ConversationController extends GetxController {
       logError(e.toString());
       conversationsPagingController.error = e;
     }
+  }
+
+  @override
+  void dispose() {
+    conversationsPagingController.dispose();
+    super.dispose();
   }
 }

@@ -22,6 +22,11 @@ const typeDefs = gql`
     ): MessagesResponse
   }
 
+  type Subscription {
+    conversationUpdated(id: String): IConversation
+    newMessage(id: String): IMessage
+  }
+
   type MessagesResponse {
     page: Int
     nextPage: Int

@@ -2,8 +2,10 @@ import Message from "../models/message_model";
 import Conversation from "../models/conversation_model";
 import { IConversation, IMessage } from "../utils/interfaces/conversation";
 import { PaginateModel, model } from "mongoose";
+import { PubSub } from "graphql-subscriptions/dist/pubsub";
 
 export async function sendMessage(
+  pubsub: PubSub,
   id: string,
   conversationId: string,
   message: string,
@@ -20,9 +22,37 @@ export async function sendMessage(
     conversationId: conversationId,
   });
 
+  const populatedMessage = await Message.populate(newMessage, {
+    path: "sender",
+    select: "id name display_pic",
+  });
+
   // Update lastMessage of the conversation
-  await Conversation.findByIdAndUpdate(conversationId, {
-    lastMessage: newMessage,
+  const newConversation: IConversation | null =
+    await Conversation.findByIdAndUpdate(
+      conversationId,
+      {
+        lastMessage: newMessage,
+      },
+      { new: true }
+    )
+      .populate({
+        path: "participants",
+        match: { _id: { $ne: id } },
+        select: "id name display_pic",
+      })
+      .populate({
+        path: "lastMessage",
+      });
+
+  // Publish the conversation update event
+  pubsub.publish(`CONVERSATION_UPDATED_${newConversation?.id as string}`, {
+    conversationUpdated: newConversation,
+  });
+
+  // Publish the new message event
+  pubsub.publish(`NEW_MESSAGE_${newConversation?.id as string}`, {
+    newMessage: populatedMessage,
   });
 
   return newMessage;

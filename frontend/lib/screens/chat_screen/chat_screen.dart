@@ -63,11 +63,9 @@ class ChatScreen extends GetView<ChatController> {
                     text: 'No messages',
                     onPressed: () => controller.pagingController.refresh(),
                   ),
-                  itemBuilder: (context, item, index) {
-                    return ChatBubble(
-                      msg: item,
-                    );
-                  },
+                  itemBuilder: (context, item, index) => ChatBubble(
+                    msg: item,
+                  ),
                 ),
               ),
         floatingActionButton: Obx(
