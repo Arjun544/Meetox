@@ -6,7 +6,13 @@ const typeDefs = gql`
   scalar IImage
 
   type Mutation {
-    createConversation(receiver: String!, message: String!): IConversation
+    createConversation(
+      receiver: String!
+      message: String!
+      type: String!
+      latitude: Float
+      longitude: Float
+    ): IConversation
     hasConversation(sender: String!, receiver: String!): hasConversationResponse
   }
 

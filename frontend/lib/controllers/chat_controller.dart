@@ -29,10 +29,17 @@ class ChatController extends GetxController {
         await fetchMessages(page);
       }
     });
-    listenMessages();
     scrollController = ScrollController()..addListener(scrollListener);
 
     super.onInit();
+  }
+
+  @override
+  void onReady() {
+    if (conversation.value.id != null) {
+      listenMessages();
+    }
+    super.onReady();
   }
 
   void scrollListener() {
@@ -70,12 +77,14 @@ class ChatController extends GetxController {
   }
 
   void listenMessages() {
+    logError('Listening messages');
+
     subscription = graphqlClient!.value
         .subscribe(
       SubscriptionOptions(
         document: gql(newMessage),
-        variables: const {
-          'id': "64b411079b61182c505e1da2",
+        variables: {
+          'id': conversation.value.id,
         },
         parserFn: (data) => Message.fromJson(
           data['newMessage'] as Map<String, dynamic>,
@@ -88,6 +97,7 @@ class ChatController extends GetxController {
           logError(result.exception.toString());
           return;
         } else {
+          logError('Listening messages');
           pagingController.itemList!.insert(0, result.parsedData!);
           pagingController
               // ignore: invalid_use_of_protected_member, invalid_use_of_visible_for_testing_member

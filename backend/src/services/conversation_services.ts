@@ -8,7 +8,10 @@ export async function createConversation(
   pubsub: PubSub,
   sender: any,
   receiver: any,
-  message: string
+  message: string,
+  type: string,
+  latitude: number,
+  longitude: number
 ): Promise<IConversation> {
   const participants = [sender, receiver];
   const newConversation = await Conversation.create({
@@ -21,11 +24,16 @@ export async function createConversation(
 
   const newMessage: IMessage | null = await Message.create({
     message: message,
-    type: "text",
-    latitude: 0,
-    longitude: 0,
+    type: type,
+    latitude: latitude,
+    longitude: longitude,
     sender: sender,
     conversationId: newConversation.id,
+  });
+
+  const populatedMessage = await Message.populate(newMessage, {
+    path: "sender",
+    select: "id name display_pic",
   });
 
   // Update lastMessage of the conversation
@@ -49,6 +57,11 @@ export async function createConversation(
   // Publish the new conversation event
   pubsub.publish("CONVERSATION_CREATED", {
     conversationCreated: updatedConversation,
+  });
+
+  // Publish the new message event
+  pubsub.publish(`NEW_MESSAGE_${newConversation?.id as string}`, {
+    newMessage: populatedMessage,
   });
 
   return updatedConversation as IConversation;

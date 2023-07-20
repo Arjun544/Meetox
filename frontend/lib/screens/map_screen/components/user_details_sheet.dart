@@ -5,7 +5,9 @@ import 'package:frontend/graphql/conversation/mutations.dart';
 import 'package:frontend/graphql/user/mutations.dart';
 import 'package:frontend/graphql/user/queries.dart';
 import 'package:frontend/helpers/get_distance.dart';
+import 'package:frontend/models/conversation_model.dart';
 import 'package:frontend/models/user_model.dart';
+import 'package:frontend/screens/chat_screen/chat_screen.dart';
 import 'package:frontend/screens/followers_screen/followers_screen.dart';
 import 'package:frontend/screens/user_profile_screen/user_profile_screen.dart';
 import 'package:frontend/utils/constants.dart';
@@ -73,8 +75,21 @@ class UserDetailsSheet extends HookWidget {
         document: gql(hasConversation),
         fetchPolicy: FetchPolicy.networkOnly,
         onCompleted: (data) {
-          logSuccess(data.toString());
-
+          logSuccess(data!['hasConversation'].toString());
+          final hasConversation = data['hasConversation']['hasConversation'];
+          if (hasConversation) {
+            final Conversation conversation =
+                Conversation.fromJson(data['hasConversation']['conversation']);
+            Get.to(() => ChatScreen(conversation: conversation));
+          } else {
+            Get.to(
+              () => ChatScreen(
+                  conversation: Conversation(
+                id: null,
+                participants: [user],
+              )),
+            );
+          }
         },
       ),
     );

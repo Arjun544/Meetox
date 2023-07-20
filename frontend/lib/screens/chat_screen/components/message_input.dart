@@ -1,8 +1,10 @@
 // ignore_for_file: invalid_use_of_visible_for_testing_member, invalid_use_of_protected_member
 
 import 'package:frontend/controllers/chat_controller.dart';
+import 'package:frontend/graphql/conversation/mutations.dart';
 import 'package:frontend/graphql/message/mutations.dart';
-import 'package:frontend/widgets/dialogues/share_location_dialogue.dart';
+import 'package:frontend/models/conversation_model.dart';
+import 'package:frontend/screens/chat_screen/components/share_location_dialogue.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 
 import '../../../core/imports/core_imports.dart';
@@ -14,6 +16,25 @@ class MessageInput extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final ChatController controller = Get.find();
+
+    final createConversaionMutation = useMutation(
+      MutationOptions(
+        document: gql(createConversation),
+        onCompleted: (data) async {
+          logSuccess('Conversation created $data');
+          if (data != null && data['createConversation'] != null) {
+            final newConversation = Conversation.fromJson(
+              data['createConversation'] as Map<String, dynamic>,
+            );
+            controller.conversation(newConversation);
+
+            controller.listenMessages();
+            controller.messageController.clear();
+            controller.messageInput.value = '';
+          }
+        },
+      ),
+    );
 
     final sendMessageMutation = useMutation(
       MutationOptions(
@@ -150,7 +171,8 @@ class MessageInput extends HookWidget {
             ),
           ),
           const SizedBox(width: 15),
-          sendMessageMutation.result.isLoading
+          createConversaionMutation.result.isLoading ||
+                  sendMessageMutation.result.isLoading
               ? LoadingAnimationWidget.staggeredDotsWave(
                   color: AppColors.primaryYellow,
                   size: 20.sp,
@@ -160,15 +182,26 @@ class MessageInput extends HookWidget {
                     visible:
                         controller.messageInput.value.isNotEmpty ? true : false,
                     child: InkWell(
-                      onTap: () => sendMessageMutation.runMutation(
-                        {
-                          'id': controller.conversation.value.id,
-                          'message': controller.messageController.text.trim(),
-                          'type': 'text',
-                          'latitude': 0,
-                          'longitude': 0,
-                        },
-                      ),
+                      onTap: () => controller.conversation.value.id == null
+                          ? createConversaionMutation.runMutation({
+                              "receiver": controller
+                                  .conversation.value.participants![0].id,
+                              "message":
+                                  controller.messageController.text.trim(),
+                              "type": "text",
+                              "latitude": 0,
+                              "longitude": 0
+                            })
+                          : sendMessageMutation.runMutation(
+                              {
+                                'id': controller.conversation.value.id,
+                                'message':
+                                    controller.messageController.text.trim(),
+                                'type': 'text',
+                                'latitude': 0,
+                                'longitude': 0,
+                              },
+                            ),
                       child: SlideInRight(
                         child: const DecoratedBox(
                           decoration: BoxDecoration(

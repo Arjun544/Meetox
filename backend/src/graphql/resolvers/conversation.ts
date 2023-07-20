@@ -14,14 +14,17 @@ const resolvers = {
   Mutation: {
     createConversation: async (_: any, args: any, context: GraphQLContext) => {
       const { req, pubsub } = context;
-      const { receiver, message } = args;
+      const { receiver, message, type, latitude, longitude } = args;
       const { id } = decodeToken(req as IncomingMessage);
 
       const newConversation: IConversation | null = await createConversation(
         pubsub,
         id as string,
         receiver,
-        message
+        message,
+        type,
+        latitude,
+        longitude
       );
 
       return newConversation;
@@ -33,7 +36,16 @@ const resolvers = {
       try {
         const conversation: IConversation | null = await Conversation.findOne({
           participants: { $all: [sender, receiver] },
-        });
+        }).populate([
+          {
+            path: "participants",
+            match: { _id: { $ne: id } },
+            select: "id name display_pic",
+          },
+          {
+            path: "lastMessage",
+          },
+        ]);
 
         return {
           hasConversation: !!conversation,

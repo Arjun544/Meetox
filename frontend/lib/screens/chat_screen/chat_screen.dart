@@ -25,49 +25,52 @@ class ChatScreen extends GetView<ChatController> {
     return UnFocuser(
       child: Scaffold(
         appBar: chatHeader(context),
-        body: conversation.id == null
-            ? Center(
-                child: CustomErrorWidget(
-                  image: AssetsManager.sadState,
-                  text: 'No messages',
-                  isWarining: true,
-                  onPressed: () {},
-                ),
-              )
-            : PagedListView(
-                pagingController: controller.pagingController,
-                reverse: true,
-                scrollController: controller.scrollController,
-                padding: EdgeInsets.symmetric(horizontal: 15.sp),
-                builderDelegate: PagedChildBuilderDelegate<Message>(
-                  animateTransitions: true,
-                  transitionDuration: const Duration(milliseconds: 500),
-                  firstPageProgressIndicatorBuilder: (_) => const ChatLoader(),
-                  newPageProgressIndicatorBuilder: (_) => const ChatLoader(),
-                  firstPageErrorIndicatorBuilder: (_) => Center(
-                    child: CustomErrorWidget(
-                      image: AssetsManager.angryState,
-                      text: 'Failed to fetch messages',
-                      onPressed: () => controller.pagingController.refresh(),
-                    ),
-                  ),
-                  newPageErrorIndicatorBuilder: (_) => Center(
-                    child: CustomErrorWidget(
-                      image: AssetsManager.angryState,
-                      text: 'Failed to fetch messages',
-                      onPressed: () => controller.pagingController.refresh(),
-                    ),
-                  ),
-                  noItemsFoundIndicatorBuilder: (_) => CustomErrorWidget(
+        body: Obx(
+          () => controller.conversation.value.id == null
+              ? Center(
+                  child: CustomErrorWidget(
                     image: AssetsManager.sadState,
                     text: 'No messages',
-                    onPressed: () => controller.pagingController.refresh(),
+                    isWarining: true,
+                    onPressed: () {},
                   ),
-                  itemBuilder: (context, item, index) => ChatBubble(
-                    msg: item,
+                )
+              : PagedListView(
+                  pagingController: controller.pagingController,
+                  reverse: true,
+                  scrollController: controller.scrollController,
+                  padding: EdgeInsets.symmetric(horizontal: 15.sp),
+                  builderDelegate: PagedChildBuilderDelegate<Message>(
+                    animateTransitions: true,
+                    transitionDuration: const Duration(milliseconds: 500),
+                    firstPageProgressIndicatorBuilder: (_) =>
+                        const ChatLoader(),
+                    newPageProgressIndicatorBuilder: (_) => const ChatLoader(),
+                    firstPageErrorIndicatorBuilder: (_) => Center(
+                      child: CustomErrorWidget(
+                        image: AssetsManager.angryState,
+                        text: 'Failed to fetch messages',
+                        onPressed: () => controller.pagingController.refresh(),
+                      ),
+                    ),
+                    newPageErrorIndicatorBuilder: (_) => Center(
+                      child: CustomErrorWidget(
+                        image: AssetsManager.angryState,
+                        text: 'Failed to fetch messages',
+                        onPressed: () => controller.pagingController.refresh(),
+                      ),
+                    ),
+                    noItemsFoundIndicatorBuilder: (_) => CustomErrorWidget(
+                      image: AssetsManager.sadState,
+                      text: 'No messages',
+                      onPressed: () => controller.pagingController.refresh(),
+                    ),
+                    itemBuilder: (context, item, index) => ChatBubble(
+                      msg: item,
+                    ),
                   ),
                 ),
-              ),
+        ),
         floatingActionButton: Obx(
           () => Visibility(
             visible: controller.hasScrolledUp.value,
