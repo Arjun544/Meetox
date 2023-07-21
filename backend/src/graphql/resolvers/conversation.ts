@@ -74,13 +74,19 @@ const resolvers = {
   Subscription: {
     conversationCreated: {
       subscribe: withFilter(
-        (_: any, args: any, context: GraphQLContext) => {
+        (_: any, _args: any, context: GraphQLContext) => {
           const { pubsub } = context;
-
           return pubsub.asyncIterator("CONVERSATION_CREATED");
         },
-        (payload: any, _, context: GraphQLContext) => {
-          return true;
+        (payload: any, args: any, _context: GraphQLContext) => {
+          const { id } = args;
+          const { conversationCreated } = payload;
+          const { participants } = conversationCreated;
+          // Only participants of the conversation will be notified 
+          const participantsIds = participants.map(
+            (participant: { _id: any }) => participant._id.toString()
+            );
+          return participantsIds.includes(id);
         }
       ),
     },

@@ -1,6 +1,6 @@
 String conversationCreated = r'''
- subscription Subscription {
-  conversationCreated
+ subscription Subscription ($id: String!) {
+  conversationCreated(id: $id)
 }
 ''';
 

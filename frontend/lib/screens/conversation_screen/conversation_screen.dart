@@ -67,6 +67,9 @@ class ConversationScreen extends GetView<ConversationController> {
               child: Subscription(
                   options: SubscriptionOptions(
                     document: gql(conversationCreated),
+                    variables: {
+                      'id': currentUser.value.id,
+                    },
                     parserFn: (data) => Conversation.fromJson(
                       data['conversationCreated'] as Map<String, dynamic>,
                     ),
@@ -76,16 +79,11 @@ class ConversationScreen extends GetView<ConversationController> {
                       logError(subscriptionResult.exception.toString());
                       return;
                     } else {
-                      final ids = subscriptionResult.parsedData!.extra!
-                          .map((e) => e.participant)
-                          .toList();
-                      if (ids.contains(currentUser.value.id)) {
-                        controller.conversationsPagingController.itemList!
-                            .insert(0, subscriptionResult.parsedData!);
+                      controller.conversationsPagingController.itemList!
+                          .insert(0, subscriptionResult.parsedData!);
 
-                        controller.conversationsPagingController
-                            .notifyListeners();
-                      }
+                      controller.conversationsPagingController
+                          .notifyListeners();
                     }
                   },
                   builder: (_) {

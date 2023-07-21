@@ -21,7 +21,7 @@ const typeDefs = gql`
   }
 
   type Subscription {
-    conversationCreated: IConversation
+    conversationCreated(id: String!): IConversation
   }
 
   type ConversationsResponse {

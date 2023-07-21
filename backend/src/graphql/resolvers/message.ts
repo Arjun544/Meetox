@@ -63,6 +63,8 @@ const resolvers = {
           return pubsub.asyncIterator(`NEW_MESSAGE_${id}`);
         },
         (payload: any, _, context: GraphQLContext) => {
+          const { pubsub } = context;
+          console.log(pubsub);
           return true;
         }
       ),

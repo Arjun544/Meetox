@@ -47,7 +47,7 @@ export async function createConversation(
     )
       .populate({
         path: "participants",
-        match: { _id: receiver },
+        // match: { _id: receiver },
         select: "id name display_pic",
       })
       .populate({

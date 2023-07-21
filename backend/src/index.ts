@@ -67,7 +67,7 @@ const main = async () => {
         console.log("Socket disconnected");
       },
       onError(ctx, message, errors) {
-        console.log("Socket error: " + message);
+        console.log("Socket error: " + message.payload);
       },
     },
     wsServer
